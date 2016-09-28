@@ -267,9 +267,9 @@ void renderScene()
 	VSMathLib::getInstance()->computeNormalMatrix3x3();
 	
 	for (int i = 0; i < 16; i++) {
-		printf("%1.1f ", VSMathLib::getInstance()->get(VSMathLib::getInstance()->PROJECTION)[i]);
+		//printf("%1.1f ", VSMathLib::getInstance()->get(VSMathLib::getInstance()->PROJECTION)[i]);
 	}
-	printf("\n\n");
+	//printf("\n\n");
 
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mNormal3x3);
 	VSMathLib::getInstance()->get(VSMathLib::getInstance()->MODEL);
@@ -321,9 +321,9 @@ void reshape(int w, int h)
 	float ratio;
 	glViewport(0, 0, WinX, WinY);
 	ratio = (WinX * 1.0f) / WinY;
-	printf("a");
+	//printf("a");
 	VSMathLib::getInstance()->loadIdentity(VSMathLib::getInstance()->PROJECTION);
-	VSMathLib::getInstance()->perspective(42.0f, ratio, 0.1f, 1000.0f);
+	VSMathLib::getInstance()->perspective(70.0f, ratio, 0.1f, 1000.0f);
 }
 
 void timer(int value)
@@ -386,7 +386,7 @@ void setupGLUT(int argc, char* argv[])
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	glutReshapeFunc(reshape);
+	
 	glutInitWindowSize(WinX, WinY);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	WindowHandle = glutCreateWindow(CAPTION);

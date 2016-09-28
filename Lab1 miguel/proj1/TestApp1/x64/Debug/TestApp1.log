@@ -1,0 +1,108 @@
+﻿Build started 28-09-2016 14:41:36.
+     1>Project "C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\TestApp1.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\x64\Debug\TestApp1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\x64\Debug\TestApp1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\x64\Debug\TestApp1.lib" /MACHINE:X64 x64\Debug\exercise1.obj
+         x64\Debug\vsMathLib.obj
+         x64\Debug\vsShaderLib.obj
+     1>exercise1.obj : error LNK2019: unresolved external symbol __imp_glewInit referenced in function "void __cdecl setupGLEW(void)" (?setupGLEW@@YAXXZ)
+     1>exercise1.obj : error LNK2019: unresolved external symbol __imp_glewGetString referenced in function "void __cdecl setupGLEW(void)" (?setupGLEW@@YAXXZ)
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBufferSubData
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBufferSubData
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDeleteBuffers
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBindAttribLocation
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBindAttribLocation
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDeleteProgram
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewDeleteProgram
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDeleteShader
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewDeleteShader
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDetachShader
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDisableVertexAttribArray
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewEnableVertexAttribArray
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+     1>vsMathLib.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewUniformMatrix3fv
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewUniformMatrix4fv
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewUseProgram
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewVertexAttribPointer
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBindFragDataLocation
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBindFragDataLocation
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewBindVertexArray
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewDeleteVertexArrays
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
+     1>exercise1.obj : error LNK2001: unresolved external symbol __imp_glewExperimental
+     1>vsMathLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3fv
+     1>vsShaderLib.obj : error LNK2019: unresolved external symbol __imp___glewProgramUniformMatrix3fv referenced in function "protected: class std::_Tree_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> > > > __cdecl std::_Tree<class std::_Tmap_traits<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct VSShaderLib::blockUniforms,struct std::less<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >,class std::allocator<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> >,0> >::_Insert_hint<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> &,struct std::_Tree_node<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms>,void *> *>(class std::_Tree_const_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> > > >,struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> &,struct std::_Tree_node<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms>,void *> *)" (??$_Insert_hint@AEAU?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAU?$_Tree_node@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAX@2@@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@2@$0A@@std@@@std@@IEAA?AV?$_Tree_iterator@V?$_Tree_val@U?$_Tree_simple_types@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@std@@@std@@@1@V?$_Tree_const_iterator@V?$_Tree_val@U?$_Tree_simple_types@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@std@@@std@@@1@AEAU?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@1@PEAU?$_Tree_node@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAX@1@@Z)
+     1>vsMathLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4fv
+     1>vsShaderLib.obj : error LNK2019: unresolved external symbol __imp___glewProgramUniformMatrix4fv referenced in function "protected: class std::_Tree_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> > > > __cdecl std::_Tree<class std::_Tmap_traits<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct VSShaderLib::blockUniforms,struct std::less<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >,class std::allocator<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> >,0> >::_Insert_hint<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> &,struct std::_Tree_node<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms>,void *> *>(class std::_Tree_const_iterator<class std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> > > >,struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms> &,struct std::_Tree_node<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,struct VSShaderLib::blockUniforms>,void *> *)" (??$_Insert_hint@AEAU?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAU?$_Tree_node@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAX@2@@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@2@$0A@@std@@@std@@IEAA?AV?$_Tree_iterator@V?$_Tree_val@U?$_Tree_simple_types@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@std@@@std@@@1@V?$_Tree_const_iterator@V?$_Tree_val@U?$_Tree_simple_types@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@@std@@@std@@@1@AEAU?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@1@PEAU?$_Tree_node@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@UblockUniforms@VSShaderLib@@@std@@PEAX@1@@Z)
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetActiveUniform
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramInfoLog
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderInfoLog
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewValidateProgram
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetFragDataLocation
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1f
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1i
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1iv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform1uiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform2dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform2fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform2iv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform2uiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform3dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform3fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform3iv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform3uiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform4dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform4fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform4iv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniform4uiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2x3dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2x3fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2x4dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix2x4fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3x2dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3x2fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3x4dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix3x4fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4x2dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4x2fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4x3dv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewProgramUniformMatrix4x3fv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewBindBufferRange
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetActiveUniformBlockName
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetActiveUniformBlockiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetActiveUniformName
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewGetActiveUniformsiv
+     1>vsShaderLib.obj : error LNK2001: unresolved external symbol __imp___glewUniformBlockBinding
+     1>C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\x64\Debug\TestApp1.exe : fatal error LNK1120: 78 unresolved externals
+     1>Done Building Project "C:\Users\Miguel\Documents\GitHub\AVT_2016_1\Lab1 miguel\proj1\TestApp1\TestApp1.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.36
