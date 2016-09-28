@@ -9,8 +9,8 @@
 #include <sstream>
 #include <string>
 
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include "GL/glew.h"
+#include "GL/freeglut.h"
 
 #include "vsMathLib.h"
 #include "vsShaderLib.h"
