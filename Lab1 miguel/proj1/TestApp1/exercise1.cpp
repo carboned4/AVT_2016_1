@@ -12,7 +12,8 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include "VSShaderlib.h"
+#include "vsMathLib.h"
+#include "vsShaderLib.h"
 #include "cube.h"
 
 #define CAPTION "Exercise 1"
@@ -136,8 +137,10 @@ GLuint setupShaders() {
 
 	glLinkProgram(shader.getProgramIndex());
 
-	pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_pvm");
+	//pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_pvm");
+	pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "Matrix");
 	vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_viewModel");
+	//vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "Matrix");
 	normal_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_normal");
 	lPos_uniformId = glGetUniformLocation(shader.getProgramIndex(), "l_pos");
 
@@ -246,17 +249,39 @@ const Matrix M = {
 
 void renderScene()
 {
+	VSMathLib::getInstance()->loadIdentity(VSMathLib::getInstance()->VIEW);
+	VSMathLib::getInstance()->loadIdentity(VSMathLib::getInstance()->MODEL);
+
+	VSMathLib::getInstance()->lookAt(0.0, 0.0, 2.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
+
 	glBindVertexArray(VaoId);
 	glUseProgram(shader.getProgramIndex());
-
-	glUniformMatrix4fv(UniformId, 1, GL_TRUE, I);
-	glDrawElements(GL_TRIANGLES, faceCount*3, GL_UNSIGNED_INT, (GLvoid*)0);
+	VSMathLib::getInstance()->translate(0.0f, 0.0f, -1.0f);
+	VSMathLib::getInstance()->rotate(45.0f, 1.0f, 0.0f, 0.0f);
+	VSMathLib::getInstance()->pushMatrix(VSMathLib::getInstance()->MODEL);
 	
+	
+	VSMathLib::getInstance()->computeDerivedMatrix(VSMathLib::getInstance()->PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mCompMatrix[VSMathLib::getInstance()->VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mCompMatrix[VSMathLib::getInstance()->PROJ_VIEW_MODEL]);
+	VSMathLib::getInstance()->computeNormalMatrix3x3();
+	
+	for (int i = 0; i < 16; i++) {
+		printf("%1.1f ", VSMathLib::getInstance()->get(VSMathLib::getInstance()->PROJECTION)[i]);
+	}
+	printf("\n\n");
+
+	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mNormal3x3);
+	VSMathLib::getInstance()->get(VSMathLib::getInstance()->MODEL);
+	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, I);
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
+
 	glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
-	glDrawElements(GL_TRIANGLES, faceCount*3, GL_UNSIGNED_INT, (GLvoid*)0);
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
 	
 	glUseProgram(0);
 	glBindVertexArray(0);
+	VSMathLib::getInstance()->popMatrix(VSMathLib::getInstance()->MODEL);
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 }
@@ -293,7 +318,12 @@ void reshape(int w, int h)
 {
 	WinX = w;
 	WinY = h;
+	float ratio;
 	glViewport(0, 0, WinX, WinY);
+	ratio = (WinX * 1.0f) / WinY;
+	printf("a");
+	VSMathLib::getInstance()->loadIdentity(VSMathLib::getInstance()->PROJECTION);
+	VSMathLib::getInstance()->perspective(42.0f, ratio, 0.1f, 1000.0f);
 }
 
 void timer(int value)
@@ -356,7 +386,7 @@ void setupGLUT(int argc, char* argv[])
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	
+	glutReshapeFunc(reshape);
 	glutInitWindowSize(WinX, WinY);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	WindowHandle = glutCreateWindow(CAPTION);

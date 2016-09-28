@@ -148,10 +148,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cube.h" />
+    <ClInclude Include="vsMathLib.h" />
     <ClInclude Include="vsShaderLib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="exercise1.cpp" />
+    <ClCompile Include="vsMathLib.cpp" />
     <ClCompile Include="vsShaderLib.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

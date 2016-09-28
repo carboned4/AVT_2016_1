@@ -21,12 +21,18 @@
     <ClInclude Include="vsShaderLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vsMathLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="exercise1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vsShaderLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vsMathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
