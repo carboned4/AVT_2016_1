@@ -275,8 +275,15 @@ void renderScene()
 	VSMathLib::getInstance()->get(VSMathLib::getInstance()->MODEL);
 	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, I);
 	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
+	//VSMathLib::getInstance()->rotate(-45.0f, 1.0f, 0.0f, 0.0f); 
+	VSMathLib::getInstance()->translate(-1.0f, 0.0f, 0.0f);
 
-	glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
+	VSMathLib::getInstance()->computeDerivedMatrix(VSMathLib::getInstance()->PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mCompMatrix[VSMathLib::getInstance()->VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, VSMathLib::getInstance()->mCompMatrix[VSMathLib::getInstance()->PROJ_VIEW_MODEL]);
+	VSMathLib::getInstance()->computeNormalMatrix3x3();
+
+	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
 	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
 	
 	glUseProgram(0);
