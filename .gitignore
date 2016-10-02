@@ -1,4 +1,12 @@
 *.suo
 *.db
-Lab1 miguel/proj1/TestApp1/TestApp1.VC.VC.opendb
+*.opendb
+*.exe
+*.tlog
+*.obj
+*.idb
+*.pdb
+*.log
+*.ilk
+*.lastbuildstate
 Lab1 miguel/proj1/TestApp1/Debug
