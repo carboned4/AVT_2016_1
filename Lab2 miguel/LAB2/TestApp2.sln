@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 14 for Windows Desktop
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp1", "TestApp1.vcxproj", "{7BC52FCC-6565-49F3-90A0-B9F1A64A1D8B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp2", "TestApp1.vcxproj", "{7BC52FCC-6565-49F3-90A0-B9F1A64A1D8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E746BFEC-3575-485A-BD62-9492E7E824B8}"
+	ProjectSection(SolutionItems) = preProject
+		shaders\blinnphong.frag = shaders\blinnphong.frag
+		shaders\blinnphong.vert = shaders\blinnphong.vert
+		shaders\gouraud.frag = shaders\gouraud.frag
+		shaders\gouraud.vert = shaders\gouraud.vert
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

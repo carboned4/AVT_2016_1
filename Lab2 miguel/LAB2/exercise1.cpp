@@ -19,10 +19,14 @@
 
 #define CAPTION "Exercise 2"
 
+std::string shadername("gouraud");
+// gouraud  blinnphong  pointlight
+
 int WinX = 640, WinY = 480;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
 int TargetFramerate = 60;
+float ratio;
 
 #define VERTEX_COORD_ATTRIB 0
 #define NORMAL_ATTRIB 1
@@ -43,6 +47,8 @@ GLint lPos_uniformId;
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
+
+bool projectionIsPerspective = true;
 
 // Camera Position
 float camX, camY, camZ;
@@ -125,8 +131,8 @@ void destroyShaderProgram()
 GLuint setupShaders() {
 	// Shader for models
 	shader.init();
-	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/pointlight.vert");
-	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/pointlight.frag");
+	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/"+shadername+".vert");
+	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/"+shadername+".frag");
 	// set semantics for the shader variables
 	glBindFragDataLocation(shader.getProgramIndex(), 0, "colorOut");
 	glBindAttribLocation(shader.getProgramIndex(), VERTEX_COORD_ATTRIB, "position");
@@ -163,7 +169,10 @@ void renderScene()
 	loadIdentity(MODEL);
 
 	lookAt(camPos[0] + camX, camPos[1] + camY, camPos[2] + camZ, camPos[0], camPos[1], camPos[2], 0, 1, 0);
-
+	loadIdentity(PROJECTION);
+	if (projectionIsPerspective)
+		perspective(70.0f, ratio, 0.1f, 1000.0f);
+	else ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f);
 	glUseProgram(shader.getProgramIndex());
 	
 	//send the light position in eye coordinates
@@ -277,6 +286,7 @@ void processMouseButtons(int button, int state, int xx, int yy)
 
 void processMouseMotion(int xx, int yy)
 {
+	//printf("Mouse");
 
 	int deltaX, deltaY;
 	float alphaAux, betaAux;
@@ -313,7 +323,7 @@ void processMouseMotion(int xx, int yy)
 	camY = rAux *   						       sin(betaAux * 3.14f / 180.0f);
 
 	//  uncomment this if not using an idle func
-		//glutPostRedisplay();
+		glutPostRedisplay();
 }
 
 void mouseWheel(int wheel, int direction, int x, int y) {
@@ -327,7 +337,7 @@ void mouseWheel(int wheel, int direction, int x, int y) {
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
 	//  uncomment this if not using an idle func
-		//glutPostRedisplay();
+		glutPostRedisplay();
 }
 
 void processKeys(unsigned char key, int xx, int yy)
@@ -359,7 +369,7 @@ void processKeys(unsigned char key, int xx, int yy)
 	case 't': keyState[key] = true; objPos[1]--; break;
 	case 'u': keyState[key] = true; objPos[1]++; break;
 
-	
+	case 'p': projectionIsPerspective = !projectionIsPerspective; break;
 	}
 }
 
@@ -400,12 +410,14 @@ void reshape(int w, int h)
 {
 	WinX = w;
 	WinY = h;
-	float ratio;
 	glViewport(0, 0, WinX, WinY);
 	ratio = (WinX * 1.0f) / WinY;
 	//printf("a");
 	loadIdentity(PROJECTION);
-	perspective(70.0f, ratio, 0.1f, 1000.0f);
+	if (projectionIsPerspective)
+		perspective(70.0f, ratio, 0.1f, 1000.0f);
+	else ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f);
+
 }
 
 void timer(int value)
