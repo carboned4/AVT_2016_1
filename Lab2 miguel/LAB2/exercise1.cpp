@@ -47,12 +47,15 @@ extern float mNormal3x3[9];
 // Camera Position
 float camX, camY, camZ;
 
-// Mouse Tracking Variables
+// Mouse/beyboard Tracking Variables
 int startX, startY, tracking = 0;
+bool keyState[256];
 
 // Camera Spherical Coordinates
 float alpha = 39.0f, beta = 51.0f;
 float r = 10.0f;
+float camPos[3];
+float objPos[3];
 
 // Frame counting and FPS computation
 long myTime, timebase = 0, frame = 0;
@@ -146,64 +149,7 @@ GLuint setupShaders() {
 
 /////////////////////////////////////////////////////////////////////// VAOs & VBOs
 
-/*
-void createBufferObjects()
-{
-	glGenVertexArrays(1, &VaoId);
-	glBindVertexArray(VaoId);
 
-	//o vbo passa a ter só 2 entradas em vez de 4: vertices + index dos vertices
-	//entrada 1: vertices (vert, norm, coord)
-	glGenBuffers(2, VboId);
-	glBindBuffer(GL_ARRAY_BUFFER, VboId[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)*3, NULL, GL_STATIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices), sizeof(vertices), normals);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices)*2, sizeof(vertices), texCoords);
-
-		glEnableVertexAttribArray(VERTEX_COORD_ATTRIB);
-		glVertexAttribPointer(VERTEX_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
-		glEnableVertexAttribArray(NORMAL_ATTRIB);
-		glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, (void *)(sizeof(vertices)));
-		glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
-		glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, (void *)(sizeof(vertices)*2));
-	//entrada 2: ordem dos vertices (index)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faceIndex), faceIndex, GL_STATIC_DRAW);
-
-// unbind the VAO
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDisableVertexAttribArray(VERTEX_COORD_ATTRIB); //antes tinha VERTICES
-	glDisableVertexAttribArray(NORMAL_ATTRIB); // antes tinha COLORS
-	glDisableVertexAttribArray(TEXTURE_COORD_ATTRIB);
-
-	checkOpenGLError("ERROR: Could not create VAOs and VBOs.");
-}
-*/
-
-/*
-void destroyBufferObjects()
-{
-	glDisableVertexAttribArray(VERTEX_COORD_ATTRIB);
-	glDisableVertexAttribArray(NORMAL_ATTRIB);
-	glDisableVertexAttribArray(TEXTURE_COORD_ATTRIB);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glDeleteBuffers(2, VboId);
-	glDeleteVertexArrays(1, &VaoId);
-	checkOpenGLError("ERROR: Could not destroy VAOs and VBOs.");
-}
-*/
-
-/////////////////////////////////////////////////////////////////////// SCENE
-
-//typedef GLfloat Matrix[16];
 
 void renderScene()
 {
@@ -216,7 +162,7 @@ void renderScene()
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
 
-	lookAt(camX, camY, camZ, 0, 0, 0, 0, 1, 0);
+	lookAt(camPos[0] + camX, camPos[1] + camY, camPos[2] + camZ, camPos[0], camPos[1], camPos[2], 0, 1, 0);
 
 	glUseProgram(shader.getProgramIndex());
 	
@@ -241,6 +187,7 @@ void renderScene()
 			loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 			glUniform1f(loc, mesh[objId].mat.shininess);
 			pushMatrix(MODEL);
+			translate(MODEL, objPos[0], objPos[1], objPos[2]);
 			translate(MODEL, i*2.0f, 0.0f, j*2.0f);
 
 			// send matrices to OGL
@@ -397,7 +344,28 @@ void processKeys(unsigned char key, int xx, int yy)
 	case 'm': glEnable(GL_MULTISAMPLE); break;
 	case 'n': glDisable(GL_MULTISAMPLE); break;
 	case 'f': switchFramerate(); break;
+	
+	case 'w': keyState[key] = true; camPos[2]--; break;
+	case 'a': keyState[key] = true; camPos[0]--; break;
+	case 's': keyState[key] = true; camPos[2]++; break;
+	case 'd': keyState[key] = true; camPos[0]++; break;
+	case 'q': keyState[key] = true; camPos[1]--; break;
+	case 'e': keyState[key] = true; camPos[1]++; break;
+	
+	case 'y': keyState[key] = true; objPos[2]--; break;
+	case 'g': keyState[key] = true; objPos[0]--; break;
+	case 'h': keyState[key] = true; objPos[2]++; break;
+	case 'j': keyState[key] = true; objPos[0]++; break;
+	case 't': keyState[key] = true; objPos[1]--; break;
+	case 'u': keyState[key] = true; objPos[1]++; break;
+
+	
 	}
+}
+
+void processUpKeys(unsigned char key, int xx, int yy)
+{
+	keyState[key] = false;
 }
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
@@ -463,6 +431,7 @@ void setupCallbacks()
 	glutTimerFunc(0, refresh, 0);
 	glutTimerFunc(0,timer,0);
 	glutKeyboardFunc(processKeys);
+	glutKeyboardUpFunc(processUpKeys);
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 	glutMouseWheelFunc(mouseWheel);
@@ -518,6 +487,13 @@ void setupGLUT(int argc, char* argv[])
 }
 
 void setupThings() {
+	for (int i = 0; i < 256; i++) {
+		keyState[i] = false;
+	}
+	for (int i = 0; i < 3; i++) {
+		camPos[i] = 0.0f;
+		objPos[i] = 0.0f;
+	}
 	// set the camera position based on its spherical coordinates
 	camX = r * sin(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
