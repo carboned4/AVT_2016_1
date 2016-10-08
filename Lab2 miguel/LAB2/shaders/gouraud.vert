@@ -33,8 +33,7 @@ void main () {
 
 	vec4 spec = vec4(0.0);
 
-	float lightattenuation = 10.0/length(lightDirG);
-
+	
 	vec3 n = normalize(normalG);
 	vec3 l = normalize(lightDirG);
 	vec3 e = normalize(eyeG);
@@ -49,7 +48,7 @@ void main () {
 		spec = mat.specular * pow(intSpec, mat.shininess);
 	}
 	
-	colorG = max(lightattenuation*(intensity * mat.diffuse + spec) + mat.ambient, 0.0);
+	colorG = max((intensity * mat.diffuse + spec) + mat.ambient, 0.0);
 
 	gl_Position = m_pvm * position;	
 }
