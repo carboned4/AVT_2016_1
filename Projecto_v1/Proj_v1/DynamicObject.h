@@ -5,10 +5,10 @@
 
 class DynamicObject : public GameObject {
 public:
-	DynamicObject()
+	DynamicObject(struct MyMesh _theMesh, Vec3 _speed) : GameObject(_theMesh), speed(_speed){}
 	virtual ~DynamicObject() {}
 		
-	Vec3 _speed;
+	Vec3 speed;
 
 	Vec3 getSpeed();
 	void update(float delta);

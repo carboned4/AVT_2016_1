@@ -152,7 +152,6 @@
     <ClCompile Include="basic_geometry.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
-    <ClCompile Include="lightDemo.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="vsMathLib.cpp" />
     <ClCompile Include="vsShaderLib.cpp" />

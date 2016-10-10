@@ -12,9 +12,11 @@ class GameObject {
 public:
 	int objId;
 	Vec3 _position;
+	struct MyMesh theMesh;
 
+	GameObject(struct MyMesh _theMesh) : theMesh(_theMesh) {}
 	virtual ~GameObject() {}
-	virtual void draw(VSShaderLib shader, struct MyMesh mesh) = 0;
+	virtual void draw(VSShaderLib shader) = 0;
 	
 };
 

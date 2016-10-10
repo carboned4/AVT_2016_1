@@ -21,9 +21,6 @@
     <ClCompile Include="basic_geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lightDemo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vsMathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
