@@ -544,7 +544,7 @@ void setupThings() {
 	*/
 	objId = 0;
 	objIdInc = 0;
-	alien1 = new Alien(0, &objIdInc);
+	alien1 = new Alien(objId, &objIdInc);
 	objId += objIdInc;
 }
 
