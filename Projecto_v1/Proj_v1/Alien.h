@@ -5,8 +5,16 @@
 #include "VSShaderLib.h"
 
 class Alien : public DynamicObject {
+private:
+	float amb[4] = { 0.2f, 0.15f, 0.1f, 1.0f };
+	float diff[4] = { 0.8f, 0.6f, 0.4f, 1.0f };
+	float spec[4] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float shininess = 100.0f;
+	int texcount = 0;
+
 public:
-	Alien(struct MyMesh _theMesh, Vec3 _speed);
+	Alien(struct MyMesh *_theMesh, int _objId);
 	~Alien();
 		
 	void update(float delta);

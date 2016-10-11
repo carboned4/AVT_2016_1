@@ -5,7 +5,7 @@
 
 class DynamicObject : public GameObject {
 public:
-	DynamicObject(struct MyMesh _theMesh, Vec3 _speed) : GameObject(_theMesh), speed(_speed){}
+	DynamicObject(struct MyMesh *_theMesh, int _objId) : GameObject(_theMesh, _objId){}
 	virtual ~DynamicObject() {}
 		
 	Vec3 speed;

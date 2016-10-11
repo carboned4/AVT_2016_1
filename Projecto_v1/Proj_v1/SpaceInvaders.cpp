@@ -9,11 +9,13 @@
 
 #include "AVTmathLib.h"
 #include "vsShaderLib.h"
-#include "basic_geometry.h"
+//#include "basic_geometry.h"
+
+#include "Alien.h"
 
 #define CAPTION "Exercise 2"
 
-std::string shadername("gouraud");
+std::string shadername("phong");
 // gouraud  blinnphong  pointlight
 
 int WinX = 640, WinY = 480;
@@ -26,7 +28,7 @@ float ratio;
 #define NORMAL_ATTRIB 1
 #define TEXTURE_COORD_ATTRIB 2
 
-struct MyMesh mesh[4];
+struct MyMesh mesh[100];
 int objId = 0; //id of the object mesh - to be used as index of mesh: mesh[objID] means the current mesh
 
 //GLuint VaoId, VboId[2];
@@ -62,6 +64,8 @@ long myTime, timebase = 0, frame = 0;
 char s[32];
 float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
+Alien *alien1;
+
 /////////////////////////////////////////////////////////////////////// ERRORS
 
 bool isOpenGLError() {
@@ -87,27 +91,6 @@ void checkOpenGLError(std::string error)
 /////////////////////////////////////////////////////////////////////// SHADERs
 
 
-/*void createShaderProgram()
-{
-	VertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(VertexShaderId, 1, &VertexShader, 0);
-	glCompileShader(VertexShaderId);
-
-	FragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(FragmentShaderId, 1, &FragmentShader, 0);
-	glCompileShader(FragmentShaderId);
-
-	ProgramId = glCreateProgram();
-	glAttachShader(ProgramId, VertexShaderId);
-	glAttachShader(ProgramId, FragmentShaderId);
-
-	glBindAttribLocation(ProgramId, VERTEX_COORD_ATTRIB, "in_Position");
-	
-	glLinkProgram(ProgramId);
-	UniformId = glGetUniformLocation(ProgramId, "Matrix");
-
-	checkOpenGLError("ERROR: Could not create shaders.");
-}*/
 
 void destroyShaderProgram()
 {
@@ -136,9 +119,7 @@ GLuint setupShaders() {
 	glLinkProgram(shader.getProgramIndex());
 
 	pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_pvm");
-	//pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "Matrix");
 	vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_viewModel");
-	//vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "Matrix");
 	normal_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_normal");
 	lPos_uniformId = glGetUniformLocation(shader.getProgramIndex(), "l_pos");
 
@@ -180,36 +161,37 @@ void renderScene()
 	objId = 0;
 	for (int i = 0; i < 2; ++i) {
 		for (int j = 0; j < 2; ++j) {
-			// send the material
-			loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
-			glUniform4fv(loc, 1, mesh[objId].mat.ambient);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
-			glUniform4fv(loc, 1, mesh[objId].mat.diffuse);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
-			glUniform4fv(loc, 1, mesh[objId].mat.specular);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
-			glUniform1f(loc, mesh[objId].mat.shininess);
 			pushMatrix(MODEL);
-			translate(MODEL, objPos[0], objPos[1], objPos[2]);
-			translate(MODEL, i*2.0f, 0.0f, j*2.0f);
+				/*
+				// send the material
+				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
+				glUniform4fv(loc, 1, mesh[objId].mat.ambient);
+				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
+				glUniform4fv(loc, 1, mesh[objId].mat.diffuse);
+				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
+				glUniform4fv(loc, 1, mesh[objId].mat.specular);
+				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
+				glUniform1f(loc, mesh[objId].mat.shininess);
+				translate(MODEL, objPos[0], objPos[1], objPos[2]);
+				translate(MODEL, i*2.0f, 0.0f, j*2.0f);
+				
+				// send matrices to OGL
+				computeDerivedMatrix(PROJ_VIEW_MODEL);
+				glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+				glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+				computeNormalMatrix3x3();
+				glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
 
-			// send matrices to OGL
-			computeDerivedMatrix(PROJ_VIEW_MODEL);
-			glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-			glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-			computeNormalMatrix3x3();
-			glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-
-			// Render mesh
-			glBindVertexArray(mesh[objId].vao);
-			glDrawElements(mesh[objId].type, mesh[objId].numIndexes, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
+				// Render mesh
+				glBindVertexArray(mesh[objId].vao);
+				glDrawElements(mesh[objId].type, mesh[objId].numIndexes, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+				*/
 			popMatrix(MODEL);
 			objId++;
 		}
 	}
-
+	alien1->draw(shader);
 	//este já é feito no display
 	//glutSwapBuffers();
 
@@ -505,7 +487,7 @@ void setupThings() {
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
-
+	/*
 	float amb[] = { 0.2f, 0.15f, 0.1f, 1.0f };
 	float diff[] = { 0.8f, 0.6f, 0.4f, 1.0f };
 	float spec[] = { 0.8f, 0.8f, 0.8f, 1.0f };
@@ -558,7 +540,9 @@ void setupThings() {
 	mesh[objId].mat.shininess = shininess;
 	mesh[objId].mat.texCount = texcount;
 	createCone(1.5f, 0.5f, 20);
-
+	*/
+	objId = 4;
+	alien1 = new Alien(mesh, 4);
 }
 
 void init(int argc, char* argv[])
