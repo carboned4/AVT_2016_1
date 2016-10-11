@@ -30,6 +30,7 @@ float ratio;
 
 struct MyMesh mesh[100];
 int objId = 0; //id of the object mesh - to be used as index of mesh: mesh[objID] means the current mesh
+int objIdInc = 0;
 
 //GLuint VaoId, VboId[2];
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
@@ -134,7 +135,7 @@ GLuint setupShaders() {
 
 void renderScene()
 {
-	GLint loc;
+	//GLint loc;
 
 	//estes já são feitos no display()
 	//FrameCount++;
@@ -541,8 +542,10 @@ void setupThings() {
 	mesh[objId].mat.texCount = texcount;
 	createCone(1.5f, 0.5f, 20);
 	*/
-	objId = 4;
-	alien1 = new Alien(mesh, 4);
+	objId = 0;
+	objIdInc = 0;
+	alien1 = new Alien(0, &objIdInc);
+	objId += objIdInc;
 }
 
 void init(int argc, char* argv[])

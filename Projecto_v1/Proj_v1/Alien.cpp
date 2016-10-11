@@ -1,7 +1,7 @@
 #include "Alien.h"
 
 
-Alien::Alien(struct MyMesh *_theMesh, int _objId) : DynamicObject(_theMesh, _objId) {
+Alien::Alien(int _objId, int* addedToId) : DynamicObject(_objId) {
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));
@@ -9,6 +9,7 @@ Alien::Alien(struct MyMesh *_theMesh, int _objId) : DynamicObject(_theMesh, _obj
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	createCone(1.5f, 0.5f, 20);
+	*addedToId = addToId;
 }
 
 Alien::~Alien() {

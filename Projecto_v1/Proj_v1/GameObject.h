@@ -23,10 +23,9 @@ class GameObject {
 public:
 	int objectId;
 	Vec3 position;
-	struct MyMesh *theMesh;
+	int addToId = 0;
 
-
-	GameObject(struct MyMesh *_theMesh, int _objId) : theMesh(_theMesh), objectId(_objId) {}
+	GameObject(int _objId) : objectId(_objId) {}
 	virtual ~GameObject() {}
 	virtual void draw(VSShaderLib shader) = 0;
 	

@@ -12,9 +12,10 @@ private:
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 100.0f;
 	int texcount = 0;
+	int addToId = 3;
 
 public:
-	Alien(struct MyMesh *_theMesh, int _objId);
+	Alien(int _objId, int* addedToId);
 	~Alien();
 		
 	void update(float delta);
