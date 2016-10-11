@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <string>
-#include <GL/glew.h>
+#include "GL/glew.h"
 
 	/// number of settable matrices
 		#define COUNT_MATRICES 3

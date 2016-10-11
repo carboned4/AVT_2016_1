@@ -16,10 +16,10 @@ Basic Revolution Geometry
 #include <vector>
 
 // include GLEW to access OpenGL 3.3 functions
-#include <GL/glew.h>
+#include "GL/glew.h"
 
 // GLUT is the toolkit to interface with the OS
-#include <GL/freeglut.h>
+#include "GL/freeglut.h"
 #include "VertexAttrDef.h"
 #include "basic_geometry.h"
 #include "cube.h"
