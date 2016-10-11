@@ -14,6 +14,8 @@
 #include "Alien.h"
 
 #define CAPTION "Exercise 2"
+#define ALIENCOLUMNS 4
+#define ALIENROWS 2
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -65,7 +67,7 @@ long myTime, timebase = 0, frame = 0;
 char s[32];
 float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
-Alien *alien1;
+Alien *aliens[8];
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -192,7 +194,9 @@ void renderScene()
 			objId++;
 		}
 	}
-	alien1->draw(shader);
+	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
+		aliens[i]->draw(shader);
+	}
 	//este já é feito no display
 	//glutSwapBuffers();
 
@@ -531,21 +535,18 @@ void setupThings() {
 	mesh[objId].mat.shininess = shininess;
 	mesh[objId].mat.texCount = texcount;
 	createCylinder(1.5f, 0.5f, 20);
-
-	// create geometry and VAO of the 
-	objId = 3;
-	memcpy(mesh[objId].mat.ambient, amb1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.diffuse, diff1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.specular, spec1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.emissive, emissive, 4 * sizeof(float));
-	mesh[objId].mat.shininess = shininess;
-	mesh[objId].mat.texCount = texcount;
-	createCone(1.5f, 0.5f, 20);
 	*/
+	
 	objId = 0;
 	objIdInc = 0;
-	alien1 = new Alien(objId, &objIdInc);
-	objId += objIdInc;
+	for (int i = 0; i < ALIENROWS; i++) {
+		for (int j = 0; j < ALIENCOLUMNS; j++){
+			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, -ALIENCOLUMNS / 2.0f + j, 0.0f, 5.0f - i, -ALIENCOLUMNS/2.0f + j, 1.0f); // x y z left width
+			objId += objIdInc;
+			
+			printf("x %f y %f z %f\n", -ALIENCOLUMNS / 2.0f + j, 0.0f, 5.0f - i);
+		}
+	}
 }
 
 void init(int argc, char* argv[])

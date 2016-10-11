@@ -1,7 +1,7 @@
 #include "Alien.h"
 
 
-Alien::Alien(int _objId, int* addedToId) : DynamicObject(_objId) {
+Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width) : DynamicObject(_objId, _x, _y, _z), left(_left), width(_width) {
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));
@@ -34,6 +34,7 @@ void Alien::draw(VSShaderLib _shader) {
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId].mat.shininess);
 	
+	//printf("%f",position.getX());
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	
 	// send matrices to OGL

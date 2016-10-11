@@ -25,7 +25,7 @@ public:
 	Vec3 position;
 	int addToId = 0;
 
-	GameObject(int _objId) : objectId(_objId) {}
+	GameObject(int _objId, float _x, float _y, float _z) : objectId(_objId) { position = Vec3(_x, _y, _z); }
 	virtual ~GameObject() {}
 	virtual void draw(VSShaderLib shader) = 0;
 	

@@ -14,8 +14,11 @@ private:
 	int texcount = 0;
 	int addToId = 3;
 
+	float left = 0;
+	float width = 1;
+
 public:
-	Alien(int _objId, int* addedToId);
+	Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width);
 	~Alien();
 		
 	void update(float delta);

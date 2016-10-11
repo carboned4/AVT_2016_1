@@ -5,7 +5,7 @@
 
 class DynamicObject : public GameObject {
 public:
-	DynamicObject(int _objId) : GameObject(_objId){}
+	DynamicObject(int _objId, float _x, float _y, float _z) : GameObject(_objId, _x, _y, _z){}
 	virtual ~DynamicObject() {}
 		
 	Vec3 speed;
