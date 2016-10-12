@@ -12,7 +12,7 @@
 //#include "basic_geometry.h"
 
 #include "Alien.h"
-
+#include "Spaceship.h"
 #define CAPTION "Exercise 2"
 #define ALIENCOLUMNS 4
 #define ALIENROWS 2
@@ -68,6 +68,7 @@ char s[32];
 float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
 Alien *aliens[8];
+Spaceship *spaceship;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -194,9 +195,14 @@ void renderScene()
 			objId++;
 		}
 	}
+
+	spaceship->draw(shader);
+
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		aliens[i]->draw(shader);
 	}
+	
+
 	//este já é feito no display
 	//glutSwapBuffers();
 
@@ -547,6 +553,9 @@ void setupThings() {
 			printf("x %f y %f z %f\n", -ALIENCOLUMNS / 2.0f + j, 0.0f, 5.0f - i);
 		}
 	}
+	
+	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,-5.0f);
+	objId += objIdInc;
 }
 
 void init(int argc, char* argv[])
