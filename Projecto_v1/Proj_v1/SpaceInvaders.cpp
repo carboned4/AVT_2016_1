@@ -55,6 +55,8 @@ float camX, camY, camZ;
 // Mouse/beyboard Tracking Variables
 int startX, startY, tracking = 0;
 bool keyState[256];
+bool keyLeft = false;
+bool keyRight = true;
 
 // Camera Spherical Coordinates
 float alpha = 39.0f, beta = 51.0f;
@@ -242,6 +244,10 @@ void switchFramerate() {
 	else if (TargetFramerate == 120) TargetFramerate = 30;
 }
 
+void update() {
+
+}
+
 ///////////////// USER INTERACTION
 
 void processMouseButtons(int button, int state, int xx, int yy)
@@ -365,6 +371,16 @@ void processUpKeys(unsigned char key, int xx, int yy)
 	keyState[key] = false;
 }
 
+void processSpecialKeys(int key, int xx, int yy) {
+	if (key == GLUT_KEY_LEFT) keyLeft = true;
+	if (key == GLUT_KEY_RIGHT) keyRight = true;
+}
+
+void processSpecialUpKeys(int key, int xx, int yy) {
+	if (key == GLUT_KEY_LEFT) keyLeft = false;
+	if (key == GLUT_KEY_RIGHT) keyRight = false;
+}
+
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 
 void cleanup()
@@ -429,8 +445,12 @@ void setupCallbacks()
 	glutReshapeFunc(reshape);
 	glutTimerFunc(0, refresh, 0);
 	glutTimerFunc(0,timer,0);
+	
 	glutKeyboardFunc(processKeys);
 	glutKeyboardUpFunc(processUpKeys);
+	glutSpecialFunc(processSpecialKeys);
+	glutSpecialUpFunc(processSpecialUpKeys);
+
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 	glutMouseWheelFunc(mouseWheel);
