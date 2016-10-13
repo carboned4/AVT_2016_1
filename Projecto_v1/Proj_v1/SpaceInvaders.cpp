@@ -61,7 +61,7 @@ float camX, camY, camZ;
 int startX, startY, tracking = 0;
 bool keyState[256];
 bool keyLeft = false;
-bool keyRight = true;
+bool keyRight = false;
 
 // Camera Spherical Coordinates
 float alpha = 39.0f, beta = 51.0f;
@@ -213,33 +213,7 @@ void renderScene()
 	//este já é feito no display
 	//glutSwapBuffers();
 
-	/*
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-	computeNormalMatrix3x3();
 	
-	
-
-	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-	get(MODEL);
-	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, I);
-	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
-	//rotate(-45.0f, 1.0f, 0.0f, 0.0f); 
-	translate(MODEL, -1.0f, 0.0f, 0.0f);
-
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-	computeNormalMatrix3x3();
-
-	//glUniformMatrix4fv(UniformId, 1, GL_TRUE, M);
-	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, (GLvoid*)0);
-	
-	glUseProgram(0);
-	glBindVertexArray(0);
-	popMatrix(MODEL);*/
-
 	checkOpenGLError("ERROR: Could not draw scene.");
 }
 
@@ -249,16 +223,29 @@ void switchFramerate() {
 	else if (TargetFramerate == 120) TargetFramerate = 30;
 }
 
-void update() {
-	int now = glutGet(GLUT_ELAPSED_TIME);
-	timeDelta = now - timePrevious;
-	timePrevious = now;
-	
+void passKeys() {
+	spaceship->updateKeys(keyLeft, keyRight);
+}
+
+void physics() {
 	spaceship->update(timeDelta);
 
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		aliens[i]->update(timeDelta);
 	}
+}
+
+void collisions() {
+
+}
+
+void update() {
+	int now = glutGet(GLUT_ELAPSED_TIME);
+timeDelta = now - timePrevious;
+	timePrevious = now;
+	passKeys();
+	physics();
+	collisions();
 }
 
 ///////////////// USER INTERACTION
@@ -417,6 +404,7 @@ void idle()
 
 void refresh(int value)
 {
+	update();
 	glutPostRedisplay();
 	glutTimerFunc(1000 / TargetFramerate, refresh, 0);
 
@@ -598,8 +586,6 @@ void init(int argc, char* argv[])
 	setupShaders();
 	setupThings();
 	setupOpenGL();
-	//createShaderProgram();
-	//createBufferObjects();
 	setupCallbacks();
 }
 

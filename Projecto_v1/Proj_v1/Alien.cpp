@@ -16,7 +16,7 @@ Alien::~Alien() {
 
 }
 
-void Alien::update(float delta) {
+void Alien::update(int delta) {
 
 }
 

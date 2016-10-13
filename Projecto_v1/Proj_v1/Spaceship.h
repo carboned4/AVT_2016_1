@@ -14,12 +14,18 @@ private:
 	int texcount = 0;
 	int addToId = 3;
 
+	bool leftPressed = false;
+	bool rightPressed = false;
+	Vec3 accelerationModulus;
+	Vec3 maxSpeed;
+
 public:
 	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z);
 	~Spaceship();
 
-	void update(float delta);
+	void update(int delta);
 	void draw(VSShaderLib shader);
+	void updateKeys(bool left, bool right);
 };
 
 

@@ -2,6 +2,10 @@
 
 
 Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z) : DynamicObject(_objId,_x,_y, _z) {
+	
+	speed = Vec3(0.0f, 0.0f, 0.0f);
+	accelerationModulus = Vec3(4.0f, 0, 0);
+	maxSpeed = Vec3(4.0f, 0.0f, 0.0f);
 
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
@@ -16,11 +20,35 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z) :
 }
 
 Spaceship::~Spaceship() {
-
+	
 }
 
-void Spaceship::update(float delta) {
+void Spaceship::update(int delta) {
+	float maxX = maxSpeed.getX();
+	if (rightPressed) {
+		speed = speed + accelerationModulus*(delta / 1000.0f);
+		if (speed.getX() > maxX) speed.set(maxX, 0.0f, 0.0f);
+	}
+	else if (leftPressed) {
+		speed = speed - accelerationModulus*(delta / 1000.0f);
+		if (speed.getX() < -maxX) speed.set(-maxX, 0.0f, 0.0f);
+	}
+	else {
+		float xspeed = speed.getX();
+		if (0.05f <= xspeed)
+			speed = speed - accelerationModulus*(delta / 1000.0f);
+		else if (xspeed <= -0.05f)
+			speed = speed + accelerationModulus*(delta / 1000.0f);
+		else/* if (-0.05f < xspeed < 0.05f)*/ {
+			speed.set(0.0f, 0.0f, 0.0f);
+		}
+	}
+	position = position + speed*(delta / 1000.0f);
+}
 
+void Spaceship::updateKeys(bool left, bool right) {
+	leftPressed = left;
+	rightPressed = right;
 }
 
 void Spaceship::draw(VSShaderLib _shader) {

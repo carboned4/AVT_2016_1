@@ -21,7 +21,7 @@ public:
 	Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width);
 	~Alien();
 		
-	void update(float delta);
+	void update(int delta);
 	void draw(VSShaderLib shader);
 };
 

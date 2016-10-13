@@ -25,8 +25,8 @@ public:
 	}
 	inline void set(float x, float y, float z) {
 		_x = x;
-		_y = x;
-		_z = x;
+		_y = y;
+		_z = z;
 	}
 	inline void operator=(const Vec3& vec) {
 		_x = vec._x;
