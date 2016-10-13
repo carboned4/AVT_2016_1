@@ -26,6 +26,11 @@ unsigned int FrameCount = 0;
 int TargetFramerate = 60;
 float ratio;
 
+int timeElapsed = 0;
+int timePrevious = 0;
+int timeDelta = 0;
+int timePause = 0;
+
 #define VERTEX_COORD_ATTRIB 0
 #define NORMAL_ATTRIB 1
 #define TEXTURE_COORD_ATTRIB 2
@@ -245,7 +250,15 @@ void switchFramerate() {
 }
 
 void update() {
+	int now = glutGet(GLUT_ELAPSED_TIME);
+	timeDelta = now - timePrevious;
+	timePrevious = now;
+	
+	spaceship->update(timeDelta);
 
+	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
+		aliens[i]->update(timeDelta);
+	}
 }
 
 ///////////////// USER INTERACTION
