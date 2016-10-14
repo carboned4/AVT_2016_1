@@ -15,7 +15,7 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z) :
 	mesh[objectId].mat.texCount = texcount;
 	//createQuad(1.5f,1.5f);
 
-	createCube();
+	createCube(objectId);
 	*addedToId = addToId;
 }
 
@@ -67,8 +67,10 @@ void Spaceship::draw(VSShaderLib _shader) {
 
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	//translate(MODEL, -1.0f, 0.0f, -5.0f);
+
+	pushMatrix(MODEL);
 	scale(MODEL, 1.5f, 1.0f, 1.0f);
-	
+	translate(MODEL, -0.5f, -0.5f, -0.5f);
 	
 	// send matrices to OGL
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
@@ -82,6 +84,7 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+	popMatrix(MODEL);
 	popMatrix(MODEL);
 }
 

@@ -20,14 +20,14 @@ struct MyMesh {
 		struct Material mat;
 	};
 
-void createCube();
-void createQuad(float size_x, float size_y);
-void createSphere(float radius, int divisions);
-void createTorus(float innerRadius, float outerRadius, int rings, int sides);
-void createCylinder(float height, float radius, int sides);
-void createCone(float height, float baseRadius, int sides);
-void createPawn();
-void computeVAO(int numP, float *p, float *pfloatoints, int sides, float smoothCos);
+void createCube(int objId);
+void createQuad(int objId,float size_x, float size_y);
+void createSphere(int objId,float radius, int divisions);
+void createTorus(int objId,float innerRadius, float outerRadius, int rings, int sides);
+void createCylinder(int objId,float height, float radius, int sides);
+void createCone(int objId,float height, float baseRadius, int sides);
+void createPawn(int objId);
+void computeVAO(int objId,int numP, float *p, float *pfloatoints, int sides, float smoothCos);
 void create (float *p, int numP, int sides, int closed, float smoothCos);
 int revSmoothNormal2(float *p, float *nx, float *ny, float smoothCos, int beginEnd);
 float *circularProfile(float minAngle, float maxAngle, float radius, int divisions, float transX= 0.0f, float transY = 0.0f);

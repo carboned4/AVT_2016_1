@@ -8,7 +8,7 @@ Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _le
 	memcpy(mesh[objectId].mat.emissive, emissive, 4 * sizeof(float));
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
-	createCone(1.5f, 0.5f, 20);
+	createCone(objectId, 1.5f, 0.5f, 20);
 	*addedToId = addToId;
 }
 

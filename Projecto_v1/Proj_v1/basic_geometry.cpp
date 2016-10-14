@@ -25,11 +25,11 @@ Basic Revolution Geometry
 #include "cube.h"
 
 extern struct MyMesh mesh[];
-extern int objId;
+//extern int objId;
 
 GLuint VboId[2];
 
-void createQuad(float size_x, float size_y) {
+void createQuad(int objId, float size_x, float size_y) {
 	
 	int i;
 	float vert[16];
@@ -76,7 +76,7 @@ void createQuad(float size_x, float size_y) {
 	mesh[objId].type = GL_TRIANGLES;
 }
 
-void createCube() {
+void createCube(int objId) {
 
 	mesh[objId].numIndexes = faceCount *3;
 
@@ -115,22 +115,22 @@ void createCube() {
 }
 
 
-void createSphere(float radius, int divisions) {
+void createSphere(int objId, float radius, int divisions) {
 
 	float *p = circularProfile(-3.14159f/2.0f, 3.14159f/2.0f, radius, divisions);
-	computeVAO(divisions+1, p+2, p, divisions*2, 0.0f);
+	computeVAO(objId, divisions+1, p+2, p, divisions*2, 0.0f);
 }
 
 
-void createTorus(float innerRadius, float outerRadius, int rings, int sides) {
+void createTorus(int objId, float innerRadius, float outerRadius, int rings, int sides) {
 
 	float tubeRadius = (outerRadius - innerRadius) * 0.5f;
 	float *p = circularProfile(-3.14159f, 3.14159f, tubeRadius, sides, innerRadius + tubeRadius);
-	computeVAO(sides+1, p+2, p, rings, 0.0f);
+	computeVAO(objId, sides+1, p+2, p, rings, 0.0f);
 }
 
 
-void createCylinder(float height, float radius, int sides) {
+void createCylinder(int objId, float height, float radius, int sides) {
 
 	float p[] = {
 			-radius,	-height*0.5f, 
@@ -141,10 +141,10 @@ void createCylinder(float height, float radius, int sides) {
 			-radius,	 height*0.5f
 	};
 
-	computeVAO(4, p+2, p, sides, 0.0f);
+	computeVAO(objId, 4, p+2, p, sides, 0.0f);
 }
 
-void createCone(float height, float baseRadius, int sides) {
+void createCone(int objId, float height, float baseRadius, int sides) {
 
 	float v[2];
 	v[0] = -baseRadius;
@@ -179,11 +179,11 @@ void createCone(float height, float baseRadius, int sides) {
 	//		-baseRadius,	height*2.0f,
 	//	};
 
-	computeVAO((p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f);
+	computeVAO(objId, (p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f);
 }
 
 
-void createPawn() {
+void createPawn(int objId) {
 
 		float p[] = {0.0f, 0.0f, 
 					  0.98f, 0.0f, 
@@ -270,10 +270,10 @@ void createPawn() {
 											(points[(numPoints-2)*2 + 1] - points[(numPoints-3)*2 + 1]);
 	}
 
-	computeVAO(numP, p, points, sides, smoothCos);
+	computeVAO(objId, numP, p, points, sides, smoothCos);
 }
 
-void computeVAO(int numP, float *p, float *points, int sides, float smoothCos) {
+void computeVAO(int objId, int numP, float *p, float *points, int sides, float smoothCos) {
 	// Compute and store vertices
 
 	int numSides = sides;
