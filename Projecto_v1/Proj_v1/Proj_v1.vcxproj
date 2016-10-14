@@ -152,9 +152,12 @@
     <ClCompile Include="AVTmathLib.cpp" />
     <ClCompile Include="basic_geometry.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
+    <ClCompile Include="FixedPerspCamera.cpp" />
+    <ClCompile Include="FollowPerspCamera.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="StaticObject.cpp" />
+    <ClCompile Include="TopOrthoCamera.cpp" />
     <ClCompile Include="vsMathLib.cpp" />
     <ClCompile Include="vsShaderLib.cpp" />
   </ItemGroup>
@@ -162,11 +165,15 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="AVTmathLib.h" />
     <ClInclude Include="basic_geometry.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="cube.h" />
+    <ClInclude Include="FixedPerspCamera.h" />
+    <ClInclude Include="FollowPerspCamera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="Spaceship.h" />
     <ClInclude Include="StaticObject.h" />
+    <ClInclude Include="TopOrthoCamera.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="VertexAttrDef.h" />
     <ClInclude Include="vsMathLib.h" />
