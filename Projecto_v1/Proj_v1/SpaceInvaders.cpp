@@ -13,6 +13,12 @@
 
 #include "Alien.h"
 #include "Spaceship.h"
+
+#include "Camera.h"
+#include "TopOrthoCamera.h"
+#include "FixedPerspCamera.h"
+
+
 #define CAPTION "Exercise 2"
 #define ALIENCOLUMNS 4
 #define ALIENROWS 2
@@ -24,7 +30,7 @@ int WinX = 640, WinY = 480;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
 int TargetFramerate = 60;
-float ratio;
+float ratio = (WinX*1.0f) / WinY;
 
 int timeElapsed = 0;
 int timePrevious = 0;
@@ -54,7 +60,10 @@ extern float mNormal3x3[9];
 
 bool projectionIsPerspective = true;
 
-// Camera Position
+// Camera Position+
+Camera *currentCamera;
+FixedPerspCamera *fixedCam;
+TopOrthoCamera *orthoCam;
 float camX, camY, camZ;
 
 // Mouse/beyboard Tracking Variables
@@ -64,7 +73,7 @@ bool keyLeft = false;
 bool keyRight = false;
 
 // Camera Spherical Coordinates
-float alpha = 39.0f, beta = 51.0f;
+float alpha = 0.0f, beta = 45.0f;
 float r = 10.0f;
 float camPos[3];
 float objPos[3];
@@ -153,12 +162,15 @@ void renderScene()
 
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
-
-	lookAt(camPos[0] + camX, camPos[1] + camY, camPos[2] + camZ, camPos[0], camPos[1], camPos[2], 0, 1, 0);
 	loadIdentity(PROJECTION);
+
+	/*lookAt(camPos[0] + camX, camPos[1] + camY, camPos[2] + camZ, camPos[0], camPos[1], camPos[2], 0, 1, 0);
 	if (projectionIsPerspective)
 		perspective(70.0f, ratio, 0.1f, 1000.0f);
 	else ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f);
+	*/
+	currentCamera->doProjection();
+	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
 	
 	//send the light position in eye coordinates
@@ -224,6 +236,15 @@ void switchFramerate() {
 }
 
 void passKeys() {
+	if (keyState['1']) {
+		currentCamera = orthoCam;
+	}
+	else if (keyState['2']) {
+		currentCamera = fixedCam;
+	}
+	else if (keyState['3']) {
+		currentCamera = fixedCam;
+	}
 	spaceship->updateKeys(keyLeft, keyRight);
 }
 
@@ -241,7 +262,7 @@ void collisions() {
 
 void update() {
 	int now = glutGet(GLUT_ELAPSED_TIME);
-timeDelta = now - timePrevious;
+	timeDelta = now - timePrevious;
 	timePrevious = now;
 	passKeys();
 	physics();
@@ -335,6 +356,7 @@ void mouseWheel(int wheel, int direction, int x, int y) {
 
 void processKeys(unsigned char key, int xx, int yy)
 {
+	keyState[key] = true;
 	switch (key) {
 
 	case 27:
@@ -417,10 +439,8 @@ void reshape(int w, int h)
 	glViewport(0, 0, WinX, WinY);
 	ratio = (WinX * 1.0f) / WinY;
 	//printf("a");
-	loadIdentity(PROJECTION);
-	if (projectionIsPerspective)
-		perspective(70.0f, ratio, 0.1f, 1000.0f);
-	else ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f);
+	orthoCam->setRatio(ratio);
+	fixedCam->setRatio(ratio);
 
 }
 
@@ -563,19 +583,26 @@ void setupThings() {
 	mesh[objId].mat.texCount = texcount;
 	createCylinder(1.5f, 0.5f, 20);
 	*/
+
+	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
+	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
+	//FixedPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z,  _tx,  _ty,  _tz);
+	fixedCam = new FixedPerspCamera(90.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f, 0.0f, 0.0f, 5.0f);
+
+	currentCamera = orthoCam;
 	
 	objId = 0;
 	objIdInc = 0;
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, -ALIENCOLUMNS / 2.0f + j, 0.0f, 5.0f - i, -ALIENCOLUMNS/2.0f + j, 1.0f); // x y z left width
+			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS / 2.0f - j, 0.0f, 10.0f - i, -ALIENCOLUMNS/2.0f + j, 1.0f); // x y z left width
 			objId += objIdInc;
 			
-			printf("x %f y %f z %f\n", -ALIENCOLUMNS / 2.0f + j, 0.0f, 5.0f - i);
+			printf("x %f y %f z %f\n", ALIENCOLUMNS / 2.0f - j, 0.0f, 5.0f - i);
 		}
 	}
 	
-	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,-5.0f);
+	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f);
 	objId += objIdInc;
 }
 

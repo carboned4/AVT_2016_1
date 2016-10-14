@@ -6,24 +6,21 @@
 class FixedPerspCamera : public Camera {
 private:
 	Vec3 position;
-	float left;
-	float right;
-	float up;
-	float down;
-	float near;
-	float far;
+	Vec3 target;
+	float fov;
+	float ratio;
+	float nearPlane;
+	float farPlane;
 
 public:
 	FixedPerspCamera(
-		float _left, float _right, float _down, float _up, float _near, float _far,
-		float _x, float _y, float _z) : left(_left), right(_right), up(_up), down(_down),
-		near(_near), far(_far) {
-		position = Vec3(_x, _y, _z);
-	}
-	virtual ~FixedPerspCamera() {}
-	void doPerspective();
+		float _fov, float _ratio, float _near, float _far,
+		float _x, float _y, float _z,
+		float _tx, float _ty, float _tz);
+	virtual ~FixedPerspCamera();
+	void setRatio(float _ratio);
+	void doProjection();
 	void doView();
-	//ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f)
 };
 
 

@@ -158,7 +158,6 @@
     <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="TopOrthoCamera.cpp" />
-    <ClCompile Include="vsMathLib.cpp" />
     <ClCompile Include="vsShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +175,6 @@
     <ClInclude Include="TopOrthoCamera.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="VertexAttrDef.h" />
-    <ClInclude Include="vsMathLib.h" />
     <ClInclude Include="vsShaderLib.h" />
   </ItemGroup>
   <ItemGroup>

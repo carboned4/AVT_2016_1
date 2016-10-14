@@ -25,11 +25,11 @@ Spaceship::~Spaceship() {
 
 void Spaceship::update(int delta) {
 	float maxX = maxSpeed.getX();
-	if (rightPressed) {
+	if (leftPressed) {
 		speed = speed + accelerationModulus*(delta / 1000.0f);
 		if (speed.getX() > maxX) speed.set(maxX, 0.0f, 0.0f);
 	}
-	else if (leftPressed) {
+	else if (rightPressed) {
 		speed = speed - accelerationModulus*(delta / 1000.0f);
 		if (speed.getX() < -maxX) speed.set(-maxX, 0.0f, 0.0f);
 	}

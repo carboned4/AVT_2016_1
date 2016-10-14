@@ -21,9 +21,6 @@
     <ClCompile Include="basic_geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vsMathLib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vsShaderLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VertexAttrDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vsMathLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vsShaderLib.h">
