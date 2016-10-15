@@ -24,7 +24,6 @@ Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _le
 	createCone(objectId+1, 1.5f, 0.5f, 12);
 	createCone(objectId+2, 1.5f, 0.5f, 12);
 
-
 	*addedToId = addToId;
 }
 
@@ -53,14 +52,14 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform1f(loc, mesh[objectId].mat.shininess);
 	// send matrices to OGL
 	pushMatrix(MODEL);
-		scale(MODEL, 1.0f, 0.5f, 0.5f);
-	popMatrix(MODEL);
+	scale(MODEL, 1.5f, 0.5f, 1.0f);	
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-// Render mesh
+	popMatrix(MODEL);
+	// Render mesh
 	glBindVertexArray(mesh[objectId].vao);
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -77,14 +76,15 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform1f(loc, mesh[objectId+1].mat.shininess);
 	// send matrices to OGL
 	pushMatrix(MODEL);
-		translate(MODEL, 0.5f, 1.0f, 0.0f);
-		scale(MODEL, 0.25f, 0.25f, 0.25f);
-	popMatrix(MODEL);
+		translate(MODEL, 0.5f, 0.0f, 0.0f);
+		rotate(MODEL, 135.0f, -1.0f, 0.0f, -1.0f);
+		scale(MODEL, 0.5f, 0.5f, 0.5f);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+	popMatrix(MODEL);
 	// Render mesh
 	glBindVertexArray(mesh[objectId+1].vao);
 	glDrawElements(mesh[objectId+1].type, mesh[objectId+1].numIndexes, GL_UNSIGNED_INT, 0);
@@ -102,14 +102,16 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform1f(loc, mesh[objectId+2].mat.shininess);
 	// send matrices to OGL
 	pushMatrix(MODEL);
-		translate(MODEL, -0.5f, 4.0f, 0.0f); 
-		scale(MODEL, 0.25f, 0.25f, 0.25f);	
-	popMatrix(MODEL);
+		translate(MODEL, -0.5f, 0.0f, 0.0f);
+		rotate(MODEL, -135.0f, 1.0f, 0.0f, -1.0f);
+		scale(MODEL, 0.5f, 0.5f, 0.5f);	
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+	popMatrix(MODEL);
+
 	// Render mesh
 	glBindVertexArray(mesh[objectId+2].vao);
 	glDrawElements(mesh[objectId+2].type, mesh[objectId+2].numIndexes, GL_UNSIGNED_INT, 0);

@@ -20,8 +20,10 @@
 
 
 #define CAPTION "Exercise 2"
-#define ALIENCOLUMNS 4
+#define ALIENCOLUMNS 6
 #define ALIENROWS 2
+#define ALIENCOLUMNGAP 2.0f
+#define ALIENWIDTH 2.0f
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -83,7 +85,7 @@ long myTime, timebase = 0, frame = 0;
 char s[32];
 float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
-Alien *aliens[8];
+Alien *aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -480,7 +482,7 @@ void setupCallbacks()
 void setupOpenGL() {
 	std::cerr << "CONTEXT: OpenGL v" << glGetString(GL_VERSION) << std::endl;
 	glEnable(GL_MULTISAMPLE);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
@@ -595,10 +597,10 @@ void setupThings() {
 	objIdInc = 0;
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS / 2.0f - j, 0.0f, 10.0f - i, -ALIENCOLUMNS/2.0f + j, 1.0f); // x y z left width
+			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENCOLUMNGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH); // x y z left width
 			objId += objIdInc;
 			
-			printf("x %f y %f z %f\n", ALIENCOLUMNS / 2.0f - j, 0.0f, 5.0f - i);
+			
 		}
 	}
 	
