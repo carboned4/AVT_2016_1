@@ -20,11 +20,12 @@
 
 
 #define CAPTION "Exercise 2"
-#define ALIENCOLUMNS 5
+#define ALIENCOLUMNS 6
 #define ALIENROWS 2
 #define ALIENCOLUMNGAP 2.0f
 #define ALIENROWGAP 1.5f
 #define ALIENWIDTH 2.0f
+#define ALIENROWSHIFT 0.5f
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -598,7 +599,7 @@ void setupThings() {
 	objIdInc = 0;
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWGAP); // x y z left width rowgap
+			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT); // x y z left width rowgap
 			objId += objIdInc;
 			
 		}

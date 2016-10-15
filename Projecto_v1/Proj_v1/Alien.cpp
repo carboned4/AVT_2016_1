@@ -1,7 +1,9 @@
 #include "Alien.h"
 
 
-Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width) : DynamicObject(_objId, _x, _y, _z), left(_left), width(_width) {
+Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width, float _rowheight) : DynamicObject(_objId, _x, _y, _z), left(_left), width(_width), rowHeight(_rowheight), prevRow(_z){
+	speed = Vec3(-speedModulus, 0.0f, 0.0f);
+	
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));
@@ -32,7 +34,35 @@ Alien::~Alien() {
 }
 
 void Alien::update(int delta) {
-
+	if (!changeRow) {
+		position = position + speed*(delta / 1000.0f);
+		float xpos = position.getX();
+		if (xpos > left) {
+			position.set(left, position.getY(), position.getZ());
+			changeRow = true;
+			speed = Vec3(0.0f, 0.0f, -speedModulus);
+		}
+		if (xpos < left - width) {
+			position.set(left-width, position.getY(), position.getZ());
+			changeRow = true;
+			speed = Vec3(0.0f, 0.0f, -speedModulus);
+		}
+	}
+	else if (changeRow) {
+		position = position + speed*(delta / 1000.0f);
+		float zpos = position.getZ();
+		if (zpos < prevRow-rowHeight) {
+			position.set(position.getX(), position.getY(), prevRow - rowHeight);
+			prevRow -= rowHeight;
+			changeRow = false;
+			if (position.getX() == left) {
+				speed = Vec3(-speedModulus, 0.0f, 0.0f);
+			}
+			if (position.getX() == left - width) {
+				speed = Vec3(+speedModulus, 0.0f, 0.0f);
+			}
+		}
+	}
 }
 
 void Alien::draw(VSShaderLib _shader) {

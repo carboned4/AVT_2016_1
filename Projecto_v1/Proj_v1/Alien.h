@@ -16,9 +16,13 @@ private:
 
 	float left = 0;
 	float width = 1;
+	float prevRow;
+	float rowHeight;
+	bool changeRow = false;
+	float speedModulus = 0.5f;
 
 public:
-	Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width);
+	Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width, float _rowheight);
 	~Alien();
 		
 	void update(int delta);
