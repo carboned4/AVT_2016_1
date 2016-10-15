@@ -20,9 +20,10 @@
 
 
 #define CAPTION "Exercise 2"
-#define ALIENCOLUMNS 6
+#define ALIENCOLUMNS 5
 #define ALIENROWS 2
 #define ALIENCOLUMNGAP 2.0f
+#define ALIENROWGAP 1.5f
 #define ALIENWIDTH 2.0f
 
 std::string shadername("phong");
@@ -597,9 +598,8 @@ void setupThings() {
 	objIdInc = 0;
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENCOLUMNGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH); // x y z left width
+			aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWGAP); // x y z left width rowgap
 			objId += objIdInc;
-			
 			
 		}
 	}
