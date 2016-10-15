@@ -605,7 +605,7 @@ void setupThings() {
 		}
 	}
 	
-	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f);
+	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-6.0f,6.0f);
 	objId += objIdInc;
 }
 

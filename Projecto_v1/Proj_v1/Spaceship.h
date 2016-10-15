@@ -11,6 +11,8 @@ private:
 	float spec[4] = { 0.45f, 0.0f, 0.0f, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 100.0f;
+	float limitRight;
+	float limitLeft;
 	int texcount = 0;
 	int addToId = 3;
 
@@ -18,9 +20,10 @@ private:
 	bool rightPressed = false;
 	Vec3 accelerationModulus;
 	Vec3 maxSpeed;
+	
 
 public:
-	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z);
+	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft, float _limitRight);
 	~Spaceship();
 
 	void update(int delta);
