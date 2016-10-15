@@ -243,12 +243,13 @@ void passKeys() {
 	if (keyState['1']) {
 		currentCamera = orthoCam;
 	}
-	else if (keyState['2']) {
+	if (keyState['2']) {
 		currentCamera = fixedCam;
 	}
-	else if (keyState['3']) {
+	if (keyState['3']) {
 		currentCamera = fixedCam;
 	}
+	
 	spaceship->updateKeys(keyLeft, keyRight);
 }
 

@@ -27,12 +27,6 @@
     <ClCompile Include="SpaceInvaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DynamicObject.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticObject.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="Alien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
