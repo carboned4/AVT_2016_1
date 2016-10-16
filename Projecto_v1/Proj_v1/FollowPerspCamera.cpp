@@ -15,6 +15,10 @@ void FollowPerspCamera::setRatio(float _ratio) {
 	ratio = _ratio;
 }
 
+void FollowPerspCamera::updatePosition(float _x, float _y, float _z) {
+	center.set(_x, _y+1.0f, _z);
+}
+
 void FollowPerspCamera::processMouseButtons(int button, int state, int xx, int yy) {
 	// start tracking the mouse
 	if (state == GLUT_DOWN) {
@@ -38,6 +42,7 @@ void FollowPerspCamera::processMouseButtons(int button, int state, int xx, int y
 		}
 		mouseTrackingType = 0;
 	}
+	
 }
 
 void FollowPerspCamera::processMouseMotion(int xx, int yy){
@@ -64,12 +69,26 @@ void FollowPerspCamera::processMouseMotion(int xx, int yy){
 		if (rAux < 0.1f)
 			rAux = 0.1f;
 	}
+	cameraX = cameraRadius* sin(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
+	cameraZ = cameraRadius* cos(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
+	cameraY = cameraRadius*   						     sin(cameraBeta * 3.14f / 180.0f);
+
 }
 
 void FollowPerspCamera::mouseWheel(int wheel, int direction, int x, int y) {
-	cameraRadius+= direction * 0.1f;
+	cameraRadius -= direction * 0.1f;
 	if (cameraRadius< 0.5f)
 		cameraRadius= 0.1f;
+	cameraX = cameraRadius* sin(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
+	cameraZ = cameraRadius* cos(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
+	cameraY = cameraRadius*   						     sin(cameraBeta * 3.14f / 180.0f);
+
+}
+
+void FollowPerspCamera::setCamXYZ(float _x, float _y, float _z) {
+	cameraX = _x;
+	cameraY = _y;
+	cameraZ = _z;
 }
 
 void FollowPerspCamera::doProjection() {
@@ -77,9 +96,7 @@ void FollowPerspCamera::doProjection() {
 }
 
 void FollowPerspCamera::doView() {
-	float camX = cameraRadius* sin(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
-	float camZ = cameraRadius* cos(cameraAlpha * 3.14f / 180.0f) * cos(cameraBeta * 3.14f / 180.0f);
-	float camY = cameraRadius*   						     sin(cameraBeta * 3.14f / 180.0f);
-	lookAt(center.getX()+camX, center.getY()+camY, center.getZ()+camZ, center.getX(), center.getY(), center.getZ(), 0, 1, 0);
+	//printf("%f %f %f   %f %f %f\n", cameraX, cameraY, cameraZ, center.getX() + cameraX, center.getY() + cameraY, center.getZ() + cameraZ);
+	lookAt(center.getX()+cameraX, center.getY()+cameraY, center.getZ()+cameraZ, center.getX(), center.getY(), center.getZ(), 0, 1, 0);
 
 }

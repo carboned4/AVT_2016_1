@@ -17,6 +17,7 @@
 #include "Camera.h"
 #include "TopOrthoCamera.h"
 #include "FixedPerspCamera.h"
+#include "FollowPerspCamera.h"
 
 
 #define CAPTION "Exercise 2"
@@ -68,6 +69,7 @@ bool projectionIsPerspective = true;
 Camera *currentCamera;
 FixedPerspCamera *fixedCam;
 TopOrthoCamera *orthoCam;
+FollowPerspCamera *followCam;
 float camX, camY, camZ;
 
 // Mouse/beyboard Tracking Variables
@@ -77,8 +79,8 @@ bool keyLeft = false;
 bool keyRight = false;
 
 // Camera Spherical Coordinates
-float alpha = 0.0f, beta = 45.0f;
-float r = 10.0f;
+float alpha = 180.0f, beta = 10.0f;
+float r = 2.6f;
 float camPos[3];
 float objPos[3];
 
@@ -247,7 +249,7 @@ void passKeys() {
 		currentCamera = fixedCam;
 	}
 	if (keyState['3']) {
-		currentCamera = fixedCam;
+		currentCamera = followCam;
 	}
 	
 	spaceship->updateKeys(keyLeft, keyRight);
@@ -271,11 +273,29 @@ void update() {
 	timePrevious = now;
 	passKeys();
 	physics();
+	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
+	followCam->setCamXYZ(camX, camY, camZ);
 	collisions();
 }
 
 ///////////////// USER INTERACTION
+/* //ESTAS TRES NAO FUNCIONAM BEM NAO SEI PORQUE
+void processMouseButtons(int button, int state, int xx, int yy) {
+	followCam->processMouseButtons(button, state, xx, yy);
+	glutPostRedisplay();
+}
 
+void processMouseMotion(int xx, int yy) {
+	followCam->processMouseMotion(xx, yy);
+	glutPostRedisplay();
+	glutPostRedisplay();
+}
+
+void mouseWheel(int wheel, int direction, int x, int y) {
+	followCam->mouseWheel(wheel, direction, x, y);
+	glutPostRedisplay();
+}
+*/
 void processMouseButtons(int button, int state, int xx, int yy)
 {
 	// start tracking the mouse
@@ -287,7 +307,6 @@ void processMouseButtons(int button, int state, int xx, int yy)
 		else if (button == GLUT_RIGHT_BUTTON)
 			tracking = 2;
 	}
-
 	//stop tracking the mouse
 	else if (state == GLUT_UP) {
 		if (tracking == 1) {
@@ -305,22 +324,15 @@ void processMouseButtons(int button, int state, int xx, int yy)
 
 void processMouseMotion(int xx, int yy)
 {
-	//printf("Mouse");
-
 	int deltaX, deltaY;
 	float alphaAux, betaAux;
 	float rAux;
-
 	deltaX = -xx + startX;
 	deltaY = yy - startY;
-
 	// left mouse button: move camera
 	if (tracking == 1) {
-
-
 		alphaAux = alpha + deltaX;
 		betaAux = beta + deltaY;
-
 		if (betaAux > 85.0f)
 			betaAux = 85.0f;
 		else if (betaAux < -85.0f)
@@ -329,32 +341,27 @@ void processMouseMotion(int xx, int yy)
 	}
 	// right mouse button: zoom
 	else if (tracking == 2) {
-
 		alphaAux = alpha;
 		betaAux = beta;
 		rAux = r + (deltaY * 0.01f);
 		if (rAux < 0.1f)
 			rAux = 0.1f;
 	}
-
 	camX = rAux * sin(alphaAux * 3.14f / 180.0f) * cos(betaAux * 3.14f / 180.0f);
 	camZ = rAux * cos(alphaAux * 3.14f / 180.0f) * cos(betaAux * 3.14f / 180.0f);
 	camY = rAux *   						       sin(betaAux * 3.14f / 180.0f);
-
 	//  uncomment this if not using an idle func
 		glutPostRedisplay();
 }
 
-void mouseWheel(int wheel, int direction, int x, int y) {
 
+void mouseWheel(int wheel, int direction, int x, int y) {
 	r += direction * 0.1f;
 	if (r < 0.1f)
 		r = 0.1f;
-
 	camX = r * sin(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
-
 	//  uncomment this if not using an idle func
 		glutPostRedisplay();
 }
@@ -593,6 +600,8 @@ void setupThings() {
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
 	//FixedPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z,  _tx,  _ty,  _tz);
 	fixedCam = new FixedPerspCamera(90.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f, 0.0f, 0.0f, 5.0f);
+	//FollowPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z);
+	followCam = new FollowPerspCamera(70.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f);
 
 	currentCamera = orthoCam;
 	
