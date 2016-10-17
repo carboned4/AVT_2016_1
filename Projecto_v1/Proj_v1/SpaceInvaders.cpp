@@ -453,6 +453,7 @@ void reshape(int w, int h)
 	//printf("a");
 	orthoCam->setRatio(ratio);
 	fixedCam->setRatio(ratio);
+	followCam->setRatio(ratio);
 
 }
 
@@ -597,7 +598,7 @@ void setupThings() {
 	*/
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
-	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
+	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 1000.0f, 0.1f, 0.0f, 10.0f, 5.0f);
 	//FixedPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z,  _tx,  _ty,  _tz);
 	fixedCam = new FixedPerspCamera(90.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f, 0.0f, 0.0f, 5.0f);
 	//FollowPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z);
