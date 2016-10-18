@@ -23,12 +23,12 @@
 
 
 #define CAPTION "Exercise 2"
-#define AlienCOLUMNS 6
-#define AlienROWS 2
-#define AlienCOLUMNGAP 2.0f
-#define AlienROWGAP 1.5f
-#define AlienWIDTH 2.0f
-#define AlienROWSHIFT 0.5f
+#define ALIENCOLUMNS 6
+#define ALIENROWS 2
+#define ALIENCOLUMNGAP 2.0f
+#define ALIENROWGAP 1.5f
+#define ALIENWIDTH 2.0f
+#define ALIENROWSHIFT 0.5f
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -91,7 +91,7 @@ long myTime, timebase = 0, frame = 0;
 char s[32];
 float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
-Alien *Aliens[AlienCOLUMNS * AlienROWS];
+Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
 Spaceship_Shot *shot;
 
@@ -227,7 +227,7 @@ void renderScene()
 	spaceship->draw(shader);
 	shot->draw(shader);
 
-	for (int i = 0; i < AlienCOLUMNS*AlienROWS; i++) {
+	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		Aliens[i]->draw(shader);
 	}
 	
@@ -262,7 +262,7 @@ void passKeys() {
 void physics() {
 	spaceship->update(timeDelta);
 
-	for (int i = 0; i < AlienCOLUMNS*AlienROWS; i++) {
+	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		Aliens[i]->update(timeDelta);
 	}
 }
@@ -612,9 +612,9 @@ void setupThings() {
 	
 	objId = 0;
 	objIdInc = 0;
-	for (int i = 0; i < AlienROWS; i++) {
-		for (int j = 0; j < AlienCOLUMNS; j++){
-			Aliens[i*AlienCOLUMNS + j] = new Alien(objId, &objIdInc, AlienCOLUMNS - j*AlienCOLUMNGAP, 0.0f, 10.0f - i*AlienROWGAP, AlienCOLUMNS - j*AlienCOLUMNGAP, AlienWIDTH, AlienROWSHIFT); // x y z left width rowgap
+	for (int i = 0; i < ALIENROWS; i++) {
+		for (int j = 0; j < ALIENCOLUMNS; j++){
+			Aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT); // x y z left width rowgap
 			objId += objIdInc;
 			
 		}
