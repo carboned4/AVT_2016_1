@@ -275,7 +275,7 @@ void update() {
 	int now = glutGet(GLUT_ELAPSED_TIME);
 	timeDelta = now - timePrevious;
 	timePrevious = now;
-	passKeys();
+	//passKeys();
 	physics();
 	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
 	followCam->setCamXYZ(camX, camY, camZ);
@@ -373,6 +373,7 @@ void mouseWheel(int wheel, int direction, int x, int y) {
 void processKeys(unsigned char key, int xx, int yy)
 {
 	keyState[key] = true;
+
 	switch (key) {
 
 	case 27:
@@ -402,21 +403,25 @@ void processKeys(unsigned char key, int xx, int yy)
 
 	case 'p': projectionIsPerspective = !projectionIsPerspective; break;
 	}
+	passKeys();
 }
 
 void processUpKeys(unsigned char key, int xx, int yy)
 {
 	keyState[key] = false;
+	passKeys();
 }
 
 void processSpecialKeys(int key, int xx, int yy) {
 	if (key == GLUT_KEY_LEFT) keyLeft = true;
 	if (key == GLUT_KEY_RIGHT) keyRight = true;
+	passKeys();
 }
 
 void processSpecialUpKeys(int key, int xx, int yy) {
 	if (key == GLUT_KEY_LEFT) keyLeft = false;
 	if (key == GLUT_KEY_RIGHT) keyRight = false;
+	passKeys();
 }
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
