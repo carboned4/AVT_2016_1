@@ -619,7 +619,7 @@ void setupThings() {
 			
 		}
 	}
-	shot = new Spaceship_Shot(objId, &objIdInc, 1.0f, 1.0f, 1.0f);
+	shot = new Spaceship_Shot(objId, &objIdInc, 4.0f, 6.0f, 2.0f);
 	objId += objIdInc;
 	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
 	objId += objIdInc;
