@@ -258,7 +258,7 @@ void passKeys() {
 		currentCamera = followCam;
 	}
 	if (keyState['b']) {
-		shotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 2.0f));
+		shotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
 		printf("press b \n");
 	}
 	
