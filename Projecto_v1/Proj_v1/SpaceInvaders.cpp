@@ -93,7 +93,7 @@ float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
-Spaceship_Shot *shot;
+std::vector <Spaceship_Shot*> shotVector;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -225,12 +225,14 @@ void renderScene()
 	}
 
 	spaceship->draw(shader);
-	shot->draw(shader);
 
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		Aliens[i]->draw(shader);
 	}
 	
+	for (int i = 0; i < shotVector.size(); i++) {
+		shotVector[i]->draw(shader);
+	}
 
 	//este já é feito no display
 	//glutSwapBuffers();
@@ -255,6 +257,10 @@ void passKeys() {
 	if (keyState['3']) {
 		currentCamera = followCam;
 	}
+	if (keyState['b']) {
+		shotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 2.0f));
+		printf("press b \n");
+	}
 	
 	spaceship->updateKeys(keyLeft, keyRight);
 }
@@ -265,6 +271,11 @@ void physics() {
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		Aliens[i]->update(timeDelta);
 	}
+
+	for (int i = 0; i < shotVector.size(); i++) {
+		shotVector[i]->update(timeDelta);
+	}
+
 }
 
 void collisions() {
@@ -624,7 +635,6 @@ void setupThings() {
 			
 		}
 	}
-	shot = new Spaceship_Shot(objId, &objIdInc, 4.0f, 6.0f, 2.0f);
 	objId += objIdInc;
 	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
 	objId += objIdInc;

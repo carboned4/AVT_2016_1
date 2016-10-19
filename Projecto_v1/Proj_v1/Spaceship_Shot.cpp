@@ -20,7 +20,8 @@ Spaceship_Shot::~Spaceship_Shot() {
 }
 
 void Spaceship_Shot::update(int delta) {
-	
+	speed.set(0.0f, 0.0f, 1.0f);
+	position = position + speed*(delta / 1000.0f);
 }
 
 void Spaceship_Shot::draw(VSShaderLib _shader) {
