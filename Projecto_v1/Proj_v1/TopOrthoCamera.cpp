@@ -14,15 +14,16 @@ void TopOrthoCamera::setRatio(float _ratio) {
 	// ratio = left-right / up-down
 	// we should keep up-down fixed
 	// so we change left-right = ratio / up-down
-	float currentRatio = (left - right) / (up - down);
+	float currentRatio = (right-left) / (up - down);
 	left = left*_ratio / currentRatio;
 	right = right*_ratio / currentRatio;
 }
 
 void TopOrthoCamera::doProjection() {
-	ortho(left, right, down, up, nearPlane, farPlane);
+	ortho((float)left, (float)right, (float)down, (float)up, (float)nearPlane, (float)farPlane);
+	
 }
 
 void TopOrthoCamera::doView() {
-	lookAt(position.getX(), -position.getY(), position.getZ(), position.getX(), position.getY()-1.0f, position.getZ(),0,0,1);
+	lookAt(position.getX(), position.getY(), position.getZ(), position.getX(), position.getY()-1.0f, position.getZ(),0,0,1);
 }
