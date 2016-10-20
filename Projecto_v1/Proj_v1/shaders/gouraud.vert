@@ -48,7 +48,7 @@ void main () {
 		spec = mat.specular * pow(intSpec, mat.shininess);
 	}
 	
-	colorG = max((intensity * mat.diffuse + spec) + mat.ambient, 0.0);
+	colorG = max((intensity * mat.diffuse + spec), mat.ambient);
 
 	gl_Position = m_pvm * position;	
 }

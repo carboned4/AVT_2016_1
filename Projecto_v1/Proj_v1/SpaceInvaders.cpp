@@ -93,7 +93,7 @@ float objPos[3];
 long myTime, timebase = 0, frame = 0;
 char s[32];
 //float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
-float lightPos[4] = { 5.0f, 10.0f, -1.0f, 1.0f };
+float lightPos[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
@@ -345,6 +345,10 @@ void processMouseButtons(int button, int state, int xx, int yy)
 		if (tracking == 1) {
 			alpha -= (xx - startX);
 			beta += (yy - startY);
+			if (beta > 80.0f)
+				beta = 80.0f;
+			else if (beta < -80.0f)
+				beta = -80.0f;
 		}
 		else if (tracking == 2) {
 			r += (yy - startY) * 0.01f;
@@ -366,10 +370,10 @@ void processMouseMotion(int xx, int yy)
 	if (tracking == 1) {
 		alphaAux = alpha + deltaX;
 		betaAux = beta + deltaY;
-		if (betaAux > 85.0f)
-			betaAux = 85.0f;
-		else if (betaAux < -85.0f)
-			betaAux = -85.0f;
+		if (betaAux > 80.0f)
+			betaAux = 80.0f;
+		else if (betaAux < -80.0f)
+			betaAux = -80.0f;
 		rAux = r;
 	}
 	// right mouse button: zoom
@@ -389,9 +393,9 @@ void processMouseMotion(int xx, int yy)
 
 
 void mouseWheel(int wheel, int direction, int x, int y) {
-	r += direction * 0.1f;
-	if (r < 0.1f)
-		r = 0.1f;
+	r -= direction * 0.2f;
+	if (r < 0.5f)
+		r = 0.5f;
 	camX = r * sin(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
