@@ -190,10 +190,6 @@ void renderScene()
 	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
 	glUniform4fv(lPos_uniformId, 1, res);
 
-	objId = 0;
-	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < 2; ++j) {
-			pushMatrix(MODEL);
 				/*
 				// send the material
 				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
@@ -219,11 +215,7 @@ void renderScene()
 				glDrawElements(mesh[objId].type, mesh[objId].numIndexes, GL_UNSIGNED_INT, 0);
 				glBindVertexArray(0);
 				*/
-			popMatrix(MODEL);
-			objId++;
-		}
-	}
-
+	
 	spaceship->draw(shader);
 
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
@@ -259,7 +251,10 @@ void passKeys() {
 	}
 	if (keyState['b']) {
 		shotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+		printf("%d\n", objId);
+		objId += objIdInc;
 		printf("press b \n");
+		printf("%d\n", objId);
 	}
 	
 	spaceship->updateKeys(keyLeft, keyRight);
@@ -638,6 +633,7 @@ void setupThings() {
 	objId += objIdInc;
 	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
 	objId += objIdInc;
+	printf("%d\n", objId);
 }
 
 void init(int argc, char* argv[])
