@@ -29,6 +29,7 @@
 #define ALIENROWGAP 1.5f
 #define ALIENWIDTH 2.0f
 #define ALIENROWSHIFT 0.5f
+#define TIMEBETWEENSHOTS 4000
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -91,7 +92,8 @@ float objPos[3];
 // Frame counting and FPS computation
 long myTime, timebase = 0, frame = 0;
 char s[32];
-float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
+//float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
+float lightPos[4] = { 5.0f, 10.0f, -1.0f, 1.0f };
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
@@ -284,15 +286,12 @@ void physics() {
 }
 
 void alienShots() {
-	int timeBetweenShots = 2000;
-	int now = glutGet(GLUT_ELAPSED_TIME);
-
-	timeAlpha = now - lastTime;
-
-	if (timeAlpha >= timeBetweenShots) {
+	timeAlpha = timeElapsed - lastTime;
+	
+	if (timeAlpha >= TIMEBETWEENSHOTS ) {
 		int output = 0 + (rand() % (int)(ALIENCOLUMNS*ALIENROWS - 0 + 1));
 		alienShotVector.push_back(new Alien_Shot(objId, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
-		lastTime = now;
+		lastTime = timeElapsed;
 	}
 }
 
@@ -301,9 +300,9 @@ void collisions() {
 }
 
 void update() {
-	int now = glutGet(GLUT_ELAPSED_TIME);
-	timeDelta = now - timePrevious;
-	timePrevious = now;
+	timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+	timeDelta = timeElapsed - timePrevious;
+	timePrevious = timeElapsed;
 	//passKeys();
 	physics();
 	alienShots();
@@ -637,7 +636,7 @@ void setupThings() {
 	*/
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
-	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 1000.0f, 0.1f, 0.0f, 10.0f, 5.0f);
+	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
 	//FixedPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z,  _tx,  _ty,  _tz);
 	fixedCam = new FixedPerspCamera(90.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f, 0.0f, 0.0f, 5.0f);
 	//FollowPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z);
