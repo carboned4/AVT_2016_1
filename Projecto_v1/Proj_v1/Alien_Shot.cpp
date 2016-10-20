@@ -20,7 +20,8 @@ Alien_Shot::~Alien_Shot() {
 }
 
 void Alien_Shot::update(int delta) {
-	
+	speed.set(0.0f, 0.0f, 1.0f);
+	position = position - speed*(delta / 1000.0f);
 }
 
 void Alien_Shot::draw(VSShaderLib _shader) {

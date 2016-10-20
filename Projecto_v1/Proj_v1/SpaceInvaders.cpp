@@ -43,6 +43,8 @@ int timeElapsed = 0;
 int timePrevious = 0;
 int timeDelta = 0;
 int timePause = 0;
+int lastTime = 0;
+int timeAlpha = 0;
 
 #define VERTEX_COORD_ATTRIB 0
 #define NORMAL_ATTRIB 1
@@ -93,7 +95,8 @@ float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
-std::vector <Spaceship_Shot*> shotVector;
+std::vector <Spaceship_Shot*> spaceshipShotVector;
+std::vector <Alien_Shot*> alienShotVector;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -222,8 +225,12 @@ void renderScene()
 		Aliens[i]->draw(shader);
 	}
 	
-	for (int i = 0; i < shotVector.size(); i++) {
-		shotVector[i]->draw(shader);
+	for (int i = 0; i < spaceshipShotVector.size(); i++) {
+		spaceshipShotVector[i]->draw(shader);
+	}
+
+	for (int i = 0; i < alienShotVector.size(); i++) {
+		alienShotVector[i]->draw(shader);
 	}
 
 	//este já é feito no display
@@ -250,11 +257,10 @@ void passKeys() {
 		currentCamera = followCam;
 	}
 	if (keyState['b']) {
-		shotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
-		printf("%d\n", objId);
+		spaceshipShotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+		//printf("%d\n", objId);
 		objId += objIdInc;
-		printf("press b \n");
-		printf("%d\n", objId);
+		//printf("%d\n", objId);
 	}
 	
 	spaceship->updateKeys(keyLeft, keyRight);
@@ -267,10 +273,27 @@ void physics() {
 		Aliens[i]->update(timeDelta);
 	}
 
-	for (int i = 0; i < shotVector.size(); i++) {
-		shotVector[i]->update(timeDelta);
+	for (int i = 0; i < spaceshipShotVector.size(); i++) {
+		spaceshipShotVector[i]->update(timeDelta);
 	}
 
+	for (int i = 0; i < alienShotVector.size(); i++) {
+		alienShotVector[i]->update(timeDelta);
+	}
+
+}
+
+void alienShots() {
+	int timeBetweenShots = 2000;
+	int now = glutGet(GLUT_ELAPSED_TIME);
+
+	timeAlpha = now - lastTime;
+
+	if (timeAlpha >= timeBetweenShots) {
+		int output = 0 + (rand() % (int)(ALIENCOLUMNS*ALIENROWS - 0 + 1));
+		alienShotVector.push_back(new Alien_Shot(objId, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+		lastTime = now;
+	}
 }
 
 void collisions() {
@@ -283,6 +306,7 @@ void update() {
 	timePrevious = now;
 	//passKeys();
 	physics();
+	alienShots();
 	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
 	followCam->setCamXYZ(camX, camY, camZ);
 	collisions();
@@ -633,7 +657,7 @@ void setupThings() {
 	objId += objIdInc;
 	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
 	objId += objIdInc;
-	printf("%d\n", objId);
+	//printf("%d\n", objId);
 }
 
 void init(int argc, char* argv[])
