@@ -66,7 +66,7 @@ GLint normal_uniformId;
 GLint lPos_uniformIdPoint0, lPos_uniformIdPoint1, lPos_uniformIdPoint2,
 lPos_uniformIdPoint3, lPos_uniformIdPoint4, lPos_uniformIdPoint5;
 bool lightsOnStars = true;
-GLint lPos_uniformIdDir;
+GLint lPos_uniformIdGlobal;
 bool lightsOnGlobal = true;
 GLint lPos_uniformIdSpot;
 bool lightsOnMiner = true;
@@ -169,6 +169,13 @@ GLuint setupShaders() {
 	vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_viewModel");
 	normal_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_normal");
 	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint0");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint1");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint2");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint3");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint4");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint5");
+	lPos_uniformIdGlobal = glGetUniformLocation(shader.getProgramIndex(), "l_posdir");
+	lPos_uniformIdSpot = glGetUniformLocation(shader.getProgramIndex(), "l_posspot");
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
@@ -198,8 +205,20 @@ void renderScene()
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
 	float res[4];
-	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos definido em World Coord so is converted to eye space
+	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos WCS -> Camera space
 	glUniform4fv(lPos_uniformIdPoint0, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint1, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint1, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint2, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint2, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint3, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint3, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint4, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint4, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint5, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint5, 1, res);
+	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdGlobal, 1, res);
 
 
 	//OBJECTS
