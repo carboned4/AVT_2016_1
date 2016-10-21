@@ -55,14 +55,29 @@ struct MyMesh mesh[100];
 int objId = 0; //id of the object mesh - to be used as index of mesh: mesh[objID] means the current mesh
 int objIdInc = 0;
 
-//GLuint VaoId, VboId[2];
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
 VSShaderLib shader;
 GLint pvm_uniformId;
 GLint vm_uniformId;
 GLint normal_uniformId;
-GLint lPos_uniformId;
+
+//luzes
+GLint lPos_uniformIdPoint0, lPos_uniformIdPoint1, lPos_uniformIdPoint2,
+lPos_uniformIdPoint3, lPos_uniformIdPoint4, lPos_uniformIdPoint5;
+bool lightsOnStars = true;
+GLint lPos_uniformIdDir;
+bool lightsOnGlobal = true;
+GLint lPos_uniformIdSpot;
+bool lightsOnMiner = true;
+float lightPosGlobal[4] = { 5.0f, -10.0f, -5.0f, 0.0f };
+float lightPosPoint0[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint1[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint2[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint3[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint4[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint5[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -92,8 +107,6 @@ float objPos[3];
 // Frame counting and FPS computation
 long myTime, timebase = 0, frame = 0;
 char s[32];
-//float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
-float lightPos[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
@@ -155,7 +168,7 @@ GLuint setupShaders() {
 	pvm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_pvm");
 	vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_viewModel");
 	normal_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_normal");
-	lPos_uniformId = glGetUniformLocation(shader.getProgramIndex(), "l_pos");
+	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint0");
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
@@ -168,8 +181,6 @@ GLuint setupShaders() {
 
 void renderScene()
 {
-	//GLint loc;
-
 	//estes já são feitos no display()
 	//FrameCount++;
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -178,67 +189,33 @@ void renderScene()
 	loadIdentity(MODEL);
 	loadIdentity(PROJECTION);
 
-	/*lookAt(camPos[0] + camX, camPos[1] + camY, camPos[2] + camZ, camPos[0], camPos[1], camPos[2], 0, 1, 0);
-	if (projectionIsPerspective)
-		perspective(70.0f, ratio, 0.1f, 1000.0f);
-	else ortho(-3.0f* ratio, 3.0f* ratio, -3.0f, 3.0f, 0.1f, 1000.0f);
-	*/
+	//CAMERAS
 	currentCamera->doProjection();
 	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
 	
-	//send the light position in eye coordinates
 
-	//glUniform4fv(lPos_uniformId, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
-
+	//LIGHTS
+	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
 	float res[4];
-	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
-	glUniform4fv(lPos_uniformId, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos definido em World Coord so is converted to eye space
+	glUniform4fv(lPos_uniformIdPoint0, 1, res);
 
-				/*
-				// send the material
-				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
-				glUniform4fv(loc, 1, mesh[objId].mat.ambient);
-				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
-				glUniform4fv(loc, 1, mesh[objId].mat.diffuse);
-				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
-				glUniform4fv(loc, 1, mesh[objId].mat.specular);
-				loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
-				glUniform1f(loc, mesh[objId].mat.shininess);
-				translate(MODEL, objPos[0], objPos[1], objPos[2]);
-				translate(MODEL, i*2.0f, 0.0f, j*2.0f);
-				
-				// send matrices to OGL
-				computeDerivedMatrix(PROJ_VIEW_MODEL);
-				glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-				glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-				computeNormalMatrix3x3();
-				glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
 
-				// Render mesh
-				glBindVertexArray(mesh[objId].vao);
-				glDrawElements(mesh[objId].type, mesh[objId].numIndexes, GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-				*/
-	
+	//OBJECTS
 	spaceship->draw(shader);
-
 	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
 		Aliens[i]->draw(shader);
 	}
-	
 	for (int i = 0; i < spaceshipShotVector.size(); i++) {
 		spaceshipShotVector[i]->draw(shader);
 	}
-
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		alienShotVector[i]->draw(shader);
 	}
 
 	//este já é feito no display
 	//glutSwapBuffers();
-
-	
 	checkOpenGLError("ERROR: Could not draw scene.");
 }
 
@@ -412,28 +389,10 @@ void processKeys(unsigned char key, int xx, int yy)
 	case 27:
 		glutLeaveMainLoop();
 		break;
-
-	case 'c':
-		printf("Camera Spherical Coordinates (%f, %f, %f)\n", alpha, beta, r);
-		break;
-	case 'm': glEnable(GL_MULTISAMPLE); break;
-	case 'n': glDisable(GL_MULTISAMPLE); break;
 	case 'f': switchFramerate(); break;
-	
-	case 'w': keyState[key] = true; camPos[2]--; break;
-	case 'a': keyState[key] = true; camPos[0]--; break;
-	case 's': keyState[key] = true; camPos[2]++; break;
-	case 'd': keyState[key] = true; camPos[0]++; break;
-	case 'q': keyState[key] = true; camPos[1]--; break;
-	case 'e': keyState[key] = true; camPos[1]++; break;
-	
-	case 'y': keyState[key] = true; objPos[2]--; break;
-	case 'g': keyState[key] = true; objPos[0]--; break;
-	case 'h': keyState[key] = true; objPos[2]++; break;
-	case 'j': keyState[key] = true; objPos[0]++; break;
-	case 't': keyState[key] = true; objPos[1]--; break;
-	case 'u': keyState[key] = true; objPos[1]++; break;
-
+	case 'n': lightsOnGlobal = !lightsOnGlobal; break;
+	case 'c': lightsOnStars = !lightsOnStars; break;
+	case 'h': lightsOnMiner = !lightsOnMiner; break;
 	case 'p': projectionIsPerspective = !projectionIsPerspective; break;
 	}
 	passKeys();

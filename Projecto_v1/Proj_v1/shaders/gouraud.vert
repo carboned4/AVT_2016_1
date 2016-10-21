@@ -4,7 +4,7 @@ uniform mat4 m_pvm;
 uniform mat4 m_viewModel;
 uniform mat3 m_normal;
 
-uniform vec4 l_pos;
+uniform vec4 l_pospoint0;
 
 in vec4 position;
 in vec4 normal;    //por causa do gerador de geometria
@@ -28,7 +28,7 @@ void main () {
 	vec4 pos = m_viewModel * position;
 
 	vec3 normalG = normalize(m_normal * normal.xyz);
-	vec3 lightDirG = vec3(l_pos - pos);
+	vec3 lightDirG = vec3(l_pospoint0 - pos);
 	vec3 eyeG = vec3(-pos);
 
 	vec4 spec = vec4(0.0);
