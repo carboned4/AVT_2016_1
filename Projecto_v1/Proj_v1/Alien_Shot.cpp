@@ -1,9 +1,10 @@
 #include "Alien_Shot.h"
+#include "Box.h"
 
 
 Alien_Shot::Alien_Shot(int _objId, int* addedToId, float _x, float _y, float _z) : DynamicObject(_objId, _x, _y, _z){
 	speed = Vec3(-speedModulus, 0.0f, 0.0f);
-	
+	shotBox = Box(SHOT_DIMENSION_XMIN, SHOT_DIMENSION_XMAX, SHOT_DIMENSION_YMIN, SHOT_DIMENSION_YMAX);
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));

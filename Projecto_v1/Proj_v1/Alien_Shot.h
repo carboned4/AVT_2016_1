@@ -4,6 +4,11 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
+#define SHOT_DIMENSION_YMIN -0.1
+#define SHOT_DIMENSION_YMAX 0.1
+#define SHOT_DIMENSION_XMIN -0.1
+#define SHOT_DIMENSION_XMAX 0.1
+
 class Alien_Shot : public DynamicObject {
 private:
 	float amb[4] = { 0.25f, 0.1f, 0.1f, 1.0f };

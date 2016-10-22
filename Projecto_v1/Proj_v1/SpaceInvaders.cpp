@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <math.h>
-
+//using namespace std
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 
@@ -110,6 +110,7 @@ char s[32];
 
 Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
 Spaceship *spaceship;
+Alien_Shot *alienshot;
 std::vector <Spaceship_Shot*> spaceshipShotVector;
 std::vector <Alien_Shot*> alienShotVector;
 
@@ -290,9 +291,15 @@ void alienShots() {
 		lastTime = timeElapsed;
 	}
 }
-
 void collisions() {
+	Vec3 ppp = spaceship->getPosition();
+	printf("imprime %f %f %f\n", ppp.getX(), ppp.getY(), ppp.getZ());
+	//Vec3 ppp2 = alienshot->getPosition();
+	//printf("imprime shot  %f %f %f\n", ppp2.getX(), ppp2.getY(), ppp2.getZ());
 
+	for (int i = 0; i < alienShotVector.size(); i++) {
+		spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->shotBox);		
+	}
 }
 
 void update() {
@@ -301,6 +308,7 @@ void update() {
 	timePrevious = timeElapsed;
 	//passKeys();
 	physics();
+	
 	alienShots();
 	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
 	followCam->setCamXYZ(camX, camY, camZ);

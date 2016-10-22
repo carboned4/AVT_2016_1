@@ -5,6 +5,8 @@
 
 class DynamicObject : public GameObject {
 public:
+
+
 	DynamicObject(int _objId, float _x, float _y, float _z) : GameObject(_objId, _x, _y, _z){}
 	virtual ~DynamicObject() {}
 		

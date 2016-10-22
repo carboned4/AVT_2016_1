@@ -1,8 +1,11 @@
 #include "Spaceship.h"
-
+#include "Box.h"
+#include "Alien_Shot.h"
+using namespace std;
 
 Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft,float _limitRight) : DynamicObject(_objId,_x,_y, _z) {
 	
+	spaceshipBox = Box(SPACESHIP_DIMENSION_XMIN, SPACESHIP_DIMENSION_XMAX, SPACESHIP_DIMENSION_YMIN, SPACESHIP_DIMENSION_YMAX);
 	speed = Vec3(0.0f, 0.0f, 0.0f);
 	accelerationModulus = Vec3(4.0f, 0, 0);
 	maxSpeed = Vec3(4.0f, 0.0f, 0.0f);
@@ -37,6 +40,18 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 Spaceship::~Spaceship() {
 	
 }
+
+bool Spaceship::checkCollisionShot( Vec3 shotPos, Box shotBox) {
+
+	 if (Box::Collided(spaceshipBox, position, shotBox, shotPos)) {
+		 printf("Colidiu com a bala");
+		 return true;
+	 }
+	 else{ 
+		 return false;
+		  }
+}
+
 
 void Spaceship::update(int delta) {
 	float maxX = maxSpeed.getX();
