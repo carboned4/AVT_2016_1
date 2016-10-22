@@ -42,6 +42,9 @@ public:
 	void updateKeys(bool left, bool right);
 	bool checkCollisionShot(Vec3 shotPos, Box shotBox );
 	
+	Vec3 getSpeedAngle() {
+		return speedAngleEffectVec;
+	}
 };
 
 
