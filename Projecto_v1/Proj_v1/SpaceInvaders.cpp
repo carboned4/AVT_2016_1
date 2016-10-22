@@ -31,6 +31,10 @@
 #define ALIENROWSHIFT 0.5f
 #define TIMEBETWEENSHOTS 4000
 
+#define I_POINT 0
+#define I_DIR 1
+#define I_SPOT 2
+
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
 
@@ -65,19 +69,24 @@ GLint normal_uniformId;
 //luzes
 GLint lPos_uniformIdPoint0, lPos_uniformIdPoint1, lPos_uniformIdPoint2,
 lPos_uniformIdPoint3, lPos_uniformIdPoint4, lPos_uniformIdPoint5;
-bool lightsOnStars = true;
 GLint lPos_uniformIdGlobal;
-bool lightsOnGlobal = true;
 GLint lPos_uniformIdSpot;
-bool lightsOnMiner = true;
+GLint lPos_uniformIdSpotDirection;
+GLint uniform_pointOn, uniform_dirOn, uniform_spotOn;
+GLint uniform_lightState;
+float lightsOnStars = 1.0f;
+float lightsOnGlobal = 1.0f;
+float lightsOnMiner = 1.0f;
 float lightPosGlobal[4] = { 5.0f, -10.0f, -5.0f, 0.0f };
-float lightPosPoint0[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+//float lightPosPoint0[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
+float lightPosPoint0[4] = { 0.0f, 10.0f, 5.0f, 1.0f };
 float lightPosPoint1[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint2[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint3[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint4[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint5[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+float lightDirSpot[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -177,6 +186,11 @@ GLuint setupShaders() {
 	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint5");
 	lPos_uniformIdGlobal = glGetUniformLocation(shader.getProgramIndex(), "l_posdir");
 	lPos_uniformIdSpot = glGetUniformLocation(shader.getProgramIndex(), "l_posspot");
+	lPos_uniformIdSpotDirection = glGetUniformLocation(shader.getProgramIndex(), "l_spotdir");
+	uniform_pointOn = glGetUniformLocation(shader.getProgramIndex(), "l_pointOn");
+	uniform_dirOn = glGetUniformLocation(shader.getProgramIndex(), "dirOn");
+	uniform_spotOn = glGetUniformLocation(shader.getProgramIndex(), "spotOn");
+	uniform_lightState = glGetUniformLocation(shader.getProgramIndex(), "lightState");
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
@@ -205,6 +219,12 @@ void renderScene()
 
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
+	float resstate[3];
+	resstate[I_DIR] = lightsOnGlobal;
+	resstate[I_POINT] = lightsOnStars;
+	resstate[I_SPOT] = lightsOnMiner;
+	glUniform3fv(uniform_lightState, 1, resstate);
+	
 	float res[4];
 	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos WCS -> Camera space
 	glUniform4fv(lPos_uniformIdPoint0, 1, res);
@@ -218,9 +238,12 @@ void renderScene()
 	glUniform4fv(lPos_uniformIdPoint4, 1, res);
 	multMatrixPoint(VIEW, lightPosPoint5, res);   //lightPos WCS -> Camera space
 	glUniform4fv(lPos_uniformIdPoint5, 1, res);
-	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightPos WCS -> Camera space
+	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightDirection WCS -> Camera space
 	glUniform4fv(lPos_uniformIdGlobal, 1, res);
-
+	multMatrixPoint(VIEW, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpot, 1, res);
+	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
 	//OBJECTS
 	spaceship->draw(shader);
@@ -417,9 +440,9 @@ void processKeys(unsigned char key, int xx, int yy)
 		glutLeaveMainLoop();
 		break;
 	case 'f': switchFramerate(); break;
-	case 'n': lightsOnGlobal = !lightsOnGlobal; break;
-	case 'c': lightsOnStars = !lightsOnStars; break;
-	case 'h': lightsOnMiner = !lightsOnMiner; break;
+	case 'n': if (lightsOnGlobal == 1.0f) lightsOnGlobal = 0.0f; else lightsOnGlobal = 1.0f; break;
+	case 'c': if (lightsOnStars == 1.0f) lightsOnStars = 0.0f; else lightsOnStars = 1.0f; break;
+	case 'h': if (lightsOnMiner == 1.0f) lightsOnMiner = 0.0f; else lightsOnMiner = 1.0f; break;
 	case 'p': projectionIsPerspective = !projectionIsPerspective; break;
 	}
 	passKeys();
