@@ -1,4 +1,6 @@
 #include "Spaceship.h"
+#include <math.h>
+
 using namespace std;
 
 Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft,float _limitRight) : DynamicObject(_objId,_x,_y, _z) {
@@ -7,6 +9,7 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 	speed = Vec3(0.0f, 0.0f, 0.0f);
 	accelerationModulus = Vec3(4.0f, 0, 0);
 	maxSpeed = Vec3(4.0f, 0.0f, 0.0f);
+	speedAngleEffectVec = Vec3(0.0f, 0.0f, 0.0f);
 	limitLeft = _limitLeft;
 	limitRight = _limitRight;
 
@@ -42,7 +45,7 @@ Spaceship::~Spaceship() {
 bool Spaceship::checkCollisionShot( Vec3 shotPos, Box shotBox) {
 
 	 if (Box::Collided(colBox, position, shotBox, shotPos)) {
-		 printf("Colidiu com a bala");
+		 printf("Colidiu com a bala\n");
 		 return true;
 	 }
 	 else{ 
@@ -55,35 +58,40 @@ void Spaceship::update(int delta) {
 	float maxX = maxSpeed.getX();
 	
 
-		if (leftPressed) {
-			speed = speed + accelerationModulus*(delta / 1000.0f);
-			if (speed.getX() > maxX) speed.set(maxX, 0.0f, 0.0f);
-		}
-		else if (rightPressed) {
+	if (leftPressed) {
+		speed = speed + accelerationModulus*(delta / 1000.0f);
+		if (speed.getX() > maxX) speed.set(maxX, 0.0f, 0.0f);
+	}
+	else if (rightPressed) {
+		speed = speed - accelerationModulus*(delta / 1000.0f);
+		if (speed.getX() < -maxX) speed.set(-maxX, 0.0f, 0.0f);
+	}
+	else {
+		float xspeed = speed.getX();
+		if (0.05f <= xspeed)
 			speed = speed - accelerationModulus*(delta / 1000.0f);
-			if (speed.getX() < -maxX) speed.set(-maxX, 0.0f, 0.0f);
-		}
-		else {
-			float xspeed = speed.getX();
-			if (0.05f <= xspeed)
-				speed = speed - accelerationModulus*(delta / 1000.0f);
-			else if (xspeed <= -0.05f)
-				speed = speed + accelerationModulus*(delta / 1000.0f);
-			else/* if (-0.05f < xspeed < 0.05f)*/ {
-				speed.set(0.0f, 0.0f, 0.0f);
-			}
-		}
-		position = position + speed*(delta / 1000.0f);
-
-		if (position.getX() <= limitLeft) {
-			position.set(limitLeft, 0.0f, 0.0f);
-			speed.set(0.0f, 0.0f, 0.0f);
-		}
-		if(position.getX() >= limitRight){
-			position.set(limitRight, 0.0f, 0.0f);
+		else if (xspeed <= -0.05f)
+			speed = speed + accelerationModulus*(delta / 1000.0f);
+		else/* if (-0.05f < xspeed < 0.05f)*/ {
 			speed.set(0.0f, 0.0f, 0.0f);
 		}
 	}
+	position = position + speed*(delta / 1000.0f);
+
+	if (position.getX() <= limitLeft) {
+		position.set(limitLeft, 0.0f, 0.0f);
+		speed.set(0.0f, 0.0f, 0.0f);
+	}
+	if(position.getX() >= limitRight){
+		position.set(limitRight, 0.0f, 0.0f);
+		speed.set(0.0f, 0.0f, 0.0f);
+	}
+	speedAngleEffect = 20.0f*speed.getX() / maxX;
+	float aux = speedAngleEffect * 3.14f / 180.0f;
+	speedAngleEffectVec = Vec3(sin(speedAngleEffect* 3.14f / 180.0f), 0.0f, cos(speedAngleEffect* 3.14f / 180.0f));
+	//printf("%f: %f %f %f\n", speedAngleEffect, speedAngleEffectVec.getX(), speedAngleEffectVec.getY(), speedAngleEffectVec.getZ());
+
+}
 
 void Spaceship::updateKeys(bool left, bool right) {
 	leftPressed = left;
@@ -106,7 +114,7 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glUniform1f(loc, mesh[objectId].mat.shininess);
 
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
-	//translate(MODEL, -1.0f, 0.0f, -5.0f);
+	rotate(MODEL, speedAngleEffect, 0.0f, 1.0f, 0.0f);
 
 	pushMatrix(MODEL);
 	scale(MODEL, 1.5f, 1.0f, 1.0f);

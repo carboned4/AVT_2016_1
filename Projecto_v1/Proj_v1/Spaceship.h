@@ -25,6 +25,8 @@ private:
 	bool rightPressed = false;
 	Vec3 accelerationModulus;
 	Vec3 maxSpeed;
+	float speedAngleEffect = 0.0f;
+	Vec3 speedAngleEffectVec;
 
 	/* Position/Collision Flags */
 	bool _alienShot;
