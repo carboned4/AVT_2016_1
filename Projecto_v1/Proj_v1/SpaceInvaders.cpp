@@ -316,12 +316,16 @@ void alienShots() {
 }
 void collisions() {
 	Vec3 ppp = spaceship->getPosition();
-	printf("imprime %f %f %f\n", ppp.getX(), ppp.getY(), ppp.getZ());
+	//printf("imprime %f %f %f\n", ppp.getX(), ppp.getY(), ppp.getZ());
 	//Vec3 ppp2 = alienshot->getPosition();
 	//printf("imprime shot  %f %f %f\n", ppp2.getX(), ppp2.getY(), ppp2.getZ());
 
 	for (int i = 0; i < alienShotVector.size(); i++) {
-		spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->shotBox);		
+		if (alienShotVector[i]->getPosition().getZ() < -1.0f) continue;
+		spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
+		//printf("\n\n%d\nshot pos %f %f %f\n", i, alienShotVector[i]->getPosition().getX(), alienShotVector[i]->getPosition().getY(), alienShotVector[i]->getPosition().getZ());
+		//printf("shot pos %f %f %f\n", spaceship->getPosition().getX(), spaceship->getPosition().getY(), spaceship->getPosition().getZ());
+
 	}
 }
 

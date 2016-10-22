@@ -4,10 +4,10 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
-#define SHOT_DIMENSION_YMIN -0.1
-#define SHOT_DIMENSION_YMAX 0.1
-#define SHOT_DIMENSION_XMIN -0.1
-#define SHOT_DIMENSION_XMAX 0.1
+#define SHOT_DIMENSION_ZMIN -0.05
+#define SHOT_DIMENSION_ZMAX 0.05
+#define SHOT_DIMENSION_XMIN -0.05
+#define SHOT_DIMENSION_XMAX 0.05
 
 class Alien_Shot : public DynamicObject {
 private:

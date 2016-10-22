@@ -25,8 +25,7 @@ public:
 	int objectId;
 	Vec3 position;
 	int addToId = 0;
-	Box spaceshipBox;
-	Box shotBox;
+	Box colBox;
 
 	GameObject(int _objId, float _x, float _y, float _z) : objectId(_objId) { position = Vec3(_x, _y, _z); }
 	virtual ~GameObject() {}
@@ -34,6 +33,9 @@ public:
 
 	Vec3 getPosition() {
 		return position;
+	}
+	Box getCollisionBox() {
+		return colBox;
 	}
 };
 
