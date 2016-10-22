@@ -86,6 +86,7 @@ float lightPosPoint3[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint4[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosPoint5[4] = { -5.0f, 10.0f, -1.0f, 1.0f };
 float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+float lightDirSpot[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -236,9 +237,12 @@ void renderScene()
 	glUniform4fv(lPos_uniformIdPoint4, 1, res);
 	multMatrixPoint(VIEW, lightPosPoint5, res);   //lightPos WCS -> Camera space
 	glUniform4fv(lPos_uniformIdPoint5, 1, res);
-	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightPos WCS -> Camera space
+	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightDirection WCS -> Camera space
 	glUniform4fv(lPos_uniformIdGlobal, 1, res);
-	
+	multMatrixPoint(VIEW, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpot, 1, res);
+	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
 	//OBJECTS
 	spaceship->draw(shader);
