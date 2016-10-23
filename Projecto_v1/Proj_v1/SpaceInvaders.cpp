@@ -242,6 +242,10 @@ void renderScene()
 	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightDirection WCS -> Camera space
 	glUniform4fv(lPos_uniformIdGlobal, 1, res);
 	
+	lightPosSpot[0] = spaceship->getPosition().getX();
+	lightPosSpot[1] = spaceship->getPosition().getY();
+	lightPosSpot[2] = spaceship->getPosition().getZ();
+	lightPosSpot[3] = 1.0f;
 	multMatrixPoint(VIEW, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
 	glUniform4fv(lPos_uniformIdSpot, 1, res);
 	lightDirSpot[0] = spaceship->getSpeedAngle().getX();

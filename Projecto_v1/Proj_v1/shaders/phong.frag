@@ -22,22 +22,46 @@ in Data {
 } DataIn;
 
 void main() {
-
+	float intensity = 0.0f;
+	float spotCutOff=0.99;
+	vec3 h;
+	float intSpec;
 	vec4 spec = vec4(0.0);
-
-	vec3 n = normalize(DataIn.normal);
-	vec3 l = normalize(DataIn.lightDir[0]);
-	vec3 e = normalize(DataIn.eye);
-
-	float intensity = max(dot(n,l), 0.0);
-
 	
-	if (intensity > 0.0) {
+	for(int i = 0; i<8; i++){
+		vec3 n = normalize(DataIn.normal);
+		vec3 l = normalize(DataIn.lightDir[i]);
+		vec3 e = normalize(DataIn.eye);
+		vec3 sd = normalize(vec3(-l_spotdir)); 
+		if(i<=5){ //POINT	
+			intensity += max(dot(n,l), 0.0);
+			if (intensity > 0.0) {
+				h = normalize(l + e);
+				intSpec = max(dot(h,n), 0.0);
+				spec = spec + mat.specular * pow(intSpec, mat.shininess);
+			}
+		}
+		else if(i==6){ //DIRECTIONAL
+			intensity += max(dot(n,l), 0.0);
+			if (intensity > 0.0) {
+				h = normalize(l + e);
+				intSpec = max(dot(h,n), 0.0);
+				spec = spec + mat.specular * pow(intSpec, mat.shininess);
+			}
+		}
+		else if(i==7){ //SPOT
+			if (dot(sd,l) > spotCutOff) {
+				intensity += max(dot(n,l), 0.0);
+				if (intensity > 0.0) {
+					h = normalize(l + e);
+					intSpec = max(dot(h,n), 0.0);
+					spec = spec + mat.specular * pow(intSpec, mat.shininess);
+				}
+			}
+		}
 
-		vec3 h = normalize(l + e);
-		float intSpec = max(dot(h,n), 0.0);
-		spec = mat.specular * pow(intSpec, mat.shininess);
+
 	}
-	
 	colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
+	//colorOut = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
