@@ -3,7 +3,7 @@
 
 Alien_Shot::Alien_Shot(int _objId, int* addedToId, float _x, float _y, float _z) : DynamicObject(_objId, _x, _y, _z){
 	speed = Vec3(-speedModulus, 0.0f, 0.0f);
-	colBox = Box(SHOT_DIMENSION_XMIN, SHOT_DIMENSION_XMAX, SHOT_DIMENSION_ZMIN, SHOT_DIMENSION_ZMAX);
+	colBox = Box(ALIENSHOT_DIMENSION_XMIN, ALIENSHOT_DIMENSION_XMAX, ALIENSHOT_DIMENSION_ZMIN, ALIENSHOT_DIMENSION_ZMAX);
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));

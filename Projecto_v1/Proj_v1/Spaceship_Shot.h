@@ -4,6 +4,11 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
+#define SHIPSHOT_DIMENSION_ZMIN -0.05
+#define SHIPSHOT_DIMENSION_ZMAX 0.05
+#define SHIPSHOT_DIMENSION_XMIN -0.05
+#define SHIPSHOT_DIMENSION_XMAX 0.05
+
 class Spaceship_Shot : public DynamicObject {
 private:
 	float amb[4] = { 0.25f, 0.1f, 0.1f, 1.0f };

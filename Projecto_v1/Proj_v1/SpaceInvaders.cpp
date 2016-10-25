@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <vector>
 #include <sstream>
 #include <string>
 #include <math.h>
@@ -116,7 +117,7 @@ float objPos[3];
 long myTime, timebase = 0, frame = 0;
 char s[32];
 
-Alien *Aliens[ALIENCOLUMNS * ALIENROWS];
+std::vector <Alien*> Aliens;
 Spaceship *spaceship;
 Alien_Shot *alienshot;
 std::vector <Spaceship_Shot*> spaceshipShotVector;
@@ -256,7 +257,7 @@ void renderScene()
 
 	//OBJECTS
 	spaceship->draw(shader);
-	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
+	for (int i = 0; i < Aliens.size(); i++) {
 		Aliens[i]->draw(shader);
 	}
 	for (int i = 0; i < spaceshipShotVector.size(); i++) {
@@ -290,7 +291,9 @@ void passKeys() {
 	if (keyState['b']) {
 		spaceshipShotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
 		//printf("%d\n", objId);
-		objId += objIdInc;
+		//objId += objIdInc;
+		//printf("objid %d\n", objId);
+
 		//printf("%d\n", objId);
 	}
 	
@@ -300,7 +303,7 @@ void passKeys() {
 void physics() {
 	spaceship->update(timeDelta);
 
-	for (int i = 0; i < ALIENCOLUMNS*ALIENROWS; i++) {
+	for (int i = 0; i < Aliens.size(); i++) {
 		Aliens[i]->update(timeDelta);
 	}
 
@@ -316,38 +319,92 @@ void physics() {
 
 void alienShots() {
 	timeAlpha = timeElapsed - lastTime;
-	
+	if (Aliens.size() == 0) return;
 	if (timeAlpha >= TIMEBETWEENSHOTS ) {
-		int output = 0 + (rand() % (int)(ALIENCOLUMNS*ALIENROWS - 0 + 1));
+		//printf("going to create shot\n");
+		int output = 0 + (rand() % (int)(Aliens.size()));
+		//printf("output is %d out of %d possible aliens\n",output, Aliens.size());
 		alienShotVector.push_back(new Alien_Shot(objId, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
 		lastTime = timeElapsed;
+		//printf("created shot on index %d\n",output);
 	}
 }
 void collisions() {
-	Vec3 ppp = spaceship->getPosition();
-	//printf("imprime %f %f %f\n", ppp.getX(), ppp.getY(), ppp.getZ());
-	//Vec3 ppp2 = alienshot->getPosition();
-	//printf("imprime shot  %f %f %f\n", ppp2.getX(), ppp2.getY(), ppp2.getZ());
-
+	bool shipcollided;
 	for (int i = 0; i < alienShotVector.size(); i++) {
-		if (alienShotVector[i]->getPosition().getZ() < -1.0f) continue;
-		spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
-		//printf("\n\n%d\nshot pos %f %f %f\n", i, alienShotVector[i]->getPosition().getX(), alienShotVector[i]->getPosition().getY(), alienShotVector[i]->getPosition().getZ());
-		//printf("shot pos %f %f %f\n", spaceship->getPosition().getX(), spaceship->getPosition().getY(), spaceship->getPosition().getZ());
+		shipcollided = spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
+		if (shipcollided) {
+			alienShotVector.erase(alienShotVector.begin() + i);
+			break;
+		}
+	}
+	bool aliencollided;
+	//printf("size shot %d %d\n", spaceshipShotVector.size(), Aliens.size());
+	//printf("lol\n");
+	std::vector<Alien*>::iterator iterAliens;
+	int i = 0;
+	for (iterAliens = Aliens.begin(); iterAliens != Aliens.end();) {
+		bool erasedAlien = false;
+		//printf("index shot %d %f\n", i, (*iterAliens)->getPosition().getX());
+		for (int j = 0; j < spaceshipShotVector.size(); j++) {
+			aliencollided = (*iterAliens)->checkCollisionShot(spaceshipShotVector[j]->getPosition(), spaceshipShotVector[j]->getCollisionBox());
+			if (aliencollided) {
+				(*iterAliens)->setDestroyed(true);
+				iterAliens = Aliens.erase(iterAliens);
+				spaceshipShotVector.erase(spaceshipShotVector.begin() + j);
+				erasedAlien = true;
+				break;
+			}
+		}
+		if (!erasedAlien) {
+			
+			++iterAliens;
+		}
+		//++iterAliens;
+		i++;
+	}
+	//printf("iteraliens cycle done %d\n", Aliens.size());
 
+}
+
+void cleanupShots() {
+	std::vector<Alien_Shot*>::iterator iterShots;
+	std::vector<Spaceship_Shot*>::iterator iterShotsb;
+	float shotz;
+	for (iterShots = alienShotVector.begin(); iterShots != alienShotVector.end(); ) {
+		shotz = (*iterShots)->getPosition().getZ();
+			if (shotz < -1.0f) {
+				iterShots = alienShotVector.erase(iterShots);
+			}
+			else {
+				++iterShots;
+			}
+	}
+	for (iterShotsb = spaceshipShotVector.begin(); iterShotsb != spaceshipShotVector.end(); ) {
+		shotz = (*iterShotsb)->getPosition().getZ();
+		if (shotz > 15.0f) {
+			iterShotsb = spaceshipShotVector.erase(iterShotsb);
+		}
+		else {
+			++iterShotsb;
+		}
 	}
 }
 
 void update() {
+
 	timeElapsed = glutGet(GLUT_ELAPSED_TIME);
 	timeDelta = timeElapsed - timePrevious;
 	timePrevious = timeElapsed;
 	//passKeys();
 	physics();
 	
+	//printf("entering alienshots\n");
 	alienShots();
+	//printf("left alienshots\n");
 	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
 	followCam->setCamXYZ(camX, camY, camZ);
+	cleanupShots();
 	collisions();
 }
 
@@ -674,7 +731,7 @@ void setupThings() {
 	objIdInc = 0;
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			Aliens[i*ALIENCOLUMNS + j] = new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT); // x y z left width rowgap
+			Aliens.push_back(new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 			objId += objIdInc;
 			
 		}
@@ -683,6 +740,7 @@ void setupThings() {
 	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
 	objId += objIdInc;
 	//printf("%d\n", objId);
+	
 }
 
 void init(int argc, char* argv[])

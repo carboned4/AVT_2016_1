@@ -3,7 +3,9 @@
 
 Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width, float _rowheight) : DynamicObject(_objId, _x, _y, _z), left(_left), width(_width), rowHeight(_rowheight), prevRow(_z){
 	speed = Vec3(-speedModulus, 0.0f, 0.0f);
-	
+	colBox = Box(ALIEN_DIMENSION_XMIN, ALIEN_DIMENSION_XMAX, ALIEN_DIMENSION_ZMIN, ALIEN_DIMENSION_ZMAX);
+
+
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));
@@ -31,6 +33,25 @@ Alien::Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _le
 
 Alien::~Alien() {
 
+}
+
+bool Alien::getDestroyed() {
+	return isDestroyed;
+}
+
+void Alien::setDestroyed(bool deststate) {
+	isDestroyed = deststate;
+}
+
+bool Alien::checkCollisionShot(Vec3 shotPos, Box shotBox) {
+
+	if (Box::Collided(colBox, position, shotBox, shotPos)) {
+		printf("Alien colidiu com a bala\n");
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 void Alien::update(int delta) {

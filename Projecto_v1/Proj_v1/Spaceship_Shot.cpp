@@ -3,7 +3,7 @@
 
 Spaceship_Shot::Spaceship_Shot(int _objId, int* addedToId, float _x, float _y, float _z) : DynamicObject(_objId, _x, _y, _z){
 	speed = Vec3(-speedModulus, 0.0f, 0.0f);
-	
+	colBox = Box(SHIPSHOT_DIMENSION_XMIN, SHIPSHOT_DIMENSION_XMAX, SHIPSHOT_DIMENSION_ZMIN, SHIPSHOT_DIMENSION_ZMAX);
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.specular, spec, 4 * sizeof(float));

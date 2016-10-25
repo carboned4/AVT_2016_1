@@ -4,6 +4,11 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
+#define ALIEN_DIMENSION_ZMIN -0.25
+#define ALIEN_DIMENSION_ZMAX 0.25
+#define ALIEN_DIMENSION_XMIN -0.89
+#define ALIEN_DIMENSION_XMAX 0.89
+
 class Alien : public DynamicObject {
 private:
 	float amb[4] = { 0.1f, 0.25f, 0.1f, 1.0f };
@@ -20,6 +25,7 @@ private:
 	float rowHeight;
 	bool changeRow = false;
 	float speedModulus = 0.5f;
+	bool isDestroyed = false;
 
 public:
 	Alien(int _objId, int* addedToId, float _x, float _y, float _z, float _left, float _width, float _rowheight);
@@ -27,6 +33,9 @@ public:
 		
 	void update(int delta);
 	void draw(VSShaderLib shader);
+	bool Alien::checkCollisionShot(Vec3 shotPos, Box shotBox);
+	bool getDestroyed();
+	void setDestroyed(bool deststate);
 };
 
 
