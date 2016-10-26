@@ -4,10 +4,10 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
-#define SHIPSHOT_DIMENSION_ZMIN -0.05
-#define SHIPSHOT_DIMENSION_ZMAX 0.05
-#define SHIPSHOT_DIMENSION_XMIN -0.05
-#define SHIPSHOT_DIMENSION_XMAX 0.05
+#define SHIPSHOT_DIMENSION_ZMIN -0.35
+#define SHIPSHOT_DIMENSION_ZMAX 0.35
+#define SHIPSHOT_DIMENSION_XMIN -0.1
+#define SHIPSHOT_DIMENSION_XMAX 0.1
 
 class Spaceship_Shot : public DynamicObject {
 private:
@@ -17,7 +17,7 @@ private:
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 50.0f;
 	int texcount = 0;
-	int addToId = 1;
+	int addToId = 2;
 
 	bool changeRow = false;
 	float speedModulus = 0.5f;
