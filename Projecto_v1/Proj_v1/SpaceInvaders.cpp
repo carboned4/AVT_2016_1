@@ -56,7 +56,7 @@ int timeAlpha = 0;
 #define NORMAL_ATTRIB 1
 #define TEXTURE_COORD_ATTRIB 2
 
-struct MyMesh mesh[100];
+struct MyMesh mesh[1000];
 int objId = 0; //id of the object mesh - to be used as index of mesh: mesh[objID] means the current mesh
 int objIdInc = 0;
 
@@ -291,7 +291,7 @@ void passKeys() {
 	if (keyState['b']) {
 		spaceshipShotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
 		//printf("%d\n", objId);
-		//objId += objIdInc;
+		objId += objIdInc;
 		//printf("objid %d\n", objId);
 
 		//printf("%d\n", objId);
@@ -326,6 +326,7 @@ void alienShots() {
 		//printf("output is %d out of %d possible aliens\n",output, Aliens.size());
 		alienShotVector.push_back(new Alien_Shot(objId, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
 		lastTime = timeElapsed;
+		objId += objIdInc;
 		//printf("created shot on index %d\n",output);
 	}
 }
