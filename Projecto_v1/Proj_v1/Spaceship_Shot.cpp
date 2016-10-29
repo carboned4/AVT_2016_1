@@ -2,7 +2,7 @@
 
 
 Spaceship_Shot::Spaceship_Shot(int _objId, int* addedToId, float _x, float _y, float _z) : DynamicObject(_objId, _x, _y, _z){
-	speed = Vec3(-speedModulus, 0.0f, 0.0f);
+	speed = Vec3(0.0f, 0.0f, speedModulus);
 	colBox = Box(SHIPSHOT_DIMENSION_XMIN, SHIPSHOT_DIMENSION_XMAX, SHIPSHOT_DIMENSION_ZMIN, SHIPSHOT_DIMENSION_ZMAX);
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
@@ -29,7 +29,7 @@ Spaceship_Shot::~Spaceship_Shot() {
 }
 
 void Spaceship_Shot::update(int delta) {
-	speed.set(0.0f, 0.0f, 1.0f);
+	//speed.set(0.0f, 0.0f, speedModulus);
 	position = position + speed*(delta / 1000.0f);
 }
 

@@ -20,7 +20,7 @@ private:
 	int addToId = 2;
 
 	bool changeRow = false;
-	float speedModulus = 0.5f;
+	float speedModulus = 2.0f;
 
 public:
 	Spaceship_Shot(int _objId, int* addedToId, float _x, float _y, float _z);

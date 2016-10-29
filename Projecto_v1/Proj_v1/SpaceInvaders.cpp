@@ -10,7 +10,7 @@
 
 #include "AVTmathLib.h"
 #include "vsShaderLib.h"
-//#include "basic_geometry.h"
+#include "TGA.h"
 
 #include "Alien.h"
 #include "Spaceship.h"
@@ -29,8 +29,8 @@
 #define ALIENCOLUMNGAP 2.0f
 #define ALIENROWGAP 1.5f
 #define ALIENWIDTH 2.0f
-#define ALIENROWSHIFT 0.5f
-#define TIMEBETWEENSHOTS 4000
+#define ALIENROWSHIFT 0.25f
+#define TIMEBETWEENSHOTS 6000
 
 #define I_POINT 0
 #define I_DIR 1
@@ -59,6 +59,14 @@ int timeAlpha = 0;
 struct MyMesh mesh[1000];
 int objId = 0; //id of the object mesh - to be used as index of mesh: mesh[objID] means the current mesh
 int objIdInc = 0;
+int objIdAlien = -1;
+int objIdShip = -1;
+int objIdAlienShot = -1;
+int objIdShipShot = -1;
+int objIdStars = -1;
+int objIdPause = -1;
+int objIdDead = -1;
+int objIdVictory = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -87,6 +95,14 @@ float lightPosPoint4[4] = { 0.0f, -10.0f, 5.0f, 1.0f };
 float lightPosPoint5[4] = { 0.0f, 10.0f, 5.0f, 1.0f };
 float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDirSpot[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
+
+//texturas
+GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
+// star BG1, star BG2, pause scr, restart, victory;
+GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
+//nothing yet
+GLint texMode_uniformId;
+GLuint TextureArray[5];
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -255,6 +271,20 @@ void renderScene()
 	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
 	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
+	//TEXTURES
+	//Associar os Texture Units aos Objects Texture
+	//stone.tga loaded in TU0; checker.tga loaded in TU1;  lightwood.tga loaded in TU2
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[1]);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[2]);
+	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
+	glUniform1i(tex_loc0, 0);
+	glUniform1i(tex_loc1, 1);
+	glUniform1i(tex_loc2, 2);
+
 	//OBJECTS
 	spaceship->draw(shader);
 	for (int i = 0; i < Aliens.size(); i++) {
@@ -289,12 +319,13 @@ void passKeys() {
 		currentCamera = followCam;
 	}
 	if (keyState['b']) {
-		spaceshipShotVector.push_back(new Spaceship_Shot(objId, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
-		//printf("%d\n", objId);
-		objId += objIdInc;
-		//printf("objid %d\n", objId);
-
-		//printf("%d\n", objId);
+		if (objIdShipShot == -1) {
+			objIdShipShot = objId;
+			spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+			objId += objIdInc;
+		}
+		else spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+		//printf("%d %d\n", objId, objIdShipShot);
 	}
 	
 	spaceship->updateKeys(keyLeft, keyRight);
@@ -321,13 +352,15 @@ void alienShots() {
 	timeAlpha = timeElapsed - lastTime;
 	if (Aliens.size() == 0) return;
 	if (timeAlpha >= TIMEBETWEENSHOTS ) {
-		//printf("going to create shot\n");
 		int output = 0 + (rand() % (int)(Aliens.size()));
-		//printf("output is %d out of %d possible aliens\n",output, Aliens.size());
-		alienShotVector.push_back(new Alien_Shot(objId, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+		if (objIdAlienShot == -1) {
+			objIdAlienShot = objId;
+			alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+			objId += objIdInc;
+		}
+		alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
 		lastTime = timeElapsed;
-		objId += objIdInc;
-		//printf("created shot on index %d\n",output);
+		//printf("%d %d\n", objId, objIdAlienShot);
 	}
 }
 void collisions() {
@@ -730,17 +763,25 @@ void setupThings() {
 	
 	objId = 0;
 	objIdInc = 0;
+	
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
-			Aliens.push_back(new Alien(objId, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
-			objId += objIdInc;
-			
+			if (objIdAlien == -1) {
+				objIdAlien = objId;
+				Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
+				objId += objIdInc;
+			}
+			else Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 		}
 	}
-	objId += objIdInc;
-	spaceship = new Spaceship(objId,&objIdInc,0.0f,0.0f,0.0f,-5.8f,5.8f);
-	objId += objIdInc;
-	//printf("%d\n", objId);
+	//objId += objIdInc;
+	if (objIdShip == -1) {
+		objIdShip = objId;
+		spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
+		objId += objIdInc;
+	}
+	else spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
+	printf("%d\n", objId);
 	
 }
 
