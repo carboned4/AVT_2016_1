@@ -91,6 +91,8 @@ void Alien::draw(VSShaderLib _shader) {
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 	
+	glUniform1i(texMode_uniformId, 4);
+
 	//SPHERE
 	// send the material
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");

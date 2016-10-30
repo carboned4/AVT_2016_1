@@ -39,6 +39,9 @@ void Spaceship_Shot::draw(VSShaderLib _shader) {
 	rotate(MODEL, 90.0f, 1.0f, 0.0f, 0.0f);
 	GLint loc;
 	
+	glUniform1i(texMode_uniformId, 4);
+
+
 	//CILINDRO
 	// send the material
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");

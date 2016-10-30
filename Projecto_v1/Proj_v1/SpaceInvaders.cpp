@@ -17,6 +17,8 @@
 #include "Alien_Shot.h"
 #include "Spaceship_Shot.h"
 
+#include "StarsBackground.h"
+
 #include "Camera.h"
 #include "TopOrthoCamera.h"
 #include "FixedPerspCamera.h"
@@ -138,6 +140,7 @@ Spaceship *spaceship;
 Alien_Shot *alienshot;
 std::vector <Spaceship_Shot*> spaceshipShotVector;
 std::vector <Alien_Shot*> alienShotVector;
+StarsBackground *background1;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -298,7 +301,7 @@ void renderScene()
 	glUniform1i(tex_loc2, 3);
 	glUniform1i(tex_loc2, 4);
 
-	glUniform1i(texMode_uniformId, 3);
+	
 	//OBJECTS
 	spaceship->draw(shader);
 	for (int i = 0; i < Aliens.size(); i++) {
@@ -310,6 +313,7 @@ void renderScene()
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		alienShotVector[i]->draw(shader);
 	}
+	background1->draw(shader);
 
 	//este já é feito no display
 	//glutSwapBuffers();
@@ -722,7 +726,7 @@ void setupThings() {
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
 	glGenTextures(5, TextureArray);
-	TGA_Texture(TextureArray, "checker.tga", 0);
+	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "checker.tga", 2);
 	TGA_Texture(TextureArray, "checker.tga", 3);
@@ -758,6 +762,14 @@ void setupThings() {
 	}
 	else spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
 	printf("%d\n", objId);
+
+	if (objIdStars == -1) {
+		objIdStars = objId;
+		background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 15.0f);
+		objId += objIdInc;
+	}
+	else background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 15.0f);
+
 	
 }
 

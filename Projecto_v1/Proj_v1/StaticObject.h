@@ -5,7 +5,7 @@
 
 class StaticObject : public GameObject {
 public:
-	StaticObject()
+	StaticObject(int _objId, float _x, float _y, float _z) : GameObject(_objId, _x, _y, _z) {}
 	virtual ~StaticObject() {}
 
 };

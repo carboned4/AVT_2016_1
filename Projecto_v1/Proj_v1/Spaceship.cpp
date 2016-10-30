@@ -101,6 +101,9 @@ void Spaceship::updateKeys(bool left, bool right) {
 }
 
 void Spaceship::draw(VSShaderLib _shader) {
+	glUniform1i(texMode_uniformId, 4);
+
+	
 	pushMatrix(MODEL);
 
 	GLint loc;

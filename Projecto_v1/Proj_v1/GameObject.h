@@ -16,6 +16,7 @@ extern GLint pvm_uniformId;
 extern GLint vm_uniformId;
 extern GLint normal_uniformId;
 extern GLint lPos_uniformId;
+extern GLint texMode_uniformId;
 extern struct MyMesh mesh[];
 extern VSShaderLib shader;
 
