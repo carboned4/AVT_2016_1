@@ -11,6 +11,7 @@
 #include "AVTmathLib.h"
 #include "vsShaderLib.h"
 #include "TGA.h"
+#include "VertexAttrDef.h"
 
 #include "Alien.h"
 #include "Spaceship.h"
@@ -112,6 +113,14 @@ extern float mNormal3x3[9];
 
 bool projectionIsPerspective = true;
 
+
+// TEXT THINGS
+int _fontSize;
+GLuint text_vaoID;
+GLuint text_texCoordBuffer;
+GLuint text_vertexBuffer;
+
+
 // Camera Position+
 Camera *currentCamera;
 FixedPerspCamera *fixedCam;
@@ -167,6 +176,85 @@ void checkOpenGLError(std::string error)
 /////////////////////////////////////////////////////////////////////// SHADERs
 
 
+void initTextureMappedFont() {
+	float vertices[] = {
+		0.0f, 0.0f,
+		_fontSize, 0.0f,
+		_fontSize, _fontSize,
+		0.0f, _fontSize
+	};
+
+	glGenVertexArrays(1, &text_vaoID);
+	glBindVertexArray(text_vaoID);
+	glGenBuffers(1, &text_vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, text_vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(VERTEX_ATTRIB1);
+	glVertexAttribPointer(VERTEX_ATTRIB1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	//Just initialize with something for now, the tex coords are updated
+	//for each character printed
+	float texCoords[] = {
+		0.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 0.0f
+	};
+
+	glGenBuffers(1, &text_texCoordBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, text_texCoordBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &texCoords[0], GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(VERTEX_ATTRIB2);
+	glVertexAttribPointer(VERTEX_ATTRIB2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	//set the orthographic projection matrix
+	//ortho(0.0f, float(WinX), 0.0f, float(WinY), -1.0f, 1.0f);
+}
+
+void DrawString(float x, float y, const std::string& str) {
+
+	float texCoords[8];
+
+	pushMatrix(MODEL);
+	translate(MODEL, x, y, 0);
+	glBindVertexArray(text_vaoID);
+	// glTranslatef(x, y, 0.0); //Position our text
+	for (std::string::size_type i = 0; i < str.size(); ++i)
+	{
+		const float aux = 1.0f / 16.0f;
+
+		int ch = int(str[i]);
+		float xPos = float(ch % 16) * aux;
+		float yPos = float(ch / 16) * aux;
+
+		texCoords[0] = xPos;
+		texCoords[1] = 1.0f - yPos - aux;
+
+		texCoords[2] = xPos + aux;
+		texCoords[3] = 1.0f - yPos - aux;
+
+		texCoords[4] = xPos + aux;
+		texCoords[5] = 1.0f - yPos - 0.001f;
+
+		texCoords[6] = xPos;
+		texCoords[7] = 1.0f - yPos - 0.001f;
+
+		glBindBuffer(GL_ARRAY_BUFFER, text_texCoordBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 8, &texCoords[0]);
+
+		computeDerivedMatrix(PROJ_VIEW_MODEL);
+		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+		translate(MODEL, _fontSize * 0.8f, 0.0f, 0.0f);
+	}
+	glBindVertexArray(0);
+	popMatrix(MODEL);
+
+	glEnable(GL_DEPTH_TEST);
+}
+
 
 void destroyShaderProgram()
 {
@@ -191,6 +279,8 @@ GLuint setupShaders() {
 	glBindAttribLocation(shader.getProgramIndex(), VERTEX_COORD_ATTRIB, "position");
 	glBindAttribLocation(shader.getProgramIndex(), NORMAL_ATTRIB, "normal");
 	glBindAttribLocation(shader.getProgramIndex(), TEXTURE_COORD_ATTRIB, "texCoord");
+	glBindAttribLocation(shader.getProgramIndex(), VERTEX_ATTRIB1, "vVertex");
+	glBindAttribLocation(shader.getProgramIndex(), VERTEX_ATTRIB2, "vtexCoord");
 
 	glLinkProgram(shader.getProgramIndex());
 
@@ -711,6 +801,7 @@ void setupGLUT(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 }
+
 
 void setupThings() {
 	for (int i = 0; i < 256; i++) {

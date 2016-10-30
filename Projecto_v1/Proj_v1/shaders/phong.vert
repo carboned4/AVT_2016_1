@@ -19,7 +19,8 @@ uniform bool l_spotOn;
 in vec4 position;
 in vec4 normal;    //por causa do gerador de geometria
 in vec4 texCoord;
-
+in vec2 vVertex;
+in vec2 vtexCoord;
 
 out Data {
 	vec3 normal;
