@@ -101,7 +101,7 @@ float lightDirSpot[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
 
 //texturas
 GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
-// star BG1, star BG2, pause scr, restart, victory;
+// star BG1, star BG2, font1, none, none;
 GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
 GLint texMode_uniformId;
@@ -119,6 +119,7 @@ int _fontSize;
 GLuint text_vaoID;
 GLuint text_texCoordBuffer;
 GLuint text_vertexBuffer;
+GLint doingText_uniformId;
 
 
 // Camera Position+
@@ -308,6 +309,8 @@ GLuint setupShaders() {
 	tex_loc3 = glGetUniformLocation(shader.getProgramIndex(), "texmap3");
 	tex_loc4 = glGetUniformLocation(shader.getProgramIndex(), "texmap4");
 
+	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
+
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
 	return(shader.isProgramValid());
@@ -332,6 +335,8 @@ void renderScene()
 	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
 	
+
+	glUniform1i(doingText_uniformId, 0);
 
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
@@ -819,7 +824,7 @@ void setupThings() {
 	glGenTextures(5, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
-	TGA_Texture(TextureArray, "checker.tga", 2);
+	TGA_Texture(TextureArray, "font1.tga", 2);
 	TGA_Texture(TextureArray, "checker.tga", 3);
 	TGA_Texture(TextureArray, "checker.tga", 4);
 

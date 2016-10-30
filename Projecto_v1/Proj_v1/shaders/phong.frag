@@ -22,6 +22,8 @@ uniform Materials mat;
 
 uniform vec4 l_spotdir;
 
+uniform int doingText;
+
 in Data {
 	vec3 normal;
 	vec3 eye;
@@ -42,37 +44,24 @@ void main() {
 	float distance;
 	vec4 texel, texel2;
 
-//STEP 1 - spec & diff
+//OPTION A - DRAWING LETTERS
+	if(2 == 1){
+		vec4 cor = vec4(1,1,1,1);
+		colorOut = texture(texmap2, DataIn.tex_coord)*cor;
+	}
 
-	for(int i = 0; i<8; i++){
-		vec3 n = normalize(DataIn.normal);
-		vec3 l = normalize(DataIn.lightDir[i]);
-		vec3 e = normalize(DataIn.eye);
-		vec3 sd = normalize(vec3(-l_spotdir)); 
-		if(i<=5){ //POINT	
-			distance = length(DataIn.lightDir[i]);
-			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
-			intensity += max(dot(n,l), 0.0) * attenuation;
-			if (intensity > 0.0) {
-				h = normalize(l + e);
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
-			}
-		}
-		else if(i==6){ //DIRECTIONAL
-			intensity += max(dot(n,l), 0.0)*0.5;
-			if (intensity > 0.0) {
-				h = normalize(l + e);
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + mat.specular * pow(intSpec, mat.shininess)*0.5;
-			}
-		}
-		else if(i==7){ //SPOT
-			float cosSDL = dot(sd,l);
-			float spotExponent = 100.0;
-			if (cosSDL > spotCutOff) {
+//OPTION B - NORMAL FRAGMENTS
+
+//STEP 1 - spec & diff
+	else{
+		for(int i = 0; i<8; i++){
+			vec3 n = normalize(DataIn.normal);
+			vec3 l = normalize(DataIn.lightDir[i]);
+			vec3 e = normalize(DataIn.eye);
+			vec3 sd = normalize(vec3(-l_spotdir)); 
+			if(i<=5){ //POINT	
 				distance = length(DataIn.lightDir[i]);
-				attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
+				attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
 				intensity += max(dot(n,l), 0.0) * attenuation;
 				if (intensity > 0.0) {
 					h = normalize(l + e);
@@ -80,35 +69,57 @@ void main() {
 					spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 				}
 			}
-		}
+			else if(i==6){ //DIRECTIONAL
+				intensity += max(dot(n,l), 0.0)*0.5;
+				if (intensity > 0.0) {
+					h = normalize(l + e);
+					intSpec = max(dot(h,n), 0.0);
+					spec = spec + mat.specular * pow(intSpec, mat.shininess)*0.5;
+				}
+			}
+			else if(i==7){ //SPOT
+				float cosSDL = dot(sd,l);
+				float spotExponent = 100.0;
+				if (cosSDL > spotCutOff) {
+					distance = length(DataIn.lightDir[i]);
+					attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
+					intensity += max(dot(n,l), 0.0) * attenuation;
+					if (intensity > 0.0) {
+						h = normalize(l + e);
+						intSpec = max(dot(h,n), 0.0);
+						spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
+					}
+				}
+			}
 		
-	}
+		}
 	
 //STEP 2 - textures
 
-	if(texMode == 0) // modulate diffuse color with texel color
-	{
-		texel = texture(texmap2, DataIn.tex_coord);  // texel from lighwood.tga
-		colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
-	}
-	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
-	{
-		texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
-		colorOut = max(intensity*texel + spec, 0.1*texel);
-	}
-	else if (texMode == 2) // multitexturing
-	{
-		texel = texture(texmap0, DataIn.tex_coord);  // texel from lighwood.tga
-		texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
-		colorOut = texel * texel2;
-	}
-	else if (texMode == 3) //use only texture
-	{
-		texel = texture(texmap0, DataIn.tex_coord); 
-		colorOut = texel;
-	}
-	else { //do not use texture
-		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
+		if(texMode == 0) // modulate diffuse color with texel color
+		{
+			texel = texture(texmap2, DataIn.tex_coord);  // texel from lighwood.tga
+			colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
+		}
+		else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
+		{
+			texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
+			colorOut = max(intensity*texel + spec, 0.1*texel);
+		}
+		else if (texMode == 2) // multitexturing
+		{
+			texel = texture(texmap0, DataIn.tex_coord);  // texel from lighwood.tga
+			texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
+			colorOut = texel * texel2;
+		}
+		else if (texMode == 3) //use only texture
+		{
+			texel = texture(texmap0, DataIn.tex_coord); 
+			colorOut = texel;
+		}
+		else { //do not use texture
+			colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
+		}
 	}
 
 //END
