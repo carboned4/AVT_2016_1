@@ -26,6 +26,8 @@ public:
 	Vec3 position;
 	int addToId = 0;
 	Box colBox;
+	GLint texMode = 0;
+	int texId = 0;
 
 	GameObject(int _objId, float _x, float _y, float _z) : objectId(_objId) { position = Vec3(_x, _y, _z); }
 	virtual ~GameObject() {}
@@ -36,6 +38,10 @@ public:
 	}
 	Box getCollisionBox() {
 		return colBox;
+	}
+	void setTextureModeId(GLint t_mode, int t_id) {
+		texMode = t_mode;
+		texId = t_id;
 	}
 };
 

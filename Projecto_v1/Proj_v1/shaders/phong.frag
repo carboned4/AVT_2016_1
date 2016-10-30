@@ -2,6 +2,13 @@
 
 out vec4 colorOut;
 
+uniform int texMode;
+uniform sampler2D texmap0;
+uniform sampler2D texmap1;
+uniform sampler2D texmap2;
+uniform sampler2D texmap3;
+uniform sampler2D texmap4;
+
 struct Materials {
 	vec4 diffuse;
 	vec4 ambient;
@@ -19,6 +26,7 @@ in Data {
 	vec3 normal;
 	vec3 eye;
 	vec3 lightDir[8];
+	vec2 tex_coord;
 } DataIn;
 
 void main() {
@@ -32,6 +40,7 @@ void main() {
 	float c = 0.07;
 	float attenuation;
 	float distance;
+	vec4 texel, texel2;
 
 	for(int i = 0; i<8; i++){
 		vec3 n = normalize(DataIn.normal);
@@ -70,9 +79,27 @@ void main() {
 				}
 			}
 		}
-
-
+		if(texMode == 0) // modulate diffuse color with texel color
+		{
+			texel = texture(texmap2, DataIn.tex_coord);  // texel from lighwood.tga
+			colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
+		}
+		else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
+		{
+			texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
+			colorOut = max(intensity*texel + spec, 0.1*texel);
+		}
+		else if (texMode == 2) // multitexturing
+		{
+			texel = texture(texmap2, DataIn.tex_coord);  // texel from lighwood.tga
+			texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
+			colorOut = texel * texel2;
+		}
+		else { //use only texture
+			texel = texture(texmap0, DataIn.tex_coord); 
+			colorOut = texel;
+		}
 	}
-	colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
+	//colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 	//colorOut = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

@@ -18,11 +18,14 @@ uniform bool l_spotOn;
 
 in vec4 position;
 in vec4 normal;    //por causa do gerador de geometria
+in vec4 texCoord;
+
 
 out Data {
 	vec3 normal;
 	vec3 eye;
 	vec3 lightDir[8];
+	vec2 tex_coord;
 } DataOut;
 
 void main () {
@@ -60,5 +63,6 @@ void main () {
 	else{
 		DataOut.lightDir[7] = vec3(0);
 	}
+	DataOut.tex_coord = texCoord.st;
 	gl_Position = m_pvm * position;	
 }

@@ -208,6 +208,13 @@ GLuint setupShaders() {
 	uniform_spotOn = glGetUniformLocation(shader.getProgramIndex(), "spotOn");
 	uniform_lightState = glGetUniformLocation(shader.getProgramIndex(), "lightState");
 
+	texMode_uniformId = glGetUniformLocation(shader.getProgramIndex(), "texMode");
+	tex_loc0 = glGetUniformLocation(shader.getProgramIndex(), "texmap0");
+	tex_loc1 = glGetUniformLocation(shader.getProgramIndex(), "texmap1");
+	tex_loc2 = glGetUniformLocation(shader.getProgramIndex(), "texmap2");
+	tex_loc3 = glGetUniformLocation(shader.getProgramIndex(), "texmap3");
+	tex_loc4 = glGetUniformLocation(shader.getProgramIndex(), "texmap4");
+
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
 	return(shader.isProgramValid());
@@ -280,11 +287,18 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[1]);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[2]);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[3]);
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[4]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
 	glUniform1i(tex_loc2, 2);
+	glUniform1i(tex_loc2, 3);
+	glUniform1i(tex_loc2, 4);
 
+	glUniform1i(texMode_uniformId, 3);
 	//OBJECTS
 	spaceship->draw(shader);
 	for (int i = 0; i < Aliens.size(); i++) {
@@ -707,50 +721,12 @@ void setupThings() {
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
-	/*
-	float amb[] = { 0.2f, 0.15f, 0.1f, 1.0f };
-	float diff[] = { 0.8f, 0.6f, 0.4f, 1.0f };
-	float spec[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-	float emissive[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float shininess = 100.0f;
-	int texcount = 0;
-
-	// create geometry and VAO of the pawn
-	objId = 0;
-	memcpy(mesh[objId].mat.ambient, amb, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.specular, spec, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.emissive, emissive, 4 * sizeof(float));
-	mesh[objId].mat.shininess = shininess;
-	mesh[objId].mat.texCount = texcount;
-	createPawn();
-
-
-	// create geometry and VAO of the sphere
-	objId = 1;
-	memcpy(mesh[objId].mat.ambient, amb, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.specular, spec, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.emissive, emissive, 4 * sizeof(float));
-	mesh[objId].mat.shininess = shininess;
-	mesh[objId].mat.texCount = texcount;
-	createSphere(1.0f, 20);
-
-	float amb1[] = { 0.3f, 0.0f, 0.0f, 1.0f };
-	float diff1[] = { 0.8f, 0.1f, 0.1f, 1.0f };
-	float spec1[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-	shininess = 500.0;
-
-	// create geometry and VAO of the cylinder
-	objId = 2;
-	memcpy(mesh[objId].mat.ambient, amb1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.diffuse, diff1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.specular, spec1, 4 * sizeof(float));
-	memcpy(mesh[objId].mat.emissive, emissive, 4 * sizeof(float));
-	mesh[objId].mat.shininess = shininess;
-	mesh[objId].mat.texCount = texcount;
-	createCylinder(1.5f, 0.5f, 20);
-	*/
+	glGenTextures(5, TextureArray);
+	TGA_Texture(TextureArray, "checker.tga", 0);
+	TGA_Texture(TextureArray, "checker.tga", 1);
+	TGA_Texture(TextureArray, "checker.tga", 2);
+	TGA_Texture(TextureArray, "checker.tga", 3);
+	TGA_Texture(TextureArray, "checker.tga", 4);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
