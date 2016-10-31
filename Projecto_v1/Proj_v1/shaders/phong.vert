@@ -10,6 +10,8 @@ uniform mat3 m_normal;
 uniform vec3 lightState;
 uniform vec2 doingtextv2;
 
+uniform int texMode;
+
 uniform vec4 l_pospoint0, l_pospoint1, l_pospoint2, l_pospoint3, l_pospoint4, l_pospoint5;
 uniform vec4 l_posdir;
 uniform vec4 l_posspot;
@@ -33,7 +35,7 @@ out Data {
 } DataOut;
 
 void main () {
-	if(2==1){
+	if(texMode == 5){
 		DataOut.tex_coord = vtexCoord;
 		gl_Position = m_pvm * vec4(vVertex, 0.0, 1.0);
 	}

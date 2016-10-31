@@ -342,7 +342,7 @@ void renderScene()
 	resDT[1] = 1;
 	glUniform2fv(doingTextV_uniformId, 1, resDT);
 	glUniform1i(doingText_uniformId, 1);
-
+	glUniform1i(texMode_uniformId, 5);
 
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 

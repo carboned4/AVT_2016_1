@@ -53,7 +53,7 @@ void main() {
 
 //STEP 1 - spec & diff
 	//se doingtext == 0
-	if(1 == 1){
+	if(texMode != 5){
 		for(int i = 0; i<8; i++){
 			vec3 n = normalize(DataIn.normal);
 			vec3 l = normalize(DataIn.lightDir[i]);
@@ -125,10 +125,10 @@ void main() {
 
 //OPTION B - DRAWING LETTERS
 	
-	//se doingtext == 1
-	if(2==1){
-		//vec4 cor = vec4(1,1,1,1);
-		//colorOut = texture(texmap2, DataIn.tex_coord)*cor;
+	//se doingtext == 1 (texmode 5)
+	else{
+		vec4 cor = vec4(1,1,1,1);
+		colorOut = texture(texmap2, DataIn.tex_coord)*cor;
 	}
 	
 //END
