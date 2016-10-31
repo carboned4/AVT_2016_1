@@ -9,6 +9,9 @@ uniform sampler2D texmap2;
 uniform sampler2D texmap3;
 uniform sampler2D texmap4;
 
+uniform vec2 doingtextv2;
+
+
 struct Materials {
 	vec4 diffuse;
 	vec4 ambient;
@@ -43,13 +46,15 @@ void main() {
 	float attenuation;
 	float distance;
 	vec4 texel, texel2;
+	int lol = doingText;
 
 //OPTION A - DRAWING LETTERS
 	if(2 == 1){
-		vec4 cor = vec4(1,1,1,1);
-		colorOut = texture(texmap2, DataIn.tex_coord)*cor;
+		//vec4 cor = vec4(1,1,1,1);
+		//colorOut = texture(texmap2, DataIn.tex_coord)*cor;
+		colorOut = vec4(1.0, 1.0, 1.0, 1.0);
 	}
-
+	
 //OPTION B - NORMAL FRAGMENTS
 
 //STEP 1 - spec & diff
@@ -121,7 +126,8 @@ void main() {
 			colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 		}
 	}
-
+	//colorOut = vec4(1.0, 1.0, 1.0, 1.0);
+	
 //END
 	//colourOut has been defined
 }

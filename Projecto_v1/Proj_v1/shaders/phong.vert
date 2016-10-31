@@ -8,6 +8,7 @@ uniform mat4 m_pvm;
 uniform mat4 m_viewModel;
 uniform mat3 m_normal;
 uniform vec3 lightState;
+uniform vec2 doingtextv2;
 
 uniform vec4 l_pospoint0, l_pospoint1, l_pospoint2, l_pospoint3, l_pospoint4, l_pospoint5;
 uniform vec4 l_posdir;

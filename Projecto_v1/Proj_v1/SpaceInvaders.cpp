@@ -120,6 +120,7 @@ GLuint text_vaoID;
 GLuint text_texCoordBuffer;
 GLuint text_vertexBuffer;
 GLint doingText_uniformId;
+GLint doingTextV_uniformId;
 
 
 // Camera Position+
@@ -310,6 +311,7 @@ GLuint setupShaders() {
 	tex_loc4 = glGetUniformLocation(shader.getProgramIndex(), "texmap4");
 
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
+	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
@@ -334,9 +336,13 @@ void renderScene()
 	currentCamera->doProjection();
 	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
-	
 
-	glUniform1i(doingText_uniformId, 0);
+	float resDT[2];
+	resDT[0] = 0;
+	resDT[1] = 1;
+	glUniform2fv(doingTextV_uniformId, 1, resDT);
+	glUniform1i(doingText_uniformId, 1);
+
 
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
