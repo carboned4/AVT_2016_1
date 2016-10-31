@@ -48,17 +48,11 @@ void main() {
 	vec4 texel, texel2;
 	int lol = doingText;
 
-//OPTION A - DRAWING LETTERS
-	if(2 == 1){
-		//vec4 cor = vec4(1,1,1,1);
-		//colorOut = texture(texmap2, DataIn.tex_coord)*cor;
-		colorOut = vec4(1.0, 1.0, 1.0, 1.0);
-	}
 	
-//OPTION B - NORMAL FRAGMENTS
+//OPTION A - NORMAL FRAGMENTS
 
 //STEP 1 - spec & diff
-	else{
+	if(1 == 1){
 		for(int i = 0; i<8; i++){
 			vec3 n = normalize(DataIn.normal);
 			vec3 l = normalize(DataIn.lightDir[i]);
@@ -125,6 +119,18 @@ void main() {
 		else { //do not use texture
 			colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 		}
+	}
+
+
+//OPTION A - DRAWING LETTERS
+	
+
+	if(2==1){
+		//vec4 cor = vec4(1,1,1,1);
+		//colorOut = texture(texmap2, DataIn.tex_coord)*cor;
+		texel = texture(texmap0, DataIn.tex_coord);  // texel from lighwood.tga
+			texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
+			colorOut = texel * texel2;
 	}
 	//colorOut = vec4(1.0, 1.0, 1.0, 1.0);
 	
