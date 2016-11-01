@@ -148,9 +148,15 @@ float objPos[3];
 long myTime, timebase = 0, frame = 0;
 char s[32];
 
+//Game
+
+bool game_running = true;
+bool pauseWindowShow = false;
+
 std::vector <Alien*> Aliens;
 Spaceship *spaceship;
 Alien_Shot *alienshot;
+Spaceship_Shot * spaceshipShot;
 std::vector <Spaceship_Shot*> spaceshipShotVector;
 std::vector <Alien_Shot*> alienShotVector;
 StarsBackground *background1;
@@ -444,6 +450,7 @@ void switchFramerate() {
 }
 
 void restartGame() {
+	
 	lives = 5;
 	alienShotVector.clear();
 	spaceshipShotVector.clear();
@@ -459,6 +466,7 @@ void restartGame() {
 		}
 	}
 }
+
 
 void passKeys() {
 	if (keyState['1']) {
@@ -479,7 +487,19 @@ void passKeys() {
 		else spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
 		//printf("%d %d\n", objId, objIdShipShot);
 	}
-	
+	if (keyState['s']) {
+											//Toggle pausewindow on or off
+		game_running = !(game_running);
+		pauseWindowShow = !(pauseWindowShow);
+	}
+
+	if (keyState['r']) {
+		//Toggle pausewindow on or off
+		game_running = true;
+		pauseWindowShow = false;
+	}
+
+		
 	spaceship->updateKeys(keyLeft, keyRight);
 }
 
@@ -582,20 +602,26 @@ void cleanupShots() {
 
 void update() {
 
-	timeElapsed = glutGet(GLUT_ELAPSED_TIME);
-	timeDelta = timeElapsed - timePrevious;
-	timePrevious = timeElapsed;
-	//passKeys();
-	physics();
-	
-	//printf("entering alienshots\n");
-	alienShots();
-	//printf("left alienshots\n");
-	followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
-	followCam->setCamXYZ(camX, camY, camZ);
-	cleanupShots();
-	collisions();
-	if (lives <= 0) restartGame();
+	if (pauseWindowShow != true) {
+		timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+		timeDelta = timeElapsed - timePrevious;
+		timePrevious = timeElapsed;
+		//passKeys();
+		physics();
+
+		//printf("entering alienshots\n");
+		alienShots();
+		//printf("left alienshots\n");
+		followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
+		followCam->setCamXYZ(camX, camY, camZ);
+		cleanupShots();
+		collisions();
+		if (lives <= 0) restartGame();
+	}
+	/*if (!game_running) {
+		//increase_speed = false;
+		timeDelta = 0;
+	}*/
 }
 
 ///////////////// USER INTERACTION
