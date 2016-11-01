@@ -913,7 +913,14 @@ void setupThings() {
 	}
 	else background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 20.0f);
 
-	
+	for (int ilives = 0; ilives < 5; ilives++) {
+		if (objIdShip == -1) {
+			objIdShip = objId;
+			LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, -1.0f*ilives, 0.0f, 0.0f, 0.0f, 0.0f));
+			objId += objIdInc;
+		}
+		else spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
+	}
 }
 
 void init(int argc, char* argv[])
