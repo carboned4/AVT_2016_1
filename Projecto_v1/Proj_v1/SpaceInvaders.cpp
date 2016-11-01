@@ -617,11 +617,11 @@ void cleanupShots() {
 }
 
 void update() {
+	timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+	timeDelta = timeElapsed - timePrevious;
+	timePrevious = timeElapsed;
 
 	if (pauseWindowShow != true) {
-		timeElapsed = glutGet(GLUT_ELAPSED_TIME);
-		timeDelta = timeElapsed - timePrevious;
-		timePrevious = timeElapsed;
 		//passKeys();
 		physics();
 
