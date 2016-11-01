@@ -39,6 +39,9 @@
 #define I_DIR 1
 #define I_SPOT 2
 
+#define ALIENSCORE 100
+#define DEATHPENALTY -50
+
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
 
@@ -56,6 +59,7 @@ int lastTime = 0;
 int timeAlpha = 0;
 
 int lives = 5;
+int score = 0;
 
 #define VERTEX_COORD_ATTRIB 0
 #define NORMAL_ATTRIB 1
@@ -434,7 +438,7 @@ void renderScene()
 	std::string s = "LIVES:" + std::to_string(lives);
 	DrawString(15, 2, s);
 
-	s = "SCORE:" + std::to_string(2560);
+	s = "SCORE:" + std::to_string(score);
 	DrawString(WinX - 175, 2, s);
 
 
@@ -468,6 +472,7 @@ void switchFramerate() {
 void restartGame() {
 	
 	lives = 5;
+	score = 0;
 	alienShotVector.clear();
 	spaceshipShotVector.clear();
 	Aliens.clear();
@@ -557,6 +562,7 @@ void collisions() {
 		shipcollided = spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
 		if (shipcollided) {
 			alienShotVector.erase(alienShotVector.begin() + i);
+			score += DEATHPENALTY;
 			break;
 		}
 	}
@@ -578,6 +584,7 @@ void collisions() {
 				iterAliens = Aliens.erase(iterAliens);
 				spaceshipShotVector.erase(spaceshipShotVector.begin() + j);
 				erasedAlien = true;
+				score += ALIENSCORE;
 				break;
 			}
 		}
