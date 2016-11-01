@@ -1,9 +1,9 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
-#include <GL/glew.h>
+#include "GL/glew.h"
 #include <stdlib.h>
-#include <GL/freeglut.h>
+#include "GL/freeglut.h"
 #include <stdio.h>
 #include "TGA.h"
 
