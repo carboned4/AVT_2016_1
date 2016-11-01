@@ -154,6 +154,8 @@ Alien_Shot *alienshot;
 std::vector <Spaceship_Shot*> spaceshipShotVector;
 std::vector <Alien_Shot*> alienShotVector;
 StarsBackground *background1;
+std::vector <Spaceship*> LivesRepresentation;
+
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
