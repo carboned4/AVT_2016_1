@@ -437,6 +437,12 @@ void renderScene()
 	s = "SCORE:" + std::to_string(2560);
 	DrawString(WinX - 175, 2, s);
 
+	if (pauseWindowShow == true) {
+		_fontSize = 50;
+		s = "PAUSE";
+		DrawString(WinX-410, 230, s);
+		
+	}
 
 	glDisable(GL_DEPTH_TEST);
 	loadIdentity(VIEW);
