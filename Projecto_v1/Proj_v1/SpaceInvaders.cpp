@@ -179,7 +179,7 @@ void checkOpenGLError(std::string error)
 
 
 void initTextureMappedFont() {
-	float vertices[] = {
+	float text_vertices[] = {
 		0.0f, 0.0f,
 		_fontSize, 0.0f,
 		_fontSize, _fontSize,
@@ -190,13 +190,13 @@ void initTextureMappedFont() {
 	glBindVertexArray(text_vaoID);
 	glGenBuffers(1, &text_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, text_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &text_vertices[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(VERTEX_ATTRIB1);
 	glVertexAttribPointer(VERTEX_ATTRIB1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	//Just initialize with something for now, the tex coords are updated
 	//for each character printed
-	float texCoords[] = {
+	float text_texCoords[] = {
 		0.0f, 0.0f,
 		0.0f, 0.0f,
 		0.0f, 0.0f,
@@ -205,7 +205,7 @@ void initTextureMappedFont() {
 
 	glGenBuffers(1, &text_texCoordBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, text_texCoordBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &texCoords[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, &text_texCoords[0], GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(VERTEX_ATTRIB2);
 	glVertexAttribPointer(VERTEX_ATTRIB2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -215,7 +215,7 @@ void initTextureMappedFont() {
 
 void DrawString(float x, float y, const std::string& str) {
 
-	float texCoords[8];
+	float text_texCoords[8];
 
 	pushMatrix(MODEL);
 	translate(MODEL, x, y, 0);
@@ -229,20 +229,20 @@ void DrawString(float x, float y, const std::string& str) {
 		float xPos = float(ch % 16) * aux;
 		float yPos = float(ch / 16) * aux;
 
-		texCoords[0] = xPos;
-		texCoords[1] = 1.0f - yPos - aux;
+		text_texCoords[0] = xPos;
+		text_texCoords[1] = 1.0f - yPos - aux;
 
-		texCoords[2] = xPos + aux;
-		texCoords[3] = 1.0f - yPos - aux;
+		text_texCoords[2] = xPos + aux;
+		text_texCoords[3] = 1.0f - yPos - aux;
 
-		texCoords[4] = xPos + aux;
-		texCoords[5] = 1.0f - yPos - 0.001f;
+		text_texCoords[4] = xPos + aux;
+		text_texCoords[5] = 1.0f - yPos - 0.001f;
 
-		texCoords[6] = xPos;
-		texCoords[7] = 1.0f - yPos - 0.001f;
+		text_texCoords[6] = xPos;
+		text_texCoords[7] = 1.0f - yPos - 0.001f;
 
 		glBindBuffer(GL_ARRAY_BUFFER, text_texCoordBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 8, &texCoords[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 8, &text_texCoords[0]);
 
 		computeDerivedMatrix(PROJ_VIEW_MODEL);
 		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
@@ -337,12 +337,6 @@ void renderScene()
 	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
 
-	float resDT[2];
-	resDT[0] = 0;
-	resDT[1] = 1;
-	glUniform2fv(doingTextV_uniformId, 1, resDT);
-	glUniform1i(doingText_uniformId, 1);
-	glUniform1i(texMode_uniformId, 5);
 
 	//LIGHTS
 	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
@@ -415,6 +409,24 @@ void renderScene()
 		alienShotVector[i]->draw(shader);
 	}
 	background1->draw(shader);
+
+
+	// H U D
+	glDisable(GL_DEPTH_TEST);
+	pushMatrix(MODEL);
+	loadIdentity(VIEW);
+	loadIdentity(MODEL);
+	loadIdentity(PROJECTION);
+	ortho(0, WinX, 0, WinY, 0, 1);
+	glUniform1i(texMode_uniformId, 5);
+
+	_fontSize = 20;
+	std::string s = "SCORE:";
+	DrawString(103, 2, s);
+
+	popMatrix(MODEL);
+	glEnable(GL_DEPTH_TEST);
+
 
 	//este já é feito no display
 	//glutSwapBuffers();
@@ -827,12 +839,16 @@ void setupThings() {
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
+	_fontSize = 16;
+	initTextureMappedFont();
+
+
 	glGenTextures(5, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "font1.tga", 2);
-	TGA_Texture(TextureArray, "checker.tga", 3);
-	TGA_Texture(TextureArray, "checker.tga", 4);
+	TGA_Texture(TextureArray, "font1.tga", 3);
+	TGA_Texture(TextureArray, "font1.tga", 4);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
@@ -863,7 +879,7 @@ void setupThings() {
 		objId += objIdInc;
 	}
 	else spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
-	printf("%d\n", objId);
+	//printf("%d\n", objId);
 
 	if (objIdStars == -1) {
 		objIdStars = objId;
