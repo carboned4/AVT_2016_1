@@ -447,17 +447,27 @@ void renderScene()
 
 	_fontSize = 50;
 	initTextureMappedFont();
-	if (pauseWindowShow == true) {
+	if (pauseWindowShow) {
 		s = "PAUSE";
 		DrawString(WinX/2-100, WinY/2, s);	
 	}
-	if (wonGame == true) {
+	if (wonGame) {
 		s = "YOU WON!";
 		DrawString(WinX / 2 - 150, WinY / 2, s);
 	}
-	if (lostGame == true) {
+	if (lostGame) {
 		s = "YOU LOST";
 		DrawString(WinX / 2 - 150, WinY / 2, s);
+	}
+	_fontSize = 30;
+	initTextureMappedFont();
+	if (pauseWindowShow) {
+		s = "Press S to resume";
+		DrawString(WinX / 2 - 200, WinY / 2-30, s);
+	}
+	if (wonGame | lostGame) {
+		s = "Press R to restart";
+		DrawString(WinX / 2 - 225, WinY / 2-30, s);
 	}
 
 	glDisable(GL_DEPTH_TEST);
