@@ -428,6 +428,19 @@ void renderScene()
 	std::string s = "LIVES:" + std::to_string(lives);
 	DrawString(103, 2, s);
 
+
+	glDisable(GL_DEPTH_TEST);
+	loadIdentity(VIEW);
+	loadIdentity(MODEL);
+	loadIdentity(PROJECTION);
+	ortho(0, WinX, 0, WinY, -5, 5);
+
+	translate(MODEL, 250, 10, 0.0);
+	scale(MODEL, 10.0, 10.0, 10.0);
+	for (int ilives = 0; ilives < lives; ilives++) {
+		LivesRepresentation[ilives]->draw(shader);
+	}
+
 	popMatrix(MODEL);
 	glEnable(GL_DEPTH_TEST);
 
@@ -917,9 +930,11 @@ void setupThings() {
 		if (objIdShip == -1) {
 			objIdShip = objId;
 			LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, -1.0f*ilives, 0.0f, 0.0f, 0.0f, 0.0f));
+			LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 5.0f*ilives, 0.0, 0.0, 0.0f, 0.0f));
 			objId += objIdInc;
 		}
 		else spaceship = new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0f, 0.0f, -5.8f, 5.8f);
+		LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 5.0f*ilives, 0.0, 0.0, 0.0f, 0.0f));
 	}
 }
 
