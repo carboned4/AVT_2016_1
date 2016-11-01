@@ -156,6 +156,8 @@ char s[32];
 
 bool game_running = true;
 bool pauseWindowShow = false;
+bool wonGame = false;
+bool lostGame = false;
 
 std::vector <Alien*> Aliens;
 Spaceship *spaceship;
@@ -514,16 +516,21 @@ void passKeys() {
 		else spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
 		//printf("%d %d\n", objId, objIdShipShot);
 	}
-	if (keyState['s']) {
-											//Toggle pausewindow on or off
-		game_running = !(game_running);
-		pauseWindowShow = !(pauseWindowShow);
+	if (keyState['s']) {							//Toggle pausewindow on or off
+		if (!wonGame & !lostGame) {
+			game_running = !(game_running);
+			pauseWindowShow = !(pauseWindowShow);
+		}
 	}
 
 	if (keyState['r']) {
-		//Toggle pausewindow on or off
-		game_running = true;
-		pauseWindowShow = false;
+		if (wonGame | lostGame) {
+			restartGame();
+			game_running = true;
+			wonGame = false;
+			lostGame = false;
+			pauseWindowShow = false;
+		}
 	}
 
 		
@@ -634,7 +641,7 @@ void update() {
 	timeDelta = timeElapsed - timePrevious;
 	timePrevious = timeElapsed;
 
-	if (pauseWindowShow != true) {
+	if (game_running == true) {
 		//passKeys();
 		physics();
 
@@ -645,7 +652,14 @@ void update() {
 		followCam->setCamXYZ(camX, camY, camZ);
 		cleanupShots();
 		collisions();
-		if (lives <= 0) restartGame();
+		if (lives <= 0) {
+			lostGame = true;
+			game_running = false;
+		}
+		if (Aliens.size() <= 0) {
+			wonGame = true;
+			game_running = false;
+		}
 	}
 	/*if (!game_running) {
 		//increase_speed = false;
