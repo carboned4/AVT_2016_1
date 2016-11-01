@@ -109,7 +109,8 @@ void main() {
 	{
 		texel = texture(texmap0, DataIn.tex_coord);  // texel from stars.tga
 		texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
-		colorOut = texel * texel2;
+		vec4 possibleMix = texel * texel2;
+		colorOut = max(intensity*texel + spec, possibleMix);
 	}
 	else if (texMode == 3) //use only texture
 	{

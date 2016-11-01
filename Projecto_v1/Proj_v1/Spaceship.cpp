@@ -46,8 +46,8 @@ bool Spaceship::checkCollisionShot( Vec3 shotPos, Box shotBox) {
 
 	 if (Box::Collided(colBox, position, shotBox, shotPos)) {
 		 printf("Colidiu com a bala\n");
-		 speed.set(0.0f, 0.0f, 0.0f);
-		 position.set(0.0f,0.0f,0.0f);
+		 //speed.set(0.0f, 0.0f, 0.0f);
+		 //position.set(0.0f,0.0f,0.0f);
 		 return true;
 	 }
 	 else{ 

@@ -55,6 +55,8 @@ int timePause = 0;
 int lastTime = 0;
 int timeAlpha = 0;
 
+int lives = 5;
+
 #define VERTEX_COORD_ATTRIB 0
 #define NORMAL_ATTRIB 1
 #define TEXTURE_COORD_ATTRIB 2
@@ -421,7 +423,7 @@ void renderScene()
 	glUniform1i(texMode_uniformId, 5);
 
 	_fontSize = 20;
-	std::string s = "SCORE:";
+	std::string s = "LIVES:" + std::to_string(lives);
 	DrawString(103, 2, s);
 
 	popMatrix(MODEL);
@@ -437,6 +439,23 @@ void switchFramerate() {
 	if (TargetFramerate == 30) TargetFramerate = 60;
 	else if (TargetFramerate == 60) TargetFramerate = 120;
 	else if (TargetFramerate == 120) TargetFramerate = 30;
+}
+
+void restartGame() {
+	lives = 5;
+	alienShotVector.clear();
+	spaceshipShotVector.clear();
+	Aliens.clear();
+	for (int i = 0; i < ALIENROWS; i++) {
+		for (int j = 0; j < ALIENCOLUMNS; j++) {
+			if (objIdAlien == -1) {
+				objIdAlien = objId;
+				Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
+				objId += objIdInc;
+			}
+			else Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
+		}
+	}
 }
 
 void passKeys() {
@@ -489,13 +508,13 @@ void alienShots() {
 			alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
 			objId += objIdInc;
 		}
-		alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+		else alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
 		lastTime = timeElapsed;
 		//printf("%d %d\n", objId, objIdAlienShot);
 	}
 }
 void collisions() {
-	bool shipcollided;
+	bool shipcollided = false;
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		shipcollided = spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
 		if (shipcollided) {
@@ -503,6 +522,9 @@ void collisions() {
 			break;
 		}
 	}
+
+	if (shipcollided) lives--;
+
 	bool aliencollided;
 	//printf("size shot %d %d\n", spaceshipShotVector.size(), Aliens.size());
 	//printf("lol\n");
@@ -529,7 +551,7 @@ void collisions() {
 		i++;
 	}
 	//printf("iteraliens cycle done %d\n", Aliens.size());
-
+	
 }
 
 void cleanupShots() {
@@ -571,6 +593,7 @@ void update() {
 	followCam->setCamXYZ(camX, camY, camZ);
 	cleanupShots();
 	collisions();
+	if (lives <= 0) restartGame();
 }
 
 ///////////////// USER INTERACTION
@@ -883,10 +906,10 @@ void setupThings() {
 
 	if (objIdStars == -1) {
 		objIdStars = objId;
-		background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 15.0f);
+		background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 20.0f);
 		objId += objIdInc;
 	}
-	else background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 15.0f);
+	else background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 20.0f);
 
 	
 }
