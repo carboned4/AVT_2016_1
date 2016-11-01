@@ -432,7 +432,10 @@ void renderScene()
 
 	_fontSize = 20;
 	std::string s = "LIVES:" + std::to_string(lives);
-	DrawString(103, 2, s);
+	DrawString(15, 2, s);
+
+	s = "SCORE:" + std::to_string(2560);
+	DrawString(WinX - 175, 2, s);
 
 
 	glDisable(GL_DEPTH_TEST);
@@ -441,7 +444,7 @@ void renderScene()
 	loadIdentity(PROJECTION);
 	ortho(0, WinX, 0, WinY, -5, 5);
 
-	translate(MODEL, 250, 10, 0.0);
+	translate(MODEL, 175, 10, 0.0);
 	scale(MODEL, 10.0, 10.0, 10.0);
 	for (int ilives = 0; ilives < lives; ilives++) {
 		LivesRepresentation[ilives]->draw(shader);
