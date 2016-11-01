@@ -962,7 +962,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "font1.tga", 2);
 	TGA_Texture(TextureArray, "font1.tga", 3);
-	TGA_Texture(TextureArray, "font1.tga", 4);
+	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 4);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);

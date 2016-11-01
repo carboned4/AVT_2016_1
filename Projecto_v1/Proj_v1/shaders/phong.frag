@@ -121,7 +121,7 @@ void main() {
 	{
 		vec4 cor = vec4(1,1,1,1);
 		vec4 texcolol = texture(texmap2, DataIn.tex_coord);
-		if(texcolol[0]+texcolol[1]+texcolol[2] < 0.2) discard;
+		if(texcolol[0]+texcolol[1]+texcolol[2] < 2.5) discard;
 		colorOut = texcolol*cor;
 	}
 	else { //do not use texture
