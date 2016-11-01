@@ -436,18 +436,28 @@ void renderScene()
 	ortho(0, WinX, 0, WinY, 0, 1);
 	glUniform1i(texMode_uniformId, 5);
 
-	_fontSize = 20;
+	_fontSize = 16;
+	initTextureMappedFont();
 	std::string s = "LIVES:" + std::to_string(lives);
 	DrawString(15, 2, s);
 
 	s = "SCORE:" + std::to_string(score);
 	DrawString(WinX - 175, 2, s);
 
+
+	_fontSize = 50;
+	initTextureMappedFont();
 	if (pauseWindowShow == true) {
-		_fontSize = 50;
 		s = "PAUSE";
-		DrawString(WinX-410, 230, s);
-		
+		DrawString(WinX/2-100, WinY/2, s);	
+	}
+	if (wonGame == true) {
+		s = "YOU WON!";
+		DrawString(WinX / 2 - 150, WinY / 2, s);
+	}
+	if (lostGame == true) {
+		s = "YOU LOST";
+		DrawString(WinX / 2 - 150, WinY / 2, s);
 	}
 
 	glDisable(GL_DEPTH_TEST);
