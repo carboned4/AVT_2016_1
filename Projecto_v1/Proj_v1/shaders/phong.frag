@@ -8,6 +8,11 @@ uniform sampler2D texmap1;
 uniform sampler2D texmap2;
 uniform sampler2D texmap3;
 uniform sampler2D texmap4;
+uniform sampler2D texmap5;
+uniform sampler2D texmap6;
+uniform sampler2D texmap7;
+uniform sampler2D texmap8;
+uniform sampler2D texmap9;
 
 uniform vec2 doingtextv2;
 
@@ -45,7 +50,7 @@ void main() {
 	float c = 0.07;
 	float attenuation;
 	float distance;
-	vec4 texel, texel2;
+	vec4 texel, texel1, texel2;
 	//int lol = doingText;
 
 	
@@ -94,27 +99,48 @@ void main() {
 	}
 	
 //STEP 2 - textures
-
+	if(mat.texCount == 0)
+		texel = texture(texmap0, DataIn.tex_coord);
+	else if(mat.texCount == 1)
+		texel = texture(texmap1, DataIn.tex_coord);
+	else if(mat.texCount == 2)
+		texel = texture(texmap2, DataIn.tex_coord);
+	else if(mat.texCount == 3)
+		texel = texture(texmap3, DataIn.tex_coord);
+	else if(mat.texCount == 4)
+		texel = texture(texmap4, DataIn.tex_coord);
+	else if(mat.texCount == 5)
+		texel = texture(texmap5, DataIn.tex_coord);
+	else if(mat.texCount == 6)
+		texel = texture(texmap6, DataIn.tex_coord);
+	else if(mat.texCount == 7)
+		texel = texture(texmap7, DataIn.tex_coord);
+	else if(mat.texCount == 8)
+		texel = texture(texmap8, DataIn.tex_coord);
+	else if(mat.texCount == 9)
+		texel = texture(texmap9, DataIn.tex_coord);
+	
+	
 	if(texMode == 0) // modulate diffuse color with texel color
 	{
-		texel = texture(texmap2, DataIn.tex_coord);  // texel from lighwood.tga
+		//texel = texture(texmap5, DataIn.tex_coord);  // texel from lighwood.tga
 		colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
 	}
 	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
 	{
-		texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
+		//texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
 		colorOut = max(intensity*texel + spec, 0.1*texel);
 	}
 	else if (texMode == 2) // multitexturing
 	{
-		texel = texture(texmap0, DataIn.tex_coord);  // texel from stars.tga
+		texel1 = texture(texmap0, DataIn.tex_coord);  // texel from stars.tga
 		texel2 = texture(texmap1, DataIn.tex_coord);  // texel from checker.tga
-		vec4 possibleMix = texel * texel2;
-		colorOut = max(intensity*texel + spec, possibleMix);
+		vec4 possibleMix = texel1 * texel2;
+		colorOut = max(intensity*texel1 + spec, possibleMix);
 	}
 	else if (texMode == 3) //use only texture
 	{
-		texel = texture(texmap0, DataIn.tex_coord); 
+		//texel = texture(texmap5, DataIn.tex_coord); 
 		colorOut = texel;
 	}
 	else if (texMode == 5)

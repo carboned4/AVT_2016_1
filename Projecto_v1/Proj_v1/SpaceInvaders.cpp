@@ -111,7 +111,7 @@ GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
 GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
 GLint texMode_uniformId;
-GLuint TextureArray[5];
+GLuint TextureArray[10];
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -325,6 +325,11 @@ GLuint setupShaders() {
 	tex_loc2 = glGetUniformLocation(shader.getProgramIndex(), "texmap2");
 	tex_loc3 = glGetUniformLocation(shader.getProgramIndex(), "texmap3");
 	tex_loc4 = glGetUniformLocation(shader.getProgramIndex(), "texmap4");
+	tex_loc5 = glGetUniformLocation(shader.getProgramIndex(), "texmap5");
+	tex_loc6 = glGetUniformLocation(shader.getProgramIndex(), "texmap6");
+	tex_loc7 = glGetUniformLocation(shader.getProgramIndex(), "texmap7");
+	tex_loc8 = glGetUniformLocation(shader.getProgramIndex(), "texmap8");
+	tex_loc9 = glGetUniformLocation(shader.getProgramIndex(), "texmap9");
 
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
 	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
@@ -405,12 +410,27 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[3]);
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[4]);
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[5]);
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[6]);
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[7]);
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[8]);
+	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[9]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
 	glUniform1i(tex_loc2, 2);
-	glUniform1i(tex_loc2, 3);
-	glUniform1i(tex_loc2, 4);
+	glUniform1i(tex_loc3, 3);
+	glUniform1i(tex_loc4, 4);
+	glUniform1i(tex_loc5, 5);
+	glUniform1i(tex_loc6, 6);
+	glUniform1i(tex_loc7, 7);
+	glUniform1i(tex_loc8, 8);
+	glUniform1i(tex_loc9, 9);
 
 	
 	//OBJECTS
@@ -957,12 +977,17 @@ void setupThings() {
 	initTextureMappedFont();
 
 
-	glGenTextures(5, TextureArray);
+	glGenTextures(10, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
-	TGA_Texture(TextureArray, "font1.tga", 2);
+	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
 	TGA_Texture(TextureArray, "font1.tga", 3);
-	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 4);
+	TGA_Texture(TextureArray, "font1.tga", 4);
+	TGA_Texture(TextureArray, "aliens.tga", 5);
+	TGA_Texture(TextureArray, "font1.tga", 6);
+	TGA_Texture(TextureArray, "font1.tga", 7);
+	TGA_Texture(TextureArray, "font1.tga", 8);
+	TGA_Texture(TextureArray, "font1.tga", 9);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);

@@ -91,7 +91,7 @@ void Alien::draw(VSShaderLib _shader) {
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 	
-	glUniform1i(texMode_uniformId, 4);
+	glUniform1i(texMode_uniformId, 0);
 
 	//SPHERE
 	// send the material
@@ -106,6 +106,7 @@ void Alien::draw(VSShaderLib _shader) {
 	// send matrices to OGL
 	pushMatrix(MODEL);
 	scale(MODEL, 1.5f, 0.5f, 1.0f);	
+	rotate(MODEL, 90.0f, 0.0f, 1.0f, 0.0f);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
