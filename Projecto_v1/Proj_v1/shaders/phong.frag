@@ -123,7 +123,7 @@ void main() {
 	
 	if(texMode == 0) // modulate diffuse color with texel color
 	{
-		//texel = texture(texmap5, DataIn.tex_coord);  // texel from lighwood.tga
+		texel = texture(texmap5, DataIn.tex_coord);  // texel from lighwood.tga
 		colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
 	}
 	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
@@ -140,7 +140,7 @@ void main() {
 	}
 	else if (texMode == 3) //use only texture
 	{
-		//texel = texture(texmap5, DataIn.tex_coord); 
+		texel = texture(texmap5, DataIn.tex_coord); 
 		colorOut = texel;
 	}
 	else if (texMode == 5)
@@ -149,6 +149,11 @@ void main() {
 		vec4 texcolol = texture(texmap2, DataIn.tex_coord);
 		if(texcolol[0]+texcolol[1]+texcolol[2] < 2.5) discard;
 		colorOut = texcolol*cor;
+	}
+	else if (texMode == 6) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
+	{
+		texel = texture(texmap5, DataIn.tex_coord);  // texel from stone.tga
+		colorOut = max(texel + spec, 0.1*texel);
 	}
 	else { //do not use texture
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
