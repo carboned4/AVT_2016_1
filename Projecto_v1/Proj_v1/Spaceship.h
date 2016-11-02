@@ -45,6 +45,12 @@ public:
 	Vec3 getSpeedAngle() {
 		return speedAngleEffectVec;
 	}
+	void setSpeed(float _x, float _y, float _z) {
+		speed.set(_x, _y, _z);
+	}
+	void setPosition(float _x, float _y, float _z) {
+		position.set(_x, _y, _z);
+	}
 };
 
 

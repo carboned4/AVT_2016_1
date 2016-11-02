@@ -128,7 +128,7 @@ void main() {
 	}
 	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
 	{
-		//texel = texture(texmap2, DataIn.tex_coord);  // texel from stone.tga
+		texel = texture(texmap5, DataIn.tex_coord);  // texel from stone.tga
 		colorOut = max(intensity*texel + spec, 0.1*texel);
 	}
 	else if (texMode == 2) // multitexturing

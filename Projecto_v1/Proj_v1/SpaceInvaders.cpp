@@ -524,6 +524,8 @@ void restartGame() {
 	alienShotVector.clear();
 	spaceshipShotVector.clear();
 	Aliens.clear();
+	spaceship->setSpeed(0.0f, 0.0f, 0.0f);
+	spaceship->setPosition(0.0f,0.0f,0.0f);
 	for (int i = 0; i < ALIENROWS; i++) {
 		for (int j = 0; j < ALIENCOLUMNS; j++) {
 			if (objIdAlien == -1) {
@@ -983,7 +985,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
 	TGA_Texture(TextureArray, "font1.tga", 3);
 	TGA_Texture(TextureArray, "font1.tga", 4);
-	TGA_Texture(TextureArray, "aliens.tga", 5);
+	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "font1.tga", 6);
 	TGA_Texture(TextureArray, "font1.tga", 7);
 	TGA_Texture(TextureArray, "font1.tga", 8);
