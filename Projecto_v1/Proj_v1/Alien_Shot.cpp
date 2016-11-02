@@ -43,7 +43,7 @@ void Alien_Shot::draw(VSShaderLib _shader) {
 	glUniform1f(loc, mesh[objectId].mat.shininess);
 	// send matrices to OGL
 	pushMatrix(MODEL);
-	scale(MODEL, 0.5f, 0.5f, 0.5f);	
+	scale(MODEL, 1.5f, 1.5f, 1.5f);	
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
