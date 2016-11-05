@@ -103,6 +103,8 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
 	scale(MODEL, 1.5f, 0.5f, 1.0f);	
@@ -128,6 +130,8 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId+1].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId+1].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
 		translate(MODEL, 0.5f, 0.0f, 0.0f);
@@ -154,6 +158,8 @@ void Alien::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId+2].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId+2].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
 		translate(MODEL, -0.5f, 0.0f, 0.0f);

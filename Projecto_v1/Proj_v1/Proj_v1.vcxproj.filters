@@ -118,12 +118,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\gouraud.frag" />
-    <None Include="shaders\gouraud.vert" />
-    <None Include="shaders\lab.frag" />
-    <None Include="shaders\lab.vert" />
-    <None Include="shaders\pointlight.frag" />
-    <None Include="shaders\pointlight.vert" />
     <None Include="shaders\phong.vert" />
     <None Include="shaders\phong.frag" />
   </ItemGroup>

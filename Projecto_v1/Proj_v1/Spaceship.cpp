@@ -115,6 +115,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	rotate(MODEL, speedAngleEffect, 0.0f, 1.0f, 0.0f);
@@ -144,6 +146,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId + 1].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId + 1].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
 	translate(MODEL, 0.0f, 0.5f, 0.5f);
@@ -170,6 +174,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glUniform4fv(loc, 1, mesh[objectId + 2].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, mesh[objectId + 2].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
 	translate(MODEL, 1.0f, 0.5f, 0.5f);
