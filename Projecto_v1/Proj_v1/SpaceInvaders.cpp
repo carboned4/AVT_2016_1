@@ -20,6 +20,7 @@
 
 #include "StarsBackground.h"
 #include "StencilPortal.h"
+#include "PortalLiquid.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -79,6 +80,7 @@ int objIdPause = -1;
 int objIdDead = -1;
 int objIdVictory = -1;
 int objIdStencilPortal = -1;
+int objIdPortalLiquid = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -172,6 +174,7 @@ StarsBackground *background1;
 std::vector <Spaceship*> LivesRepresentation;
 
 StencilPortal* stencilPortal;
+PortalLiquid* portalLiquid;
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -402,6 +405,7 @@ void renderScene()
 	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
 	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
+
 	//TEXTURES
 	//Associar os Texture Units aos Objects Texture
 	//stone.tga loaded in TU0; checker.tga loaded in TU1;  lightwood.tga loaded in TU2
@@ -481,6 +485,7 @@ void renderScene()
 	glDisable(GL_STENCIL_TEST);
 	
 
+	portalLiquid->draw(shader);
 
 
 	// H U D
@@ -1023,7 +1028,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "font1.tga", 4);
 	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
-	TGA_Texture(TextureArray, "font1.tga", 7);
+	TGA_Texture(TextureArray, "humaneyebigsq.tga", 7);
 	TGA_Texture(TextureArray, "font1.tga", 8);
 	TGA_Texture(TextureArray, "font1.tga", 9);
 
@@ -1080,6 +1085,14 @@ void setupThings() {
 		objId += objIdInc;
 	}
 	else stencilPortal = new StencilPortal(objIdStencilPortal, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+	
+	if (objIdPortalLiquid == -1) {
+		objIdPortalLiquid = objId;
+		portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+		objId += objIdInc;
+	}
+	portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+
 	
 }
 

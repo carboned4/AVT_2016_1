@@ -14,7 +14,7 @@ StencilPortal::StencilPortal(int _objId, int* addedToId, float _x, float _y, flo
 	memcpy(mesh[objectId + 1].mat.emissive, emissive1, 4 * sizeof(float));
 	mesh[objectId + 1].mat.shininess = shininess1;
 	mesh[objectId + 1].mat.texCount = texcount1;
-	createCone(objectId, 0.1f, 2.0f, 20);
+	createCylinder(objectId, 0.1f, 2.0f, 20);
 	createSphere(objectId+1, 2.0f, 20);
 
 
@@ -63,7 +63,7 @@ void StencilPortal::fillStencil(VSShaderLib _shader) {
 
 void StencilPortal::draw(VSShaderLib _shader) {
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX()+2.0f, position.getY(), position.getZ()+3.0f);
+	translate(MODEL, position.getX()+4.0f, position.getY(), position.getZ()+6.0f);
 	GLint loc;
 
 	glUniform1i(texMode_uniformId, 1);
