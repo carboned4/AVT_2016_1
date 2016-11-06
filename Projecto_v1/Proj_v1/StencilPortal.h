@@ -7,9 +7,9 @@
 
 class StencilPortal : public StaticObject {
 private:
-	float amb[4] = { 0.1f, 0.25f, 0.1f, 1.0f };
-	float diff[4] = { 0.1f, 0.9f, 0.1f, 1.0f };
-	float spec[4] = { 0.9f, 0.5f, 0.1f, 1.0f };
+	float amb[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float diff[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float spec[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 20.0f;
 	int texcount = 0;

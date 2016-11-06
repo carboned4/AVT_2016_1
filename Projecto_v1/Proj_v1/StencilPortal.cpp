@@ -63,7 +63,7 @@ void StencilPortal::fillStencil(VSShaderLib _shader) {
 
 void StencilPortal::draw(VSShaderLib _shader) {
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX()+2.0f, position.getY(), position.getZ()+1.0f);
+	translate(MODEL, position.getX()+2.0f, position.getY(), position.getZ()+3.0f);
 	GLint loc;
 
 	glUniform1i(texMode_uniformId, 1);
