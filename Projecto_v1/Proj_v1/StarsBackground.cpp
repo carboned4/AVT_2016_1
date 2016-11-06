@@ -9,7 +9,7 @@ StarsBackground::StarsBackground(int _objId, int* addedToId, float _x, float _y,
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	
-	createQuad(objectId, 60.0f, 60.0f);
+	createQuad(objectId, 75.0f, 75.0f);
 
 	*addedToId = addToId;
 }

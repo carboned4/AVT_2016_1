@@ -19,6 +19,7 @@
 #include "Spaceship_Shot.h"
 
 #include "StarsBackground.h"
+#include "StencilPortal.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -33,6 +34,7 @@
 #define ALIENROWGAP 1.5f
 #define ALIENWIDTH 2.0f
 #define ALIENROWSHIFT 0.25f
+#define FARTHESTALIEN 10.0f
 #define TIMEBETWEENSHOTS 6000
 
 #define I_POINT 0
@@ -76,6 +78,7 @@ int objIdStars = -1;
 int objIdPause = -1;
 int objIdDead = -1;
 int objIdVictory = -1;
+int objIdStencilPortal = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -144,7 +147,7 @@ bool keyRight = false;
 
 // Camera Spherical Coordinates
 float alpha = 180.0f, beta = 10.0f;
-float r = 2.6f;
+float r = 3.5f;
 float camPos[3];
 float objPos[3];
 
@@ -167,6 +170,8 @@ std::vector <Spaceship_Shot*> spaceshipShotVector;
 std::vector <Alien_Shot*> alienShotVector;
 StarsBackground *background1;
 std::vector <Spaceship*> LivesRepresentation;
+
+StencilPortal* stencilPortal;
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -445,6 +450,37 @@ void renderScene()
 		alienShotVector[i]->draw(shader);
 	}
 	background1->draw(shader);
+	
+	
+	/*
+	stencilPortal->fillStencil(shader);
+	stencilPortal->draw(shader);
+	*/
+	
+	
+	//STENCIL
+	glUniform1i(texMode_uniformId, 0);
+	glEnable(GL_STENCIL_TEST);
+
+	// Draw floor
+	glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFF); // Write to stencil buffer
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+	
+	stencilPortal->fillStencil(shader);
+
+	// Draw cube reflection
+	glStencilFunc(GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
+	glStencilMask(0x00); // Don't write anything to stencil buffer
+	glDepthMask(GL_TRUE); // Write to depth buffer
+
+	stencilPortal->draw(shader);
+
+	glDisable(GL_STENCIL_TEST);
+	
+
 
 
 	// H U D
@@ -669,7 +705,7 @@ void cleanupShots() {
 	}
 	for (iterShotsb = spaceshipShotVector.begin(); iterShotsb != spaceshipShotVector.end(); ) {
 		shotz = (*iterShotsb)->getPosition().getZ();
-		if (shotz > 15.0f) {
+		if (shotz > (FARTHESTALIEN + 5.0f)) {
 			iterShotsb = spaceshipShotVector.erase(iterShotsb);
 		}
 		else {
@@ -745,13 +781,13 @@ void processMouseButtons(int button, int state, int xx, int yy)
 			beta += (yy - startY);
 			if (beta > 80.0f)
 				beta = 80.0f;
-			else if (beta < -80.0f)
-				beta = -80.0f;
+			else if (beta < -10.0f)
+				beta = -10.0f;
 		}
 		else if (tracking == 2) {
 			r += (yy - startY) * 0.01f;
-			if (r < 0.1f)
-				r = 0.1f;
+			if (r < 0.5f)
+				r = 0.5f;
 		}
 		tracking = 0;
 	}
@@ -770,8 +806,8 @@ void processMouseMotion(int xx, int yy)
 		betaAux = beta + deltaY;
 		if (betaAux > 80.0f)
 			betaAux = 80.0f;
-		else if (betaAux < -80.0f)
-			betaAux = -80.0f;
+		else if (betaAux < -10.0f)
+			betaAux = -10.0f;
 		rAux = r;
 	}
 	// right mouse button: zoom
@@ -779,8 +815,8 @@ void processMouseMotion(int xx, int yy)
 		alphaAux = alpha;
 		betaAux = beta;
 		rAux = r + (deltaY * 0.01f);
-		if (rAux < 0.1f)
-			rAux = 0.1f;
+		if (rAux < 0.5f)
+			rAux = 0.5f;
 	}
 	camX = rAux * sin(alphaAux * 3.14f / 180.0f) * cos(betaAux * 3.14f / 180.0f);
 	camZ = rAux * cos(alphaAux * 3.14f / 180.0f) * cos(betaAux * 3.14f / 180.0f);
@@ -986,7 +1022,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "font1.tga", 3);
 	TGA_Texture(TextureArray, "font1.tga", 4);
 	TGA_Texture(TextureArray, "reptil.tga", 5);
-	TGA_Texture(TextureArray, "font1.tga", 6);
+	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
 	TGA_Texture(TextureArray, "font1.tga", 7);
 	TGA_Texture(TextureArray, "font1.tga", 8);
 	TGA_Texture(TextureArray, "font1.tga", 9);
@@ -1007,10 +1043,10 @@ void setupThings() {
 		for (int j = 0; j < ALIENCOLUMNS; j++){
 			if (objIdAlien == -1) {
 				objIdAlien = objId;
-				Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
+				Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 				objId += objIdInc;
 			}
-			else Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, 10.0f - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
+			else Aliens.push_back(new Alien(objIdAlien, &objIdInc, ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0f, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 		}
 	}
 	//objId += objIdInc;
@@ -1024,10 +1060,10 @@ void setupThings() {
 
 	if (objIdStars == -1) {
 		objIdStars = objId;
-		background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 20.0f);
+		background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, FARTHESTALIEN+15.0f);
 		objId += objIdInc;
 	}
-	else background1 = new StarsBackground(objId, &objIdInc, 0.0f, 0.0f, 20.0f);
+	else background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, FARTHESTALIEN+15.0f);
 
 	for (int ilives = 0; ilives < 5; ilives++) {
 		if (objIdShip == -1) {
@@ -1037,6 +1073,14 @@ void setupThings() {
 		}
 		LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 5.0f*ilives, 0.0, 0.0, 0.0f, 0.0f));
 	}
+	
+	if (objIdStencilPortal == -1) {
+		objIdStencilPortal = objId;
+		stencilPortal = new StencilPortal(objIdStencilPortal, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+		objId += objIdInc;
+	}
+	else stencilPortal = new StencilPortal(objIdStencilPortal, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+	
 }
 
 void init(int argc, char* argv[])
