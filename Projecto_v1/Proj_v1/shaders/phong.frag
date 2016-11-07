@@ -123,13 +123,13 @@ void main() {
 	
 	if(texMode == 0) // modulate diffuse color with texel color
 	{
-		//texel = texture(texmap5, DataIn.tex_coord);  // texel from lighwood.tga
-		colorOut = max(intensity * mat.diffuse * texel + spec,mat.ambient * texel);
+		colorOut.rgb = max(intensity * mat.diffuse.rgb * texel.rgb + spec.rgb,mat.ambient.rgb * texel.rgb);
+		colorOut.a = mat.ambient.a * texel.a;
 	}
 	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
 	{
-		//texel = texture(texmap5, DataIn.tex_coord);  // texel from stone.tga
-		colorOut = max(intensity*texel + spec, 0.1*texel);
+		colorOut.rgb = max(intensity*texel.rgb + spec.rgb, 0.1*texel.rgb);
+		colorOut.a = mat.ambient.a * texel.a;
 	}
 	else if (texMode == 2) // multitexturing
 	{
@@ -140,10 +140,10 @@ void main() {
 	}
 	else if (texMode == 3) //use only texture
 	{
-		//texel = texture(texmap5, DataIn.tex_coord); 
-		colorOut = texel;
+		colorOut.rgb = texel.rgb;
+		colorOut.a = texel.a;
 	}
-	else if (texMode == 5)
+	else if (texMode == 5) //writing
 	{
 		vec4 cor = vec4(1,1,1,1);
 		vec4 texcolol = texture(texmap2, DataIn.tex_coord);
@@ -152,8 +152,8 @@ void main() {
 	}
 	else if (texMode == 6) // full texel color, with specular area or ambient (0.1*texel)
 	{
-		//texel = texture(texmap5, DataIn.tex_coord);  // texel from stone.tga
-		colorOut = max(texel + spec, 0.1*texel);
+		colorOut.rgb = max(texel.rgb + spec.rgb, 0.1*texel.rgb);
+		colorOut.a = mat.ambient.a * texel.a;
 	}
 	else { //do not use texture
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
