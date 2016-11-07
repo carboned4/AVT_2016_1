@@ -8,7 +8,7 @@ PortalLiquid::PortalLiquid(int _objId, int* addedToId, float _x, float _y, float
 	memcpy(mesh[objectId].mat.emissive, emissive, 4 * sizeof(float));
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
-	createCylinder(objectId, 0.1f, 2.0f, 20);
+	createSphere(objectId, 2.0f, 20);
 
 	*addedToId = addToId;
 }
@@ -22,7 +22,7 @@ void PortalLiquid::draw(VSShaderLib _shader) {
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 
-	glUniform1i(texMode_uniformId, 4);
+	glUniform1i(texMode_uniformId, 1);
 
 	//SPHERE
 	// send the material
@@ -37,7 +37,9 @@ void PortalLiquid::draw(VSShaderLib _shader) {
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
-	rotate(MODEL, -80.0f, -1.0f, 0.0f, 1.0f);
+	//rotate(MODEL, -80.0f, -1.0f, 0.0f, 1.0f);
+	rotate(MODEL, -45.0f, 0.0f, 1.0f, 0.0f);
+	scale(MODEL, 0.1f, 1.0f, 1.0f);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);

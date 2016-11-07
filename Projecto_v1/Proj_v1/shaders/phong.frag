@@ -150,7 +150,7 @@ void main() {
 		if(texcolol[0]+texcolol[1]+texcolol[2] < 2.5) discard;
 		colorOut = texcolol*cor;
 	}
-	else if (texMode == 6) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
+	else if (texMode == 6) // full texel color, with specular area or ambient (0.1*texel)
 	{
 		//texel = texture(texmap5, DataIn.tex_coord);  // texel from stone.tga
 		colorOut = max(texel + spec, 0.1*texel);

@@ -405,7 +405,8 @@ void renderScene()
 	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
 	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
-
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//TEXTURES
 	//Associar os Texture Units aos Objects Texture
 	//stone.tga loaded in TU0; checker.tga loaded in TU1;  lightwood.tga loaded in TU2
@@ -484,7 +485,7 @@ void renderScene()
 
 	glDisable(GL_STENCIL_TEST);
 	
-
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	portalLiquid->draw(shader);
 
 
@@ -1028,7 +1029,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "font1.tga", 4);
 	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
-	TGA_Texture(TextureArray, "humaneyebigsq.tga", 7);
+	TGA_Texture(TextureArray, "liquidmetal.tga", 7);
 	TGA_Texture(TextureArray, "font1.tga", 8);
 	TGA_Texture(TextureArray, "font1.tga", 9);
 
