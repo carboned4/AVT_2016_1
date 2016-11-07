@@ -46,7 +46,7 @@ void Alien::setDestroyed(bool deststate) {
 bool Alien::checkCollisionShot(Vec3 shotPos, Box shotBox) {
 
 	if (Box::Collided(colBox, position, shotBox, shotPos)) {
-		printf("Alien colidiu com a bala\n");
+		//printf("Alien colidiu com a bala\n");
 		return true;
 	}
 	else {

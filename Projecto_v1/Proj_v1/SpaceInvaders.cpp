@@ -21,6 +21,7 @@
 #include "StarsBackground.h"
 #include "StencilPortal.h"
 #include "PortalLiquid.h"
+#include "Planet.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -81,6 +82,7 @@ int objIdDead = -1;
 int objIdVictory = -1;
 int objIdStencilPortal = -1;
 int objIdPortalLiquid = -1;
+int objIdPlanet = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -103,12 +105,12 @@ float lightsOnMiner = 1.0f;
 float lightPosGlobal[4] = { 5.0f, -10.0f, -5.0f, 0.0f };
 float lightPosPoint0[4] = { 5.0f, 10.0f, 15.0f, 1.0f };
 float lightPosPoint1[4] = { -5.0f, 10.0f, 15.0f, 1.0f };
-float lightPosPoint2[4] = { 5.0f, 5.0f, 5.0f, 1.0f };
-float lightPosPoint3[4] = { -5.0f, 5.0f, 5.0f, 1.0f };
+float lightPosPoint2[4] = { 5.0f, 10.0f, 5.0f, 1.0f };
+float lightPosPoint3[4] = { -5.0f, 10.0f, 5.0f, 1.0f };
 float lightPosPoint4[4] = { 0.0f, -10.0f, 5.0f, 1.0f };
 float lightPosPoint5[4] = { 0.0f, 10.0f, 5.0f, 1.0f };
 float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-float lightDirSpot[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
+float lightDirSpot[4] = { 0.0f, 10.0f, 5.0f, 0.0f };
 
 //texturas
 GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
@@ -175,6 +177,7 @@ std::vector <Spaceship*> LivesRepresentation;
 
 StencilPortal* stencilPortal;
 PortalLiquid* portalLiquid;
+Planet* planet;
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -457,10 +460,7 @@ void renderScene()
 	background1->draw(shader);
 	
 	
-	/*
-	stencilPortal->fillStencil(shader);
-	stencilPortal->draw(shader);
-	*/
+	planet->draw(shader);
 	
 	
 	//STENCIL
@@ -487,7 +487,7 @@ void renderScene()
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	portalLiquid->draw(shader);
-
+	planet->drawAtmosphere(shader);
 
 	// H U D
 	glDisable(GL_DEPTH_TEST);
@@ -636,6 +636,7 @@ void physics() {
 		alienShotVector[i]->update(timeDelta);
 	}
 
+	planet->update(timeDelta);
 }
 
 void alienShots() {
@@ -1092,8 +1093,15 @@ void setupThings() {
 		portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
 		objId += objIdInc;
 	}
-	portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+	else portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
 
+	if (objIdPlanet == -1) {
+		objIdPlanet = objId;
+		planet = new Planet(objIdPlanet, &objIdInc, -8.0f, 2.0f, FARTHESTALIEN);
+		objId += objIdInc;
+	}
+	else planet = new Planet(objIdPlanet, &objIdInc, -8.0f, 2.0f, FARTHESTALIEN);
+	//printf("%d\n", objId);
 	
 }
 

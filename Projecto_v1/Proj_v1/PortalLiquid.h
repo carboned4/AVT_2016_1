@@ -7,10 +7,10 @@
 
 class PortalLiquid : public StaticObject {
 private:
-	float amb[4] = { 1.0f, 1.0f, 1.0f, 0.1f };
-	float diff[4] = { 1.0f, 1.0f, 1.0f, 0.1f };
-	float spec[4] = { 0.0f, 0.0f, 0.0f, 0.1f };
-	float emissive[4] = { 0.0f, 0.0f, 0.0f, 0.1f };
+	float amb[4] = { 0.25f, 0.25f, 0.25f, 0.000005f };
+	float diff[4] = { 0.5f, 0.5f, 0.5f, 0.0000005f };
+	float spec[4] = { 0.0f, 0.0f, 0.0f, 0.0000005f };
+	float emissive[4] = { 0.25f, 0.25f, 0.25f, 0.000005f };
 	float shininess = 20.0f;
 	int texcount = 7;
 	int addToId = 1;

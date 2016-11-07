@@ -74,11 +74,11 @@ void main() {
 			}
 		}
 		else if(i==6){ //DIRECTIONAL
-			intensity += max(dot(n,l), 0.0)*0.5;
+			intensity += max(dot(n,l), 0.0);
 			if (intensity > 0.0) {
 				h = normalize(l + e);
 				intSpec = max(dot(h,n), 0.0);
-				spec = spec + mat.specular * pow(intSpec, mat.shininess)*0.5;
+				spec = spec + mat.specular * pow(intSpec, mat.shininess);
 			}
 		}
 		else if(i==7){ //SPOT

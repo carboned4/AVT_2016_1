@@ -34,10 +34,10 @@ void Planet::update(int delta) {
 
 void Planet::draw(VSShaderLib _shader) {
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX()-5.0f, position.getY(), position.getZ()+6.0f);
+	translate(MODEL, position.getX() - 5.0f, position.getY(), position.getZ() + 6.0f);
 	GLint loc;
 
-	glUniform1i(texMode_uniformId, 1);
+	glUniform1i(texMode_uniformId, 0);
 
 	//SPHERE
 	// send the material
@@ -53,6 +53,7 @@ void Planet::draw(VSShaderLib _shader) {
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
+	rotate(MODEL, -23.0f, 1.0f, 0.0f, 0.0f); 
 	rotate(MODEL, angleSurface, 0.0f, 1.0f, 0.0f);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
@@ -65,7 +66,15 @@ void Planet::draw(VSShaderLib _shader) {
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	glUniform1i(texMode_uniformId, 0);
+	popMatrix(MODEL);
+}
+
+void Planet::drawAtmosphere(VSShaderLib _shader) {
+	pushMatrix(MODEL);
+	translate(MODEL, position.getX() - 5.0f, position.getY(), position.getZ() + 6.0f);
+	GLint loc;
+
+	glUniform1i(texMode_uniformId, 1);
 
 	//SPHERE
 	// send the material
@@ -81,6 +90,7 @@ void Planet::draw(VSShaderLib _shader) {
 	glUniform1i(loc, mesh[objectId + 1].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
+	rotate(MODEL, -23.0f, 1.0f, 0.0f, 0.0f);
 	rotate(MODEL, angleAtmosphere, 0.0f, 1.0f, 0.0f);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
