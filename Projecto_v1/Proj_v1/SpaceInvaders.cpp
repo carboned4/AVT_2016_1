@@ -1030,8 +1030,8 @@ void setupThings() {
 	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
 	TGA_Texture(TextureArray, "liquidmetal.tga", 7);
-	TGA_Texture(TextureArray, "font1.tga", 8);
-	TGA_Texture(TextureArray, "font1.tga", 9);
+	TGA_Texture(TextureArray, "earth.tga", 8);
+	TGA_Texture(TextureArray, "cloud_nobg.tga", 9);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
