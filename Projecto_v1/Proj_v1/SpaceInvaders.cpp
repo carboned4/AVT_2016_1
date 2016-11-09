@@ -1027,7 +1027,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
 	TGA_Texture(TextureArray, "font1.tga", 3);
-	TGA_Texture(TextureArray, "font1.tga", 4);
+	TGA_Texture(TextureArray, "corrmetal.tga", 4);
 	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
 	TGA_Texture(TextureArray, "liquidmetal.tga", 7);

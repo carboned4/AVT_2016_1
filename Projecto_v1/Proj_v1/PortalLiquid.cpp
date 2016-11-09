@@ -64,7 +64,7 @@ void PortalLiquid::draw(VSShaderLib _shader) {
 	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 
-	glUniform1i(texMode_uniformId, 4);
+	glUniform1i(texMode_uniformId, 0);
 
 	//SPHERE
 	// send the material
