@@ -13,14 +13,20 @@ private:
 	float emissive[4] = { 0.25f, 0.25f, 0.25f, 0.5f };
 	float shininess = 20.0f;
 	int texcount = 7;
-	int addToId = 1;
+	float amb1[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float diff1[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float spec1[4] = { 0.75f, 0.75f, 0.75f, 1.0f };
+	float emissive1[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
+	float shininess1 = 1000.0f;
+	int texcount1 = 7;
+	int addToId = 2;
 
 public:
 	PortalLiquid(int _objId, int* addedToId, float _x, float _y, float _z);
 	~PortalLiquid();
 
+	void drawTransparent(VSShaderLib shader);
 	void draw(VSShaderLib shader);
-
 };
 
 

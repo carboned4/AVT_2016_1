@@ -459,7 +459,7 @@ void renderScene()
 	}
 	background1->draw(shader);
 	
-	
+	portalLiquid->draw(shader);
 	planet->draw(shader);
 	
 	
@@ -486,7 +486,7 @@ void renderScene()
 	glDisable(GL_STENCIL_TEST);
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	portalLiquid->draw(shader);
+	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
 
 	// H U D
