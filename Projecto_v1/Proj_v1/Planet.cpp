@@ -34,7 +34,7 @@ void Planet::update(int delta) {
 
 void Planet::draw(VSShaderLib _shader) {
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX() - 5.0f, position.getY(), position.getZ() + 6.0f);
+	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 
 	glUniform1i(texMode_uniformId, 0);
@@ -71,7 +71,7 @@ void Planet::draw(VSShaderLib _shader) {
 
 void Planet::drawAtmosphere(VSShaderLib _shader) {
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX() - 5.0f, position.getY(), position.getZ() + 6.0f);
+	translate(MODEL, position.getX(), position.getY(), position.getZ());
 	GLint loc;
 
 	glUniform1i(texMode_uniformId, 1);

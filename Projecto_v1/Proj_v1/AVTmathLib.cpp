@@ -336,6 +336,20 @@ void multMatrixPoint(MatrixTypes aType, float *point, float *res) {
 	}
 }
 
+// Compute res = M * point
+void multMatrixPoint(ComputedMatrixTypes aType, float *point, float *res) {
+
+	for (int i = 0; i < 4; ++i) {
+
+		res[i] = 0.0f;
+
+		for (int j = 0; j < 4; j++) {
+
+			res[i] += point[j] * mCompMatrix[aType][j * 4 + i];
+		}
+	}
+}
+
 // res = a cross b;
 void  crossProduct( float *a, float *b, float *res) {
 

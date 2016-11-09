@@ -462,7 +462,22 @@ void renderScene()
 	portalLiquid->draw(shader);
 	planet->draw(shader);
 	
-	
+
+
+
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	float pointSun[4] = { -13.0f, 2.0f, FARTHESTALIEN + 6.0f, 1.0f };
+	multMatrixPoint(PROJ_VIEW_MODEL, pointSun, res);
+	float *ndc = res;
+	ndc[0] = res[0] / res[3];
+	ndc[1] = res[1] / res[3];
+	ndc[2] = res[2] / res[3];
+	printf("%f %f %f %f\n", ndc[0], ndc[1], ndc[2], ndc[3]);
+
+
+
+
+
 	//STENCIL
 	glUniform1i(texMode_uniformId, 0);
 	glEnable(GL_STENCIL_TEST);
@@ -746,10 +761,7 @@ void update() {
 			game_running = false;
 		}
 	}
-	/*if (!game_running) {
-		//increase_speed = false;
-		timeDelta = 0;
-	}*/
+	
 }
 
 ///////////////// USER INTERACTION
@@ -1097,10 +1109,10 @@ void setupThings() {
 
 	if (objIdPlanet == -1) {
 		objIdPlanet = objId;
-		planet = new Planet(objIdPlanet, &objIdInc, -8.0f, 2.0f, FARTHESTALIEN);
+		planet = new Planet(objIdPlanet, &objIdInc, -13.0f, 2.0f, FARTHESTALIEN + 6.0f);
 		objId += objIdInc;
 	}
-	else planet = new Planet(objIdPlanet, &objIdInc, -8.0f, 2.0f, FARTHESTALIEN);
+	else planet = new Planet(objIdPlanet, &objIdInc, -13.0f, 2.0f, FARTHESTALIEN + 6.0f);
 	//printf("%d\n", objId);
 	
 }
