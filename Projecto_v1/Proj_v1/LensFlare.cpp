@@ -1,6 +1,11 @@
 #include "LensFlare.h"
 #include <math.h>
 
+#include "Spaceship.h"
+#include "Planet.h"
+extern std::vector <Spaceship*> LivesRepresentation;
+extern Planet* planet;
+
 LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) : StaticObject(_objId, _x, _y, _z) {
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
@@ -43,7 +48,7 @@ LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) :
 	memcpy(mesh[objectId + 5].mat.emissive, emissive, 4 * sizeof(float));
 	mesh[objectId + 5].mat.shininess = shininess;
 	mesh[objectId + 5].mat.texCount = texcount;
-
+	printf("%d\n",objectId);
 	createQuad(objectId, 1.0f, 1.0f);
 	createQuad(objectId + 1, 1.0f, 1.0f);
 	createQuad(objectId + 2, 1.0f, 1.0f);
@@ -51,6 +56,13 @@ LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) :
 	createQuad(objectId + 4, 1.0f, 1.0f);
 	createQuad(objectId + 5, 1.0f, 1.0f);
 	
+	/*createSphere(objectId, 10.0f, 12);
+	createSphere(objectId+1, 10.0f, 12);
+	createSphere(objectId+2, 10.0f, 12);
+	createSphere(objectId+3, 10.0f, 12);
+	createSphere(objectId+4, 10.0f, 12);
+	createSphere(objectId+5, 10.0f, 12);
+	*/
 	*addedToId = addToId;
 }
 
@@ -92,9 +104,6 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 	flarescale = int(_winw * fScale);
 
 	float px, py;
-	float relativePositions[6] = { 0.1f, 0.2f, 0.4f, 0.7f, 0.9f, 1.0f };
-	float fsizes[6] = { 0.1f, 0.2f, 0.4f, 0.7f, 0.3f, 0.1f };
-	float falphas[6] = { 0.3f, 0.2f, 0.4f, 0.3f, 0.3f, 0.3f };
 	
 	for (int i = 0; i < numberCoronas; i++) {
 		px = (1-relativePositions[i])*startx + relativePositions[i]*destx;
@@ -102,14 +111,18 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		side = flaredist*flarescale*fsizes[i]/maxflaredist;
 		if (side > flaremaxsize) side = flaremaxsize;
 		alpha = (flaredist*falphas[i]) / maxflaredist;
-		printf("%i + %i -> %f %f , %f %f\n",objectId, i, px, py, side, alpha);
+		//printf("%i + %i -> %f %f , %f %f\n",objectId, i, px, py, side, alpha);
 
 		pushMatrix(MODEL);
 		translate(MODEL, px, py, 0.0f);
+
+		
 		GLint loc;
 
 		glUniform1i(texMode_uniformId, 3);
 
+
+		//objectId + i
 		// send the material
 		loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 		glUniform4fv(loc, 1, mesh[objectId + i].mat.ambient);
@@ -120,10 +133,13 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 		glUniform1f(loc, mesh[objectId + i].mat.shininess);
 		loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
-		glUniform1i(loc, mesh[objectId + i].mat.texCount);
+		//glUniform1i(loc, mesh[objectId + i].mat.texCount);
+		glUniform1i(loc, 11);
 		// send matrices to OGL
-		scale(MODEL, 10.0f, 10.0f, 10.0f);
+		scale(MODEL, side, side, 1.0f);
+		
 		computeDerivedMatrix(PROJ_VIEW_MODEL);
+		printf("%d\n", ftexcounts[i]);
 		glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 		computeNormalMatrix3x3();
@@ -132,15 +148,15 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		glBindVertexArray(mesh[objectId + i].vao);
 		glDrawElements(mesh[objectId + i].type, mesh[objectId + i].numIndexes, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
+		
 		popMatrix(MODEL);
 	}
-/*	pushMatrix(MODEL);
+	/*pushMatrix(MODEL);
 	//translate(MODEL, px, py, 0.0f);
+	translate(MODEL, _winw/2.0f, _winh/2.0f, 0.0f);
 	GLint loc;
 	glUniform1i(texMode_uniformId, 3);
 	int i = 0;
-	printf("%f\n", mesh[objectId + i].mat.shininess);
 	// send the material
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 	glUniform4fv(loc, 1, mesh[objectId + i].mat.ambient);
@@ -165,4 +181,5 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 	glBindVertexArray(0);
 
 	popMatrix(MODEL);*/
+	
 }

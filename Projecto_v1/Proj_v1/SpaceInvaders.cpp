@@ -120,8 +120,9 @@ GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
 // star BG1, star BG2, font1, none, none;
 GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
+GLint tex_loc10, tex_loc11, tex_loc12, tex_loc13, tex_loc14;
 GLint texMode_uniformId;
-GLuint TextureArray[10];
+GLuint TextureArray[15];
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -346,6 +347,11 @@ GLuint setupShaders() {
 	tex_loc7 = glGetUniformLocation(shader.getProgramIndex(), "texmap7");
 	tex_loc8 = glGetUniformLocation(shader.getProgramIndex(), "texmap8");
 	tex_loc9 = glGetUniformLocation(shader.getProgramIndex(), "texmap9");
+	tex_loc10 = glGetUniformLocation(shader.getProgramIndex(), "texmap10");
+	tex_loc11 = glGetUniformLocation(shader.getProgramIndex(), "texmap11");
+	tex_loc12 = glGetUniformLocation(shader.getProgramIndex(), "texmap12");
+	tex_loc13 = glGetUniformLocation(shader.getProgramIndex(), "texmap13");
+	tex_loc14 = glGetUniformLocation(shader.getProgramIndex(), "texmap14");
 
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
 	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
@@ -438,6 +444,16 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[8]);
 	glActiveTexture(GL_TEXTURE9);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[9]);
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[10]);
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[11]);
+	glActiveTexture(GL_TEXTURE12);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[12]);
+	glActiveTexture(GL_TEXTURE13);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[13]);
+	glActiveTexture(GL_TEXTURE14);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[14]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
@@ -449,6 +465,11 @@ void renderScene()
 	glUniform1i(tex_loc7, 7);
 	glUniform1i(tex_loc8, 8);
 	glUniform1i(tex_loc9, 9);
+	glUniform1i(tex_loc10, 10);
+	glUniform1i(tex_loc11, 11);
+	glUniform1i(tex_loc12, 12);
+	glUniform1i(tex_loc13, 13);
+	glUniform1i(tex_loc14, 14);
 
 	
 	//OBJECTS
@@ -775,7 +796,7 @@ void update() {
 			game_running = false;
 		}
 	}
-	printf("%d\n", objId, objIdAlien);
+	//printf("%d\n", objId, objIdAlien);
 }
 
 ///////////////// USER INTERACTION
@@ -1059,6 +1080,11 @@ void setupThings() {
 	TGA_Texture(TextureArray, "liquidmetal.tga", 7);
 	TGA_Texture(TextureArray, "earth.tga", 8);
 	TGA_Texture(TextureArray, "cloud_nobg.tga", 9);
+	TGA_Texture(TextureArray, "flare1.tga", 10);
+	TGA_Texture(TextureArray, "flare2.tga", 11);
+	TGA_Texture(TextureArray, "flare3.tga", 12);
+	TGA_Texture(TextureArray, "flare4.tga", 13);
+	TGA_Texture(TextureArray, "flare5.tga", 14);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
@@ -1110,6 +1136,7 @@ void setupThings() {
 	if (objIdStencilPortal == -1) {
 		objIdStencilPortal = objId;
 		stencilPortal = new StencilPortal(objIdStencilPortal, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+		//printf("stencil %d\n", objId);
 		objId += objIdInc;
 	}
 	else stencilPortal = new StencilPortal(objIdStencilPortal, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
@@ -1117,13 +1144,15 @@ void setupThings() {
 	if (objIdPortalLiquid == -1) {
 		objIdPortalLiquid = objId;
 		portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
+		//printf("liquid %d\n", objId);
 		objId += objIdInc;
 	}
 	else portalLiquid = new PortalLiquid(objIdPortalLiquid, &objIdInc, 8.0f, 2.0f, FARTHESTALIEN);
-
+	
 	if (objIdPlanet == -1) {
 		objIdPlanet = objId;
 		planet = new Planet(objIdPlanet, &objIdInc, -13.0f, 2.0f, FARTHESTALIEN + 6.0f);
+		//printf("planet %d\n", objId);
 		objId += objIdInc;
 	}
 	else planet = new Planet(objIdPlanet, &objIdInc, -13.0f, 2.0f, FARTHESTALIEN + 6.0f);
@@ -1131,11 +1160,11 @@ void setupThings() {
 	if (objIdLensFlare == -1) {
 		objIdLensFlare = objId;
 		lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
+		//printf("flare %d\n", objId);
 		objId += objIdInc;
 	}
 	else lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
-
-	//printf("%d\n", objId);
+	
 	
 }
 

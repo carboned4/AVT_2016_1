@@ -13,6 +13,11 @@ uniform sampler2D texmap6;
 uniform sampler2D texmap7;
 uniform sampler2D texmap8;
 uniform sampler2D texmap9;
+uniform sampler2D texmap10;
+uniform sampler2D texmap11;
+uniform sampler2D texmap12;
+uniform sampler2D texmap13;
+uniform sampler2D texmap14;
 
 uniform vec2 doingtextv2;
 
@@ -119,7 +124,16 @@ void main() {
 		texel = texture(texmap8, DataIn.tex_coord);
 	else if(mat.texCount == 9)
 		texel = texture(texmap9, DataIn.tex_coord);
-	
+	else if(mat.texCount == 10)
+		texel = texture(texmap10, DataIn.tex_coord);
+	else if(mat.texCount == 11)
+		texel = texture(texmap11, DataIn.tex_coord);
+	else if(mat.texCount == 12)
+		texel = texture(texmap12, DataIn.tex_coord);
+	else if(mat.texCount == 13)
+		texel = texture(texmap13, DataIn.tex_coord);
+	else if(mat.texCount == 14)
+		texel = texture(texmap14, DataIn.tex_coord);
 	
 	if(texMode == 0) // modulate diffuse color with texel color
 	{
