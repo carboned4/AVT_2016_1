@@ -23,6 +23,8 @@
 #include "PortalLiquid.h"
 #include "Planet.h"
 
+#include "LensFlare.h"
+
 #include "Camera.h"
 #include "TopOrthoCamera.h"
 #include "FixedPerspCamera.h"

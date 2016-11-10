@@ -8,7 +8,42 @@ LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) :
 	memcpy(mesh[objectId].mat.emissive, emissive, 4 * sizeof(float));
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
-	
+
+	memcpy(mesh[objectId + 1].mat.ambient, amb, 4 * sizeof(float));
+	memcpy(mesh[objectId + 1].mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(mesh[objectId + 1].mat.specular, spec, 4 * sizeof(float));
+	memcpy(mesh[objectId + 1].mat.emissive, emissive, 4 * sizeof(float));
+	mesh[objectId + 1].mat.shininess = shininess;
+	mesh[objectId + 1].mat.texCount = texcount;
+
+	memcpy(mesh[objectId + 2].mat.ambient, amb, 4 * sizeof(float));
+	memcpy(mesh[objectId + 2].mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(mesh[objectId + 2].mat.specular, spec, 4 * sizeof(float));
+	memcpy(mesh[objectId + 2].mat.emissive, emissive, 4 * sizeof(float));
+	mesh[objectId + 2].mat.shininess = shininess;
+	mesh[objectId + 2].mat.texCount = texcount;
+
+	memcpy(mesh[objectId + 3].mat.ambient, amb, 4 * sizeof(float));
+	memcpy(mesh[objectId + 3].mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(mesh[objectId + 3].mat.specular, spec, 4 * sizeof(float));
+	memcpy(mesh[objectId + 3].mat.emissive, emissive, 4 * sizeof(float));
+	mesh[objectId + 3].mat.shininess = shininess;
+	mesh[objectId + 3].mat.texCount = texcount;
+
+	memcpy(mesh[objectId + 4].mat.ambient, amb, 4 * sizeof(float));
+	memcpy(mesh[objectId + 4].mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(mesh[objectId + 4].mat.specular, spec, 4 * sizeof(float));
+	memcpy(mesh[objectId + 4].mat.emissive, emissive, 4 * sizeof(float));
+	mesh[objectId + 4].mat.shininess = shininess;
+	mesh[objectId + 4].mat.texCount = texcount;
+
+	memcpy(mesh[objectId + 5].mat.ambient, amb, 4 * sizeof(float));
+	memcpy(mesh[objectId + 5].mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(mesh[objectId + 5].mat.specular, spec, 4 * sizeof(float));
+	memcpy(mesh[objectId + 5].mat.emissive, emissive, 4 * sizeof(float));
+	mesh[objectId + 5].mat.shininess = shininess;
+	mesh[objectId + 5].mat.texCount = texcount;
+
 	createQuad(objectId, 1.0f, 1.0f);
 	createQuad(objectId + 1, 1.0f, 1.0f);
 	createQuad(objectId + 2, 1.0f, 1.0f);
