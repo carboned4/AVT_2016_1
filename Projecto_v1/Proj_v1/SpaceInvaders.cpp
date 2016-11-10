@@ -1069,7 +1069,7 @@ void setupThings() {
 	initTextureMappedFont();
 
 
-	glGenTextures(10, TextureArray);
+	glGenTextures(15, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
