@@ -463,8 +463,30 @@ void renderScene()
 	planet->draw(shader);
 	
 
+	//STENCIL
+	glUniform1i(texMode_uniformId, 0);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 0x1); // Set any stencil to 1
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFF); // Write to stencil buffer
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+	stencilPortal->fillStencil(shader);
+	glStencilFunc(GL_EQUAL, 1, 0x1); // Pass test if stencil value is 1
+	glStencilMask(0x00); // Don't write anything to stencil buffer
+	glDepthMask(GL_TRUE); // Write to depth buffer
+	stencilPortal->draw(shader);
+	glDisable(GL_STENCIL_TEST);
+	
+	
+	//COISAS TRANSPARENTES DA CENA
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	portalLiquid->drawTransparent(shader);
+	planet->drawAtmosphere(shader);
 
-
+	
+	//COORDENADAS DO LENSFLARE + desenhar
+	//http://www.songho.ca/opengl/gl_transform.html
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	float pointSun[4] = { -13.0f, 2.0f, FARTHESTALIEN + 6.0f, 1.0f };
 	multMatrixPoint(PROJ_VIEW_MODEL, pointSun, res);
@@ -472,37 +494,19 @@ void renderScene()
 	ndc[0] = res[0] / res[3];
 	ndc[1] = res[1] / res[3];
 	ndc[2] = res[2] / res[3];
-	printf("%f %f %f %f\n", ndc[0], ndc[1], ndc[2], ndc[3]);
+	float sunWinCoords[3];
+	sunWinCoords[0] = WinX / 2.0f*ndc[0] + 0 + WinX/2.0f;
+	sunWinCoords[1] = WinY / 2.0f*ndc[1] + 0 + WinY/2.0f;
+	//using n=0.f, f=1000.f (also used in ortho and perspective)
+	sunWinCoords[2] = 0.5*(1000.0f-0.1f)*ndc[2] + (1000.0f + 0.1f)*0.5f;
+	printf("%f %f %f\n", sunWinCoords[0], sunWinCoords[1], sunWinCoords[2]);
+	pushMatrix(MODEL);
+	pushMatrix(PROJECTION);
+	ortho(0, WinX, 0, WinY, 0, 1);
+	//lensflare->drawFlares(shader, sunWinCoords[0], sunWinCoords[1], sunWinCoords[2], WinX, WinY);
+	popMatrix(MODEL);
+	popMatrix(PROJECTION);
 
-
-
-
-
-	//STENCIL
-	glUniform1i(texMode_uniformId, 0);
-	glEnable(GL_STENCIL_TEST);
-
-	// Draw floor
-	glStencilFunc(GL_ALWAYS, 1, 0x1); // Set any stencil to 1
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	glStencilMask(0xFF); // Write to stencil buffer
-	glDepthMask(GL_FALSE); // Don't write to depth buffer
-	glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
-	
-	stencilPortal->fillStencil(shader);
-
-	// Draw cube reflection
-	glStencilFunc(GL_EQUAL, 1, 0x1); // Pass test if stencil value is 1
-	glStencilMask(0x00); // Don't write anything to stencil buffer
-	glDepthMask(GL_TRUE); // Write to depth buffer
-
-	stencilPortal->draw(shader);
-
-	glDisable(GL_STENCIL_TEST);
-	
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	portalLiquid->drawTransparent(shader);
-	planet->drawAtmosphere(shader);
 
 	// H U D
 	glDisable(GL_DEPTH_TEST);
