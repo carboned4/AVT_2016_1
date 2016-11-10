@@ -85,6 +85,7 @@ int objIdVictory = -1;
 int objIdStencilPortal = -1;
 int objIdPortalLiquid = -1;
 int objIdPlanet = -1;
+int objIdLensFlare = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -180,6 +181,8 @@ std::vector <Spaceship*> LivesRepresentation;
 StencilPortal* stencilPortal;
 PortalLiquid* portalLiquid;
 Planet* planet;
+
+LensFlare* lensFlare;
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -501,13 +504,18 @@ void renderScene()
 	sunWinCoords[1] = WinY / 2.0f*ndc[1] + 0 + WinY/2.0f;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0f-0.1f)*ndc[2] + (1000.0f + 0.1f)*0.5f;
-	printf("%f %f %f\n", sunWinCoords[0], sunWinCoords[1], sunWinCoords[2]);
+	//printf("%f %f %f\n", sunWinCoords[0], sunWinCoords[1], sunWinCoords[2]);
+	glDisable(GL_DEPTH_TEST);
 	pushMatrix(MODEL);
 	pushMatrix(PROJECTION);
-	ortho(0, WinX, 0, WinY, 0, 1);
-	//lensflare->drawFlares(shader, sunWinCoords[0], sunWinCoords[1], sunWinCoords[2], WinX, WinY);
+	loadIdentity(VIEW);
+	loadIdentity(MODEL);
+	loadIdentity(PROJECTION);
+	ortho(0, WinX, 0, WinY, -5, 5);
+	lensFlare->drawFlares(shader, sunWinCoords[0], sunWinCoords[1], sunWinCoords[2], WinX, WinY);
 	popMatrix(MODEL);
 	popMatrix(PROJECTION);
+	glEnable(GL_DEPTH_TEST);
 
 
 	// H U D
@@ -767,7 +775,7 @@ void update() {
 			game_running = false;
 		}
 	}
-	
+	printf("%d\n", objId, objIdAlien);
 }
 
 ///////////////// USER INTERACTION
@@ -1119,6 +1127,14 @@ void setupThings() {
 		objId += objIdInc;
 	}
 	else planet = new Planet(objIdPlanet, &objIdInc, -13.0f, 2.0f, FARTHESTALIEN + 6.0f);
+	
+	if (objIdLensFlare == -1) {
+		objIdLensFlare = objId;
+		lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
+		objId += objIdInc;
+	}
+	else lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
+
 	//printf("%d\n", objId);
 	
 }

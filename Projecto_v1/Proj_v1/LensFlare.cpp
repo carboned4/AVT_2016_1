@@ -50,7 +50,7 @@ LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) :
 	createQuad(objectId + 3, 1.0f, 1.0f);
 	createQuad(objectId + 4, 1.0f, 1.0f);
 	createQuad(objectId + 5, 1.0f, 1.0f);
-
+	
 	*addedToId = addToId;
 }
 
@@ -73,18 +73,18 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		printf("no lensflare\n");
 		return;
 	}
-	int fScale = 0.2f;
-	int fMaxSize = 0.5f;
+	float fScale = 0.2f;
+	float fMaxSize = 0.5f;
 
 	int startx = int(_lx + 0.5);
 	int starty = int(_ly + 0.5);
 	int centerx = int(_winw / 2.0f + 0.5f);
 	int centery = int(_winh / 2.0f + 0.5f);
-	int destx = centerx + (centerx - _lx);
-	int desty = centery + (centery - _ly);
+	int destx = int(centerx + (centerx - _lx));
+	int desty = int(centery + (centery - _ly));
 	int maxflaredist, flaredist, flaremaxsize, flarescale;
 
-	int side, alpha;
+	float side, alpha;
 
 	maxflaredist = int(sqrt(centerx*centerx + centery*centery));
 	flaredist = int(sqrt((_lx - centerx)*(_lx - centerx) + (_ly - centery)*(_ly - centery)));
@@ -95,23 +95,21 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 	float relativePositions[6] = { 0.1f, 0.2f, 0.4f, 0.7f, 0.9f, 1.0f };
 	float fsizes[6] = { 0.1f, 0.2f, 0.4f, 0.7f, 0.3f, 0.1f };
 	float falphas[6] = { 0.3f, 0.2f, 0.4f, 0.3f, 0.3f, 0.3f };
-
+	
 	for (int i = 0; i < numberCoronas; i++) {
 		px = (1-relativePositions[i])*startx + relativePositions[i]*destx;
 		py = (1 - relativePositions[i])*starty + relativePositions[i] * desty;
-
 		side = flaredist*flarescale*fsizes[i]/maxflaredist;
 		if (side > flaremaxsize) side = flaremaxsize;
-
 		alpha = (flaredist*falphas[i]) / maxflaredist;
+		printf("%i + %i -> %f %f , %f %f\n",objectId, i, px, py, side, alpha);
 
 		pushMatrix(MODEL);
-		translate(MODEL, px, py, 0.5f);
+		translate(MODEL, px, py, 0.0f);
 		GLint loc;
 
 		glUniform1i(texMode_uniformId, 3);
 
-		//SPHERE
 		// send the material
 		loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 		glUniform4fv(loc, 1, mesh[objectId + i].mat.ambient);
@@ -124,7 +122,7 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
 		glUniform1i(loc, mesh[objectId + i].mat.texCount);
 		// send matrices to OGL
-		scale(MODEL, side, side, 1.0f);
+		scale(MODEL, 10.0f, 10.0f, 10.0f);
 		computeDerivedMatrix(PROJ_VIEW_MODEL);
 		glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
@@ -137,4 +135,34 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 
 		popMatrix(MODEL);
 	}
+/*	pushMatrix(MODEL);
+	//translate(MODEL, px, py, 0.0f);
+	GLint loc;
+	glUniform1i(texMode_uniformId, 3);
+	int i = 0;
+	printf("%f\n", mesh[objectId + i].mat.shininess);
+	// send the material
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
+	glUniform4fv(loc, 1, mesh[objectId + i].mat.ambient);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
+	glUniform4fv(loc, 1, mesh[objectId + i].mat.diffuse);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
+	glUniform4fv(loc, 1, mesh[objectId + i].mat.specular);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
+	glUniform1f(loc, mesh[objectId + i].mat.shininess);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
+	glUniform1i(loc, mesh[objectId + i].mat.texCount);
+	// send matrices to OGL
+	scale(MODEL, _winw, _winh, 1.0f);
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	computeNormalMatrix3x3();
+	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+	// Render mesh
+	glBindVertexArray(mesh[objectId + i].vao);
+	glDrawElements(mesh[objectId + i].type, mesh[objectId + i].numIndexes, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	popMatrix(MODEL);*/
 }
