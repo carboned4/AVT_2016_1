@@ -8,8 +8,8 @@
 #define FLAREFADEPERSECOND 0.25f
 #define FLARE_PLANES 12
 #define FLARE_RADIUSES 12
-#define INITIALSPEEDMODULUS 1.0f
-#define ACCELERATIONMODULUS 1.0f
+#define INITIALSPEEDMODULUS 0.5f
+#define ACCELERATIONMODULUS 0.5f
 
 class Explosion : public DynamicObject {
 private:

@@ -24,6 +24,7 @@
 #include "Planet.h"
 
 #include "LensFlare.h"
+#include "Explosion.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -47,6 +48,11 @@
 
 #define ALIENSCORE 100
 #define DEATHPENALTY -50
+
+#define GRAVITYPOINTX -13.0f
+#define GRAVITYPOINTY 2.0f
+#define GRAVITYPOINTZ FARTHESTALIEN + 6.0f
+
 
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
@@ -86,6 +92,7 @@ int objIdStencilPortal = -1;
 int objIdPortalLiquid = -1;
 int objIdPlanet = -1;
 int objIdLensFlare = -1;
+int objIdExplosion = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -121,6 +128,9 @@ GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
 GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
 GLint tex_loc10, tex_loc11, tex_loc12, tex_loc13, tex_loc14;
+GLint tex_loc15, tex_loc16, tex_loc17, tex_loc18, tex_loc19;
+//nothing yet
+GLint tex_loc20, tex_loc21, tex_loc22, tex_loc23, tex_loc24;
 GLint texMode_uniformId;
 GLuint TextureArray[15];
 
@@ -184,7 +194,7 @@ PortalLiquid* portalLiquid;
 Planet* planet;
 
 LensFlare* lensFlare;
-
+Explosion* explosion;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -352,6 +362,16 @@ GLuint setupShaders() {
 	tex_loc12 = glGetUniformLocation(shader.getProgramIndex(), "texmap12");
 	tex_loc13 = glGetUniformLocation(shader.getProgramIndex(), "texmap13");
 	tex_loc14 = glGetUniformLocation(shader.getProgramIndex(), "texmap14");
+	tex_loc15 = glGetUniformLocation(shader.getProgramIndex(), "texmap15");
+	tex_loc16 = glGetUniformLocation(shader.getProgramIndex(), "texmap16");
+	tex_loc17 = glGetUniformLocation(shader.getProgramIndex(), "texmap17");
+	tex_loc18 = glGetUniformLocation(shader.getProgramIndex(), "texmap18");
+	tex_loc19 = glGetUniformLocation(shader.getProgramIndex(), "texmap19");
+	tex_loc20 = glGetUniformLocation(shader.getProgramIndex(), "texmap20");
+	tex_loc21 = glGetUniformLocation(shader.getProgramIndex(), "texmap21");
+	tex_loc22 = glGetUniformLocation(shader.getProgramIndex(), "texmap22");
+	tex_loc23 = glGetUniformLocation(shader.getProgramIndex(), "texmap23");
+	tex_loc24 = glGetUniformLocation(shader.getProgramIndex(), "texmap24");
 
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
 	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
@@ -470,6 +490,16 @@ void renderScene()
 	glUniform1i(tex_loc12, 12);
 	glUniform1i(tex_loc13, 13);
 	glUniform1i(tex_loc14, 14);
+	glUniform1i(tex_loc15, 15);
+	glUniform1i(tex_loc16, 16);
+	glUniform1i(tex_loc17, 17);
+	glUniform1i(tex_loc18, 18);
+	glUniform1i(tex_loc19, 19);
+	glUniform1i(tex_loc20, 20);
+	glUniform1i(tex_loc21, 21);
+	glUniform1i(tex_loc22, 22);
+	glUniform1i(tex_loc23, 23);
+	glUniform1i(tex_loc24, 24);
 
 	
 	//OBJECTS
@@ -487,7 +517,7 @@ void renderScene()
 	
 	portalLiquid->draw(shader);
 	planet->draw(shader);
-	
+	explosion->draw(shader);
 
 	//STENCIL
 	glUniform1i(texMode_uniformId, 0);
@@ -685,8 +715,9 @@ void physics() {
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		alienShotVector[i]->update(timeDelta);
 	}
-
 	planet->update(timeDelta);
+	explosion->update(timeDelta);
+
 }
 
 void alienShots() {
@@ -1069,7 +1100,7 @@ void setupThings() {
 	initTextureMappedFont();
 
 
-	glGenTextures(15, TextureArray);
+	glGenTextures(25, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
@@ -1085,6 +1116,16 @@ void setupThings() {
 	TGA_Texture(TextureArray, "flare3.tga", 12);
 	TGA_Texture(TextureArray, "flare4.tga", 13);
 	TGA_Texture(TextureArray, "flare5.tga", 14);
+	TGA_Texture(TextureArray, "fireball.tga", 15);
+	TGA_Texture(TextureArray, "fireball.tga", 16);
+	TGA_Texture(TextureArray, "fireball.tga", 17);
+	TGA_Texture(TextureArray, "fireball.tga", 18);
+	TGA_Texture(TextureArray, "fireball.tga", 19);
+	TGA_Texture(TextureArray, "fireball.tga", 20);
+	TGA_Texture(TextureArray, "fireball.tga", 21);
+	TGA_Texture(TextureArray, "fireball.tga", 22);
+	TGA_Texture(TextureArray, "fireball.tga", 23);
+	TGA_Texture(TextureArray, "fireball.tga", 24);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
@@ -1165,6 +1206,15 @@ void setupThings() {
 	}
 	else lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
 	
+	if (objIdExplosion == -1) {
+		objIdExplosion = objId;
+		explosion = new Explosion(objIdExplosion, &objIdInc, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
+		//printf("flare %d\n", objId);
+		objId += objIdInc;
+	}
+	else explosion = new Explosion(objIdExplosion, &objIdInc, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
+
+
 	
 }
 
