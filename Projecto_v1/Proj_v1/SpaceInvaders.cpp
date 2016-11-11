@@ -671,7 +671,7 @@ void restartGame() {
 	alienShotVector.clear();
 	spaceshipShotVector.clear();
 	Aliens.clear();
-	explosionVector.clear()
+	explosionVector.clear();
 	spaceship->setSpeed(0.0f, 0.0f, 0.0f);
 	spaceship->setPosition(0.0f,0.0f,0.0f);
 	for (int i = 0; i < ALIENROWS; i++) {
