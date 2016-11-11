@@ -49,12 +49,14 @@ void Explosion::update(int delta) {
 		speeds[iflare] = speeds[iflare] + accelerations[iflare] *(delta / 1000.0f);
 		positions[iflare] = positions[iflare] + speeds[iflare] * (delta / 1000.0f);
 	}
-	lifeLeft -= lifeFade;
+	lifeLeft -= lifeFade*(delta / 1000.0f);
+	if (lifeLeft < 0.0f) lifeLeft = 0.0f;
 }
 
 
 void Explosion::draw(VSShaderLib _shader) {
-	glUniform1i(texMode_uniformId, 4);
+	glUniform1i(texMode_uniformId, 6);
+	mesh[objectId].mat.ambient[3] = lifeLeft;
 
 	for (int iflare = 0; iflare < positions.size(); iflare++) {
 		pushMatrix(MODEL);

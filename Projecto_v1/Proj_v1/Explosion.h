@@ -5,7 +5,7 @@
 #include "VSShaderLib.h"
 #include <vector>
 
-#define FLAREFADEPERSECOND 0.25f
+#define FLAREFADEPERSECOND 0.125f
 #define FLARE_PLANES 12
 #define FLARE_RADIUSES 12
 #define INITIALSPEEDMODULUS 0.5f
@@ -15,10 +15,10 @@ class Explosion : public DynamicObject {
 private:
 	float amb[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float diff[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float spec[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float spec[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 50.0f;
-	int texcount = 14;
+	int texcount = 6;
 	int addToId = 1;
 
 	float lifeLeft = 1.0f;
