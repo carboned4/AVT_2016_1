@@ -18,7 +18,7 @@ Explosion::Explosion(int _objId, int* addedToId,
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	
-	createSphere(objectId, 0.2f, 8);
+	createQuad(objectId, 0.2f, 0.2f);
 	*addedToId = addToId;
 
 	for (int iplane = 0; iplane < FLARE_PLANES; iplane++) {
@@ -55,8 +55,9 @@ void Explosion::update(int delta) {
 
 
 void Explosion::draw(VSShaderLib _shader) {
-	glUniform1i(texMode_uniformId, 6);
-	mesh[objectId].mat.ambient[3] = lifeLeft;
+	glUniform1i(texMode_uniformId, 3);
+	//mesh[objectId].mat.ambient[3] = lifeLeft;
+	float modelview[16];  //To be used in "Cheating" Matrix reset Billboard technique
 
 	for (int iflare = 0; iflare < positions.size(); iflare++) {
 		pushMatrix(MODEL);
@@ -77,8 +78,21 @@ void Explosion::draw(VSShaderLib _shader) {
 
 		translate(MODEL, positions[iflare].getX(), positions[iflare].getY(), positions[iflare].getZ());
 
+		computeDerivedMatrix(VIEW_MODEL);
+		memcpy(modelview, mCompMatrix[VIEW_MODEL], sizeof(float) * 16);
+		// spherical cheating
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (i == j)
+					mCompMatrix[VIEW_MODEL][i * 4 + j] = 1.0;
+				else
+					mCompMatrix[VIEW_MODEL][i * 4 + j] = 0.0;
+			}
+		}
+		computeDerivedMatrix_PVM();
+
 		// send matrices to OGL
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
+		//computeDerivedMatrix(PROJ_VIEW_MODEL);
 		glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 		computeNormalMatrix3x3();

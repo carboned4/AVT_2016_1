@@ -132,7 +132,7 @@ GLint tex_loc15, tex_loc16, tex_loc17, tex_loc18, tex_loc19;
 //nothing yet
 GLint tex_loc20, tex_loc21, tex_loc22, tex_loc23, tex_loc24;
 GLint texMode_uniformId;
-GLuint TextureArray[15];
+GLuint TextureArray[25];
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -474,6 +474,26 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[13]);
 	glActiveTexture(GL_TEXTURE14);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[14]);
+	glActiveTexture(GL_TEXTURE15);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[15]);
+	glActiveTexture(GL_TEXTURE16);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[16]);
+	glActiveTexture(GL_TEXTURE17);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[17]);
+	glActiveTexture(GL_TEXTURE18);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[18]);
+	glActiveTexture(GL_TEXTURE19);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[19]);
+	glActiveTexture(GL_TEXTURE20);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[20]);
+	glActiveTexture(GL_TEXTURE21);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[21]);
+	glActiveTexture(GL_TEXTURE22);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[22]);
+	glActiveTexture(GL_TEXTURE23);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[23]);
+	glActiveTexture(GL_TEXTURE24);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[24]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
@@ -517,8 +537,7 @@ void renderScene()
 	
 	portalLiquid->draw(shader);
 	planet->draw(shader);
-	explosion->draw(shader);
-
+	
 	//STENCIL
 	glUniform1i(texMode_uniformId, 0);
 	glEnable(GL_STENCIL_TEST);
@@ -539,8 +558,10 @@ void renderScene()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
+	explosion->draw(shader);
 
 	
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	//COORDENADAS DO LENSFLARE + desenhar
 	//http://www.songho.ca/opengl/gl_transform.html
 	computeDerivedMatrix(PROJ_VIEW_MODEL);

@@ -15,10 +15,10 @@ class Explosion : public DynamicObject {
 private:
 	float amb[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float diff[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float spec[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float spec[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float shininess = 50.0f;
-	int texcount = 6;
+	int texcount = 15;
 	int addToId = 1;
 
 	float lifeLeft = 1.0f;
