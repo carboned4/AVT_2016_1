@@ -75,7 +75,7 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		|| _ly < -_winh*0.1f
 		|| _lz < 0.1f
 		|| _lz > 1000.0f) {
-		printf("no lensflare\n");
+		//printf("no lensflare\n");
 		return;
 	}
 	float fScale = 0.2f;

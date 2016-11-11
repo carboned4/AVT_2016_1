@@ -152,6 +152,7 @@
     <ClCompile Include="Alien_Shot.cpp" />
     <ClCompile Include="AVTmathLib.cpp" />
     <ClCompile Include="basic_geometry.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="FixedPerspCamera.cpp" />
     <ClCompile Include="FollowPerspCamera.cpp" />
     <ClCompile Include="LensFlare.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="cube.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FixedPerspCamera.h" />
     <ClInclude Include="FollowPerspCamera.h" />
     <ClInclude Include="GameObject.h" />
