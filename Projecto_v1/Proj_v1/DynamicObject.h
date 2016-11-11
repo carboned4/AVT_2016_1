@@ -12,7 +12,9 @@ public:
 		
 	Vec3 speed;
 
-	Vec3 getSpeed();
+	Vec3 getSpeed() {
+		return speed;
+	}
 	void update(float delta);
 		
 		

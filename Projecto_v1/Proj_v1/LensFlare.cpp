@@ -3,8 +3,6 @@
 
 #include "Spaceship.h"
 #include "Planet.h"
-extern std::vector <Spaceship*> LivesRepresentation;
-extern Planet* planet;
 
 LensFlare::LensFlare(int _objId, int* addedToId, float _x, float _y, float _z) : StaticObject(_objId, _x, _y, _z) {
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
@@ -130,7 +128,7 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 		scale(MODEL, side, side, 1.0f);
 		
 		computeDerivedMatrix(PROJ_VIEW_MODEL);
-		printf("%d\n", ftexcounts[i]);
+		//printf("%d\n", ftexcounts[i]);
 		glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 		computeNormalMatrix3x3();

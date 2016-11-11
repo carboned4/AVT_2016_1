@@ -194,7 +194,7 @@ PortalLiquid* portalLiquid;
 Planet* planet;
 
 LensFlare* lensFlare;
-Explosion* explosion;
+std::vector <Explosion*> explosionVector;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -559,7 +559,9 @@ void renderScene()
 	glDepthMask(GL_FALSE); // Don't write to depth buffer
 	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
-	explosion->draw(shader);
+	for (int i = 0; i < explosionVector.size(); i++) {
+		explosionVector[i]->draw(shader);
+	}
 	glDepthMask(GL_TRUE); // Write to depth buffer
 
 	
@@ -669,6 +671,7 @@ void restartGame() {
 	alienShotVector.clear();
 	spaceshipShotVector.clear();
 	Aliens.clear();
+	explosionVector.clear()
 	spaceship->setSpeed(0.0f, 0.0f, 0.0f);
 	spaceship->setPosition(0.0f,0.0f,0.0f);
 	for (int i = 0; i < ALIENROWS; i++) {
@@ -738,9 +741,12 @@ void physics() {
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		alienShotVector[i]->update(timeDelta);
 	}
+	for (int i = 0; i < explosionVector.size(); i++) {
+		explosionVector[i]->update(timeDelta);
+	}
 	planet->update(timeDelta);
-	explosion->update(timeDelta);
-
+	
+	
 }
 
 void alienShots() {
@@ -782,7 +788,22 @@ void collisions() {
 		for (int j = 0; j < spaceshipShotVector.size(); j++) {
 			aliencollided = (*iterAliens)->checkCollisionShot(spaceshipShotVector[j]->getPosition(), spaceshipShotVector[j]->getCollisionBox());
 			if (aliencollided) {
-				(*iterAliens)->setDestroyed(true);
+				Vec3 deadalienpos = (*iterAliens)->getPosition();
+				Vec3 deadalienspeed = (*iterAliens)->getSpeed();
+				//CREATE EXPLOSION
+				if (objIdExplosion == -1) {
+					objIdExplosion = objId;
+					explosionVector.push_back(new Explosion(objIdExplosion, &objIdInc,
+						deadalienpos.getX(), deadalienpos.getY(), deadalienpos.getZ(),
+						deadalienspeed.getX(), deadalienspeed.getY(), deadalienspeed.getZ(),
+						GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ));
+					objId += objIdInc;
+				}
+				else explosionVector.push_back(new Explosion(objIdExplosion, &objIdInc,
+					deadalienpos.getX(), deadalienpos.getY(), deadalienpos.getZ(),
+					deadalienspeed.getX(), deadalienspeed.getY(), deadalienspeed.getZ(),
+					GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ));
+				//carry on destroying alien
 				iterAliens = Aliens.erase(iterAliens);
 				spaceshipShotVector.erase(spaceshipShotVector.begin() + j);
 				erasedAlien = true;
@@ -801,10 +822,12 @@ void collisions() {
 	
 }
 
-void cleanupShots() {
+void cleanupProjectiles() {
 	std::vector<Alien_Shot*>::iterator iterShots;
 	std::vector<Spaceship_Shot*>::iterator iterShotsb;
+	std::vector<Explosion*>::iterator iterExplosions;
 	float shotz;
+	float lifel;
 	for (iterShots = alienShotVector.begin(); iterShots != alienShotVector.end(); ) {
 		shotz = (*iterShots)->getPosition().getZ();
 			if (shotz < -1.0f) {
@@ -823,6 +846,15 @@ void cleanupShots() {
 			++iterShotsb;
 		}
 	}
+	for (iterExplosions = explosionVector.begin(); iterExplosions != explosionVector.end(); ) {
+		lifel = (*iterExplosions)->getLifeLeft();
+		if (lifel <= 0.0f) {
+			iterExplosions = explosionVector.erase(iterExplosions);
+		}
+		else {
+			++iterExplosions;
+		}
+	}
 }
 
 void update() {
@@ -839,7 +871,7 @@ void update() {
 		//printf("left alienshots\n");
 		followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
 		followCam->setCamXYZ(camX, camY, camZ);
-		cleanupShots();
+		cleanupProjectiles();
 		collisions();
 		if (lives <= 0) {
 			lostGame = true;
@@ -1228,15 +1260,6 @@ void setupThings() {
 		objId += objIdInc;
 	}
 	else lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
-	
-	if (objIdExplosion == -1) {
-		objIdExplosion = objId;
-		explosion = new Explosion(objIdExplosion, &objIdInc, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
-		//printf("flare %d\n", objId);
-		objId += objIdInc;
-	}
-	else explosion = new Explosion(objIdExplosion, &objIdInc, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
-
 
 	
 }
