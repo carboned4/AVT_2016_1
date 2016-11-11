@@ -6,8 +6,8 @@
 #include <vector>
 
 #define FLAREFADEPERSECOND 0.125f
-#define FLARE_PLANES 12
-#define FLARE_RADIUSES 12
+#define FLARE_PLANES 8
+#define FLARE_RADIUSES 8
 #define INITIALSPEEDMODULUS 0.5f
 #define ACCELERATIONMODULUS 0.5f
 
@@ -16,7 +16,7 @@ private:
 	float amb[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float diff[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float spec[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float shininess = 50.0f;
 	int texcount = 15;
 	int addToId = 1;

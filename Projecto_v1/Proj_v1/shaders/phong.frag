@@ -183,7 +183,8 @@ void main() {
 		colorOut = max(intensity*texel1 + spec, possibleMix);
 	}
 	else if (texMode == 3) //use only texture
-	{
+	{	
+		if(texel.a == 0.0f) discard;
 		colorOut.rgb = texel.rgb;
 		colorOut.a = texel.a;
 	}
@@ -196,6 +197,7 @@ void main() {
 	}
 	else if (texMode == 6) // full texel color, with specular area or ambient (0.1*texel)
 	{
+		if (mat.ambient.a * texel.a == 0.0) discard;
 		colorOut.rgb = max(texel.rgb + spec.rgb, 0.1*texel.rgb);
 		colorOut.a = mat.ambient.a * texel.a;
 	}

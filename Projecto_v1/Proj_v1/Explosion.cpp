@@ -18,7 +18,7 @@ Explosion::Explosion(int _objId, int* addedToId,
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	
-	createQuad(objectId, 0.2f, 0.2f);
+	createQuad(objectId, 0.5f, 0.5f);
 	*addedToId = addToId;
 
 	for (int iplane = 0; iplane < FLARE_PLANES; iplane++) {
@@ -46,8 +46,10 @@ Explosion::~Explosion() {
 
 void Explosion::update(int delta) {
 	for(int iflare = 0; iflare < positions.size(); iflare++){
-		speeds[iflare] = speeds[iflare] + accelerations[iflare] *(delta / 1000.0f);
 		positions[iflare] = positions[iflare] + speeds[iflare] * (delta / 1000.0f);
+		Vec3 iaccel = gravityPoint - positions[iflare];
+		iaccel = iaccel * (ACCELERATIONMODULUS / sqrt(iaccel.getX()*iaccel.getX() + iaccel.getY()*iaccel.getY() + iaccel.getZ()*iaccel.getZ()));
+		speeds[iflare] = speeds[iflare] + accelerations[iflare] *(delta / 1000.0f);
 	}
 	lifeLeft -= lifeFade*(delta / 1000.0f);
 	if (lifeLeft < 0.0f) lifeLeft = 0.0f;
@@ -55,13 +57,13 @@ void Explosion::update(int delta) {
 
 
 void Explosion::draw(VSShaderLib _shader) {
-	glUniform1i(texMode_uniformId, 3);
-	//mesh[objectId].mat.ambient[3] = lifeLeft;
+	glUniform1i(texMode_uniformId, 6);
+	mesh[objectId].mat.ambient[3] = lifeLeft;
 	float modelview[16];  //To be used in "Cheating" Matrix reset Billboard technique
 
 	for (int iflare = 0; iflare < positions.size(); iflare++) {
 		pushMatrix(MODEL);
-
+		mesh[objectId].mat.ambient[3] = lifeLeft;
 		GLint loc;
 		//CUBE
 		// send the material
@@ -77,7 +79,7 @@ void Explosion::draw(VSShaderLib _shader) {
 		glUniform1i(loc, mesh[objectId].mat.texCount);
 
 		translate(MODEL, positions[iflare].getX(), positions[iflare].getY(), positions[iflare].getZ());
-
+		
 		computeDerivedMatrix(VIEW_MODEL);
 		memcpy(modelview, mCompMatrix[VIEW_MODEL], sizeof(float) * 16);
 		// spherical cheating

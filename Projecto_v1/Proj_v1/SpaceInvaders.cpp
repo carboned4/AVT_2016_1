@@ -57,7 +57,7 @@
 std::string shadername("phong");
 // gouraud  blinnphong  pointlight
 
-int WinX = 640, WinY = 480;
+int WinX = 800, WinY = 600;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
 int TargetFramerate = 60;
@@ -555,10 +555,12 @@ void renderScene()
 	
 	
 	//COISAS TRANSPARENTES DA CENA
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
 	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
 	explosion->draw(shader);
+	glDepthMask(GL_TRUE); // Write to depth buffer
 
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -1155,7 +1157,7 @@ void setupThings() {
 	//FollowPerspCamera( _fov,  _ratio,  _near,  _far,  _x,  _y,  _z);
 	followCam = new FollowPerspCamera(70.0f, ratio, 0.1f, 1000.0f, 0.0f, 5.0f, -5.0f);
 
-	currentCamera = orthoCam;
+	currentCamera = followCam;
 	
 	objId = 0;
 	objIdInc = 0;
