@@ -25,6 +25,7 @@
 
 #include "LensFlare.h"
 #include "Explosion.h"
+#include "Asteroid.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -52,6 +53,14 @@
 #define GRAVITYPOINTX -13.0f
 #define GRAVITYPOINTY 2.0f
 #define GRAVITYPOINTZ FARTHESTALIEN + 6.0f
+
+#define ASTEROIDNUMBER 30
+#define ASTEROID_XMIN -7.0f
+#define ASTEROID_XMAX 7.0f
+#define ASTEROID_YMIN -3.0f
+#define ASTEROID_YMAX 5.0f
+#define ASTEROID_ZMIN -5.0f
+#define ASTEROID_ZMAX 12.0f
 
 
 std::string shadername("phong");
@@ -93,6 +102,7 @@ int objIdPortalLiquid = -1;
 int objIdPlanet = -1;
 int objIdLensFlare = -1;
 int objIdExplosion = -1;
+int objIdAsteroid = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -195,6 +205,7 @@ Planet* planet;
 
 LensFlare* lensFlare;
 std::vector <Explosion*> explosionVector;
+std::vector <Asteroid*> asteroidVector;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -561,6 +572,9 @@ void renderScene()
 	planet->drawAtmosphere(shader);
 	for (int i = 0; i < explosionVector.size(); i++) {
 		explosionVector[i]->draw(shader);
+	}
+	for (int i = 0; i < asteroidVector.size(); i++) {
+		asteroidVector[i]->draw(shader);
 	}
 	glDepthMask(GL_TRUE); // Write to depth buffer
 
@@ -1172,7 +1186,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "flare4.tga", 13);
 	TGA_Texture(TextureArray, "flare5.tga", 14);
 	TGA_Texture(TextureArray, "fireball.tga", 15);
-	TGA_Texture(TextureArray, "fireball.tga", 16);
+	TGA_Texture(TextureArray, "asteroid.tga", 16);
 	TGA_Texture(TextureArray, "fireball.tga", 17);
 	TGA_Texture(TextureArray, "fireball.tga", 18);
 	TGA_Texture(TextureArray, "fireball.tga", 19);
@@ -1261,7 +1275,17 @@ void setupThings() {
 	}
 	else lensFlare = new LensFlare(objIdLensFlare, &objIdInc, 0.0f, 0.0f, 0.0f);
 
-	
+	for (int iasteroid = 0; iasteroid < ASTEROIDNUMBER; iasteroid++) {
+		float iax = ASTEROID_XMIN + ((float)rand() / RAND_MAX)*(ASTEROID_XMAX-ASTEROID_XMIN);
+		float iay = ASTEROID_YMIN + ((float)rand() / RAND_MAX)*(ASTEROID_YMAX - ASTEROID_YMIN);
+		float iaz = ASTEROID_ZMIN + ((float)rand() / RAND_MAX)*(ASTEROID_ZMAX - ASTEROID_ZMIN);
+		if (objIdAsteroid == -1) {
+			objIdAsteroid = objId;
+			asteroidVector.push_back(new Asteroid(objIdAsteroid, &objIdInc, iax, iay, iaz));
+			objId += objIdInc;
+		}
+		asteroidVector.push_back(new Asteroid(objIdAsteroid, &objIdInc, iax, iay, iaz));
+	}
 }
 
 void init(int argc, char* argv[])

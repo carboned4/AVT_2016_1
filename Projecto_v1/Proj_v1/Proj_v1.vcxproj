@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Alien_Shot.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="AVTmathLib.cpp" />
     <ClCompile Include="basic_geometry.cpp" />
     <ClCompile Include="Explosion.cpp" />
@@ -170,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="Alien.h" />
     <ClInclude Include="Alien_Shot.h" />
+    <ClInclude Include="Asteroid.h" />
     <ClInclude Include="AVTmathLib.h" />
     <ClInclude Include="basic_geometry.h" />
     <ClInclude Include="Box.h" />
