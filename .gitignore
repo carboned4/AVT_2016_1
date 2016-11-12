@@ -3,10 +3,12 @@
 *.opendb
 *.exe
 *.tlog
-*.obj
 *.idb
 *.pdb
 *.log
 *.ilk
 *.lastbuildstate
-Lab1 miguel/proj1/TestApp1/Debug
+Lab1 miguel/
+Lab2 miguel/
+Projecto_v1/Proj_v1/Debug/
+Projecto_v1/Proj_v1/Release/

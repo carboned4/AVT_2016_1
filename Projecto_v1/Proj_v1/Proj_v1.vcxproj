@@ -157,6 +157,7 @@
     <ClCompile Include="FixedPerspCamera.cpp" />
     <ClCompile Include="FollowPerspCamera.cpp" />
     <ClCompile Include="LensFlare.cpp" />
+    <ClCompile Include="objloader.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="PortalLiquid.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="LensFlare.h" />
+    <ClInclude Include="objloader.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="PortalLiquid.h" />
     <ClInclude Include="Spaceship.h" />
