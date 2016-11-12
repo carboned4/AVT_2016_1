@@ -1,6 +1,6 @@
 #version 330
 
-out vec4 colorOut;
+
 
 uniform int texMode;
 uniform sampler2D texmap0;
@@ -31,6 +31,9 @@ uniform sampler2D texmap24;
 
 uniform vec2 doingtextv2;
 
+out vec4 colorOut;
+const vec3 fogColor = vec3(0.5, 0.5,0.5);
+const float FogDensity = 0.05;
 
 struct Materials {
 	vec4 diffuse;
@@ -55,6 +58,15 @@ in Data {
 } DataIn;
 
 void main() {
+
+  vec3 finalColor = vec3(0, 0, 0);
+ //distance
+  float dist = 0;
+  float fogFactor = 0;
+  dist = length(DataIn.eye.z);
+  fogFactor = 1.0 /exp( (dist * FogDensity)* (dist * FogDensity));
+  fogFactor = clamp( fogFactor, 0.0, 1.0 );
+
 	float intensity = 0.0f;
 	float spotCutOff=0.9;
 	vec3 h;
@@ -203,6 +215,11 @@ void main() {
 	}
 	else { //do not use texture
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
+	}
+
+	if(mat.texCount!=2 && mat.texCount!=10 && mat.texCount!=11 && mat.texCount!=12 && mat.texCount!=13 && mat.texCount!=14 ){
+		finalColor=colorOut.rgb;
+		colorOut.rgb = mix(fogColor, finalColor, fogFactor);
 	}
 
 
