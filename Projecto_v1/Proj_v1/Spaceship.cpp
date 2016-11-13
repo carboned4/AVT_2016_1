@@ -26,8 +26,8 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 	std::vector <glm::vec4> objuv;
 	std::vector <glm::vec4> objn;
 
-	loadOBJ("test.obj", objv, objuv, objn);
-	//loadOBJ("cubotutorial.obj", objv, objuv, objn); 
+	loadOBJ("gunship.obj", objv, objuv, objn);
+	//loadOBJ("cube.obj", objv, objuv, objn); 
 	handleOBJ(objectId, objv, objuv, objn);
 }
 
@@ -92,7 +92,7 @@ void Spaceship::updateKeys(bool left, bool right) {
 }
 
 void Spaceship::draw(VSShaderLib _shader) {
-	glUniform1i(texMode_uniformId, 6);
+	glUniform1i(texMode_uniformId, 0);
 
 	
 	pushMatrix(MODEL);
@@ -116,8 +116,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	rotate(MODEL, speedAngleEffect, 0.0f, 1.0f, 0.0f);
 	rotate(MODEL, -speedAngleEffect, 0.0f, 0.0f, 1.0f);
 	pushMatrix(MODEL);
-	translate(MODEL, 0.20f, -0.25f, -0.5f);
-	scale(MODEL, 0.05f, 0.05f, 0.05f);
+	translate(MODEL, 0.1f, 0.3f, -0.5f);
+	scale(MODEL, 0.01f, 0.01f, 0.01f);
 	
 	// send matrices to OGL
 	computeDerivedMatrix(PROJ_VIEW_MODEL);

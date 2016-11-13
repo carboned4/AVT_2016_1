@@ -1189,6 +1189,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "asteroid.tga", 16);
 	TGA_Texture(TextureArray, "fireball.tga", 17);
 	TGA_Texture(TextureArray, "GunshipSheet.tga", 18);
+	//TGA_Texture(TextureArray, "stone.tga", 18);
 	TGA_Texture(TextureArray, "fireball.tga", 19);
 	TGA_Texture(TextureArray, "fireball.tga", 20);
 	TGA_Texture(TextureArray, "fireball.tga", 21);

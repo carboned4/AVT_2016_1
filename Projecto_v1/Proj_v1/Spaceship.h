@@ -11,11 +11,11 @@
 
 class Spaceship : public DynamicObject {
 private:
-	float amb[4] = { 0.0f, 0.0f, 0.5f, 1.0f };
-	float diff[4] = { 0.4f, 0.0f, 0.5f, 1.0f };
-	float spec[4] = { 0.45f, 0.0f, 0.5f, 1.0f };
+	float amb[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float diff[4] = { 0.65f, 0.65f, 0.5f, 1.0f };
+	float spec[4] = { 0.65f, 0.65f, 0.5, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float shininess = 50.0f;
+	float shininess = 10.0f;
 	float limitRight;
 	float limitLeft;
 	int texcount = 18;

@@ -213,7 +213,7 @@ void main() {
 		colorOut.rgb = max(texel.rgb + spec.rgb, 0.1*texel.rgb);
 		colorOut.a = mat.ambient.a * texel.a;
 	}
-	else { //do not use texture
+	else { //do not use texture // 4
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 	}
 

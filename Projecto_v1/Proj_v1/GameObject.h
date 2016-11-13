@@ -72,13 +72,13 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
 		glBufferData(GL_ARRAY_BUFFER, in_uvs.size() * sizeof(glm::vec4), &in_uvs[0], GL_STATIC_DRAW);
 		glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
-		glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 2, GL_FLOAT, 0, 0, 0);
+		glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
 
 		//normals buffer
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
 		glBufferData(GL_ARRAY_BUFFER, in_normals.size() * sizeof(glm::vec4), &in_normals[0], GL_STATIC_DRAW);
 		glEnableVertexAttribArray(NORMAL_ATTRIB);
-		glVertexAttribPointer(NORMAL_ATTRIB, 3, GL_FLOAT, 0, 0, 0);
+		glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
 
 		// unbind the VAO
 		glBindVertexArray(0);
