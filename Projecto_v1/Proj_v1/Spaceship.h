@@ -4,10 +4,10 @@
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
 
-#define SPACESHIP_DIMENSION_ZMIN -0.5
-#define SPACESHIP_DIMENSION_ZMAX 0.5
-#define SPACESHIP_DIMENSION_XMIN -2.0
-#define SPACESHIP_DIMENSION_XMAX 2.0
+#define SPACESHIP_DIMENSION_ZMIN 0.0
+#define SPACESHIP_DIMENSION_ZMAX 1.2
+#define SPACESHIP_DIMENSION_XMIN -0.5
+#define SPACESHIP_DIMENSION_XMAX 0.5
 
 class Spaceship : public DynamicObject {
 private:

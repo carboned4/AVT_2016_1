@@ -116,9 +116,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	rotate(MODEL, speedAngleEffect, 0.0f, 1.0f, 0.0f);
 	rotate(MODEL, -speedAngleEffect, 0.0f, 0.0f, 1.0f);
 	pushMatrix(MODEL);
-	translate(MODEL, 0.1f, 0.3f, -0.5f);
+	translate(MODEL, 0.1f, 0.3f, -1.0f);
 	scale(MODEL, 0.01f, 0.01f, 0.01f);
-	
 	// send matrices to OGL
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);

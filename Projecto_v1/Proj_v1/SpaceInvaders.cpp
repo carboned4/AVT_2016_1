@@ -175,7 +175,7 @@ bool keyRight = false;
 
 // Camera Spherical Coordinates
 float alpha = 180.0f, beta = 10.0f;
-float r = 3.5f;
+float r = 4.5f;
 float camPos[3];
 float objPos[3];
 
@@ -608,6 +608,8 @@ void renderScene()
 	glEnable(GL_DEPTH_TEST);
 
 
+	glBlendFunc(GL_ONE, GL_ZERO);
+	glDisable(GL_BLEND);
 	// H U D
 	glDisable(GL_DEPTH_TEST);
 	pushMatrix(MODEL);
@@ -655,12 +657,16 @@ void renderScene()
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
 	loadIdentity(PROJECTION);
-	ortho(0, WinX, 0, WinY, -5, 5);
+	ortho(0, WinX, 0, WinY, -10, 10);
 
-	translate(MODEL, 175, 10, 0.0);
+	translate(MODEL, 150, 10, 0.0);
 	scale(MODEL, 10.0, 10.0, 10.0);
 	for (int ilives = 0; ilives < lives; ilives++) {
+		pushMatrix(MODEL);
+		rotate(MODEL, 90.0f, 0.0f, 1.0f, 0.0f);
 		LivesRepresentation[ilives]->draw(shader);
+		popMatrix(MODEL);
+		translate(MODEL, 5, 0.0, 0.0);
 	}
 
 	popMatrix(MODEL);
@@ -899,24 +905,7 @@ void update() {
 	//printf("%d\n", objId, objIdAlien);
 }
 
-///////////////// USER INTERACTION
-/* //ESTAS TRES NAO FUNCIONAM BEM NAO SEI PORQUE
-void processMouseButtons(int button, int state, int xx, int yy) {
-	followCam->processMouseButtons(button, state, xx, yy);
-	glutPostRedisplay();
-}
 
-void processMouseMotion(int xx, int yy) {
-	followCam->processMouseMotion(xx, yy);
-	glutPostRedisplay();
-	glutPostRedisplay();
-}
-
-void mouseWheel(int wheel, int direction, int x, int y) {
-	followCam->mouseWheel(wheel, direction, x, y);
-	glutPostRedisplay();
-}
-*/
 void processMouseButtons(int button, int state, int xx, int yy)
 {
 	// start tracking the mouse
@@ -933,8 +922,8 @@ void processMouseButtons(int button, int state, int xx, int yy)
 		if (tracking == 1) {
 			alpha -= (xx - startX);
 			beta += (yy - startY);
-			if (beta > 80.0f)
-				beta = 80.0f;
+			if (beta > 60.0f)
+				beta = 60.0f;
 			else if (beta < -10.0f)
 				beta = -10.0f;
 		}
@@ -958,8 +947,8 @@ void processMouseMotion(int xx, int yy)
 	if (tracking == 1) {
 		alphaAux = alpha + deltaX;
 		betaAux = beta + deltaY;
-		if (betaAux > 80.0f)
-			betaAux = 80.0f;
+		if (betaAux > 60.0f)
+			betaAux = 60.0f;
 		else if (betaAux < -10.0f)
 			betaAux = -10.0f;
 		rAux = r;
@@ -1189,8 +1178,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "asteroid.tga", 16);
 	TGA_Texture(TextureArray, "fireball.tga", 17);
 	TGA_Texture(TextureArray, "GunshipSheet.tga", 18);
-	//TGA_Texture(TextureArray, "stone.tga", 18);
-	TGA_Texture(TextureArray, "fireball.tga", 19);
+	TGA_Texture(TextureArray, "GunshipSheet_normal.tga", 19);
 	TGA_Texture(TextureArray, "fireball.tga", 20);
 	TGA_Texture(TextureArray, "fireball.tga", 21);
 	TGA_Texture(TextureArray, "fireball.tga", 22);
@@ -1238,10 +1226,10 @@ void setupThings() {
 	for (int ilives = 0; ilives < 5; ilives++) {
 		if (objIdShip == -1) {
 			objIdShip = objId;
-			LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 5.0f*ilives, 0.0, 0.0, 0.0f, 0.0f));
+			LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0, 0.0, 0.0f, 0.0f));
 			objId += objIdInc;
 		}
-		LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 5.0f*ilives, 0.0, 0.0, 0.0f, 0.0f));
+		LivesRepresentation.push_back(new Spaceship(objIdShip, &objIdInc, 0.0f, 0.0, 0.0, 0.0f, 0.0f));
 	}
 	
 	if (objIdStencilPortal == -1) {
