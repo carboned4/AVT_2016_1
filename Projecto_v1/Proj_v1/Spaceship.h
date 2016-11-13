@@ -3,7 +3,6 @@
 
 #include "DynamicObject.h"
 #include "VSShaderLib.h"
-#include "objloader.h"
 
 #define SPACESHIP_DIMENSION_ZMIN -0.5
 #define SPACESHIP_DIMENSION_ZMAX 0.5
@@ -20,7 +19,7 @@ private:
 	float limitRight;
 	float limitLeft;
 	int texcount = 0;
-	int addToId = 3;
+	int addToId = 1;
 
 	bool leftPressed = false;
 	bool rightPressed = false;
@@ -31,11 +30,7 @@ private:
 
 	/* Position/Collision Flags */
 	bool _alienShot;
-		
-	void Spaceship::handleOBJ(int objidForOBJ,
-		std::vector<glm::vec4> in_vertices,
-		std::vector<glm::vec4> in_uvs,
-		std::vector<glm::vec4> in_normals);
+	
 public:
 	
 	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft, float _limitRight);
