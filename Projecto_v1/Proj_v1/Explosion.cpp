@@ -23,13 +23,15 @@ Explosion::Explosion(int _objId, int* addedToId,
 
 	for (int iplane = 0; iplane < FLARE_PLANES; iplane++) {
 		for (int iradius = 0; iradius < FLARE_RADIUSES; iradius++) {
+			float sparsityMult = 1.0f;
+			if ((iradius % 2) == 0) sparsityMult = 0.5f;
 			Vec3 ipos = Vec3(_x, _y, _z);
 			float theta = 2.0 * 3.1416f * (float)rand() / RAND_MAX;
 			float phi = 3.1416f * (float)rand() / RAND_MAX;
 			float vx = INITIALSPEEDMODULUS * cos(theta) * sin(phi);
 			float vz = INITIALSPEEDMODULUS * sin(theta) * sin(phi);
 			float vy = INITIALSPEEDMODULUS * cos(phi);
-			Vec3 ispeed = speed + Vec3(vx, vy, vz);
+			Vec3 ispeed = speed + Vec3(vx, vy, vz)*sparsityMult;
 			Vec3 iaccel = gravityPoint - position;
 			iaccel = iaccel * (ACCELERATIONMODULUS / sqrt(iaccel.getX()*iaccel.getX() + iaccel.getY()*iaccel.getY() + iaccel.getZ()*iaccel.getZ()));
 			positions.push_back(ipos);

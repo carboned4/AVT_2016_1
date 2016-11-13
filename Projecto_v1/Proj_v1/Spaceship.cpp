@@ -114,7 +114,7 @@ void Spaceship::draw(VSShaderLib _shader) {
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 
 	rotate(MODEL, speedAngleEffect, 0.0f, 1.0f, 0.0f);
-
+	rotate(MODEL, -speedAngleEffect, 0.0f, 0.0f, 1.0f);
 	pushMatrix(MODEL);
 	translate(MODEL, 0.20f, -0.25f, -0.5f);
 	scale(MODEL, 0.05f, 0.05f, 0.05f);

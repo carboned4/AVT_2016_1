@@ -9,7 +9,7 @@
 
 class Asteroid : public StaticObject {
 private:
-	float amb[4] = { 0.25f, 0.25f, 0.25f, 0.7f };
+	float amb[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
 	float diff[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	float spec[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float emissive[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
