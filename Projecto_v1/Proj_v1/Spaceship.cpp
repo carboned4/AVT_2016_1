@@ -7,7 +7,7 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 	
 	colBox = Box(SPACESHIP_DIMENSION_XMIN, SPACESHIP_DIMENSION_XMAX, SPACESHIP_DIMENSION_ZMIN, SPACESHIP_DIMENSION_ZMAX);
 	speed = Vec3(0.0f, 0.0f, 0.0f);
-	accelerationModulus = Vec3(4.0f, 0, 0);
+	accelerationModulus = Vec3(6.0f, 0, 0);
 	maxSpeed = Vec3(4.0f, 0.0f, 0.0f);
 	speedAngleEffectVec = Vec3(0.0f, 0.0f, 0.0f);
 	limitLeft = _limitLeft;
@@ -117,7 +117,7 @@ void Spaceship::draw(VSShaderLib _shader) {
 	rotate(MODEL, -speedAngleEffect, 0.0f, 0.0f, 1.0f);
 	pushMatrix(MODEL);
 	translate(MODEL, 0.20f, -0.25f, -0.5f);
-	scale(MODEL, 0.05f, 0.05f, 0.05f);
+	scale(MODEL, 0.05f, 0.05f, 0.025f);
 	
 	// send matrices to OGL
 	computeDerivedMatrix(PROJ_VIEW_MODEL);

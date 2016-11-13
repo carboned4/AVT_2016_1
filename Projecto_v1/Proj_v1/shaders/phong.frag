@@ -32,7 +32,7 @@ uniform sampler2D texmap24;
 uniform vec2 doingtextv2;
 
 out vec4 colorOut;
-const vec3 fogColor = vec3(0.5, 0.5,0.5);
+const vec3 fogColor = vec3(0.25, 0.1, 0.1);
 const float FogDensity = 0.05;
 
 struct Materials {
@@ -217,7 +217,7 @@ void main() {
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 	}
 
-	if(mat.texCount!=2 && mat.texCount!=10 && mat.texCount!=11 && mat.texCount!=12 && mat.texCount!=13 && mat.texCount!=14 ){
+	if(mat.texCount!=0 && mat.texCount!=2 && mat.texCount!=10 && mat.texCount!=11 && mat.texCount!=12 && mat.texCount!=13 && mat.texCount!=14 ){
 		finalColor=colorOut.rgb;
 		colorOut.rgb = mix(fogColor, finalColor, fogFactor);
 	}

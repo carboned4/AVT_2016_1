@@ -5,7 +5,7 @@
 #include "VSShaderLib.h"
 #include <vector>
 
-#define FLAREFADEPERSECOND 0.0625f
+#define FLAREFADEPERSECOND 0.125f
 #define FLARE_PLANES 8
 #define FLARE_RADIUSES 8
 #define INITIALSPEEDMODULUS 0.5f
