@@ -11,7 +11,7 @@
 #include "AVTmathLib.h"
 #include "vsShaderLib.h"
 #include "TGA.h"
-#include "VertexAttrDef.h"
+//#include "VertexAttrDef.h"
 
 #include "Alien.h"
 #include "Spaceship.h"
