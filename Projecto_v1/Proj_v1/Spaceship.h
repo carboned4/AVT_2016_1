@@ -6,8 +6,8 @@
 
 #define SPACESHIP_DIMENSION_ZMIN -0.5
 #define SPACESHIP_DIMENSION_ZMAX 0.5
-#define SPACESHIP_DIMENSION_XMIN -2.2
-#define SPACESHIP_DIMENSION_XMAX 2.2
+#define SPACESHIP_DIMENSION_XMIN -2.0
+#define SPACESHIP_DIMENSION_XMAX 2.0
 
 class Spaceship : public DynamicObject {
 private:
@@ -19,7 +19,7 @@ private:
 	float limitRight;
 	float limitLeft;
 	int texcount = 0;
-	int addToId = 3;
+	int addToId = 1;
 
 	bool leftPressed = false;
 	bool rightPressed = false;
@@ -30,8 +30,7 @@ private:
 
 	/* Position/Collision Flags */
 	bool _alienShot;
-		
-
+	
 public:
 	
 	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft, float _limitRight);

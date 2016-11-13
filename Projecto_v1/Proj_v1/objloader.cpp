@@ -3,14 +3,14 @@
 
 bool loadOBJ(
 	const char * path,
-	std::vector < OBJVec4 > & out_vertices,
-	std::vector < OBJVec4 > & out_uvs,
-	std::vector < OBJVec4 > & out_normals
+	std::vector<glm::vec4> & out_vertices,
+	std::vector<glm::vec4> & out_uvs,
+	std::vector<glm::vec4> & out_normals
 ) {
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-	std::vector< OBJVec4 > temp_vertices;
-	std::vector< OBJVec4 > temp_uvs;
-	std::vector< OBJVec4 > temp_normals;
+	std::vector<glm::vec4> temp_vertices;
+	std::vector<glm::vec4> temp_uvs;
+	std::vector<glm::vec4> temp_normals;
 
 	FILE * file = fopen(path, "r");
 	if (file == NULL) {
@@ -26,18 +26,21 @@ bool loadOBJ(
 			break; // EOF = End Of File. Quit the loop.
 
 		if (strcmp(lineHeader, "v") == 0) {
-			OBJVec4 vertex;
+			glm::vec4 vertex;
+			vertex.w = 1.0f;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 			temp_vertices.push_back(vertex);
-
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
-			OBJVec4 uv;
+			glm::vec4 uv;
+			uv.z = 0.0f;
+			uv.w = 1.0f;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
-			OBJVec4 normal;
+			glm::vec4 normal;
+			normal.z = 0.0f;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
 			temp_normals.push_back(normal);
 		}
@@ -62,17 +65,17 @@ bool loadOBJ(
 	}
 	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
 		unsigned int vertexIndex = vertexIndices[i];
-		OBJVec4 vertex = temp_vertices[vertexIndex - 1];
+		glm::vec4 vertex = temp_vertices[vertexIndex - 1];
 		out_vertices.push_back(vertex);
-	}
-	for (unsigned int i = 0; i < uvIndices.size(); i++) {
+		
 		unsigned int uvIndex = uvIndices[i];
-		OBJVec4 uv = temp_uvs[uvIndex - 1];
+		glm::vec4 uv = temp_uvs[uvIndex - 1];
 		out_uvs.push_back(uv);
-	}
-	for (unsigned int i = 0; i < normalIndices.size(); i++) {
+		
 		unsigned int normalIndex = normalIndices[i];
-		OBJVec4 normal = temp_normals[normalIndex - 1];
+		glm::vec4 normal = temp_normals[normalIndex - 1];
 		out_normals.push_back(normal);
 	}
+	
+	return true;
 }
