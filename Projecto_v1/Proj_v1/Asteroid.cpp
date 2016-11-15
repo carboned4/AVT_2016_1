@@ -9,7 +9,7 @@ Asteroid::Asteroid(int _objId, int* addedToId, float _x, float _y, float _z) : S
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	
-	createQuad(objectId, 0.25f, 0.25f);
+	createQuad(objectId, 0.4f, 0.4f);
 	
 	*addedToId = addToId;
 }

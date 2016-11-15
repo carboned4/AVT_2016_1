@@ -54,13 +54,13 @@
 #define GRAVITYPOINTY 2.0f
 #define GRAVITYPOINTZ FARTHESTALIEN + 6.0f
 
-#define ASTEROIDNUMBER 30
-#define ASTEROID_XMIN -7.0f
-#define ASTEROID_XMAX 7.0f
-#define ASTEROID_YMIN -3.0f
-#define ASTEROID_YMAX 5.0f
-#define ASTEROID_ZMIN -5.0f
-#define ASTEROID_ZMAX 12.0f
+#define ASTEROIDNUMBER 300
+#define ASTEROID_XMIN -20.0f
+#define ASTEROID_XMAX 20.0f
+#define ASTEROID_YMIN -20.0f
+#define ASTEROID_YMAX 20.0f
+#define ASTEROID_ZMIN -10.0f
+#define ASTEROID_ZMAX 30.0f
 
 
 std::string shadername("phong");
@@ -1218,10 +1218,10 @@ void setupThings() {
 
 	if (objIdStars == -1) {
 		objIdStars = objId;
-		background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, FARTHESTALIEN+15.0f);
+		background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, 0.0f);
 		objId += objIdInc;
 	}
-	else background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, FARTHESTALIEN+15.0f);
+	else background1 = new StarsBackground(objIdStars, &objIdInc, 0.0f, 0.0f, 0.0f);
 
 	for (int ilives = 0; ilives < 5; ilives++) {
 		if (objIdShip == -1) {
