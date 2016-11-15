@@ -18,7 +18,8 @@ private:
 	float relativePositions[6] = { 0.3f, 0.4f, 0.5f, 0.55f, 0.7f, 0.8f };
 	float fsizes[6] = { 0.2f, 0.4f, 0.8f, 1.4f, 0.6f, 0.2f };
 	float falphas[6] = { 0.6f, 0.4f, 0.8f, 0.6f, 0.4f, 0.6f };
-	int ftexcounts[6] = { 14, 12, 13, 11, 10, 12 };
+	//int ftexcounts[6] = { 14, 12, 13, 11, 10, 12 }; //14 13 11
+	int ftexcounts[6] = { 14, 11, 13, 11, 14, 11 }; //14 13 11
 
 public:
 	LensFlare(int _objId, int* addedToId, float _x, float _y, float _z);

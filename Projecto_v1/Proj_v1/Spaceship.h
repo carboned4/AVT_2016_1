@@ -18,7 +18,8 @@ private:
 	float shininess = 10.0f;
 	float limitRight;
 	float limitLeft;
-	int texcount = 18;
+	int texcount = 15;
+	int texcountnormal = 3;
 	int addToId = 1;
 
 	bool leftPressed = false;

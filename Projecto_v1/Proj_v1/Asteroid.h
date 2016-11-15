@@ -14,7 +14,7 @@ private:
 	float spec[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float emissive[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
 	float shininess = 10.0f;
-	int texcount = 16;
+	int texcount = 12;
 	int addToId = 1;
 
 public:

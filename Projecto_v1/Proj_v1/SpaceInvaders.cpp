@@ -1162,23 +1162,23 @@ void setupThings() {
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
-	TGA_Texture(TextureArray, "font1.tga", 3);
+	TGA_Texture(TextureArray, "GunshipSheet_normal.tga", 3);
 	TGA_Texture(TextureArray, "corrmetal.tga", 4);
 	TGA_Texture(TextureArray, "reptil.tga", 5);
 	TGA_Texture(TextureArray, "humaneyebigsq.tga", 6);
 	TGA_Texture(TextureArray, "liquidmetal.tga", 7);
 	TGA_Texture(TextureArray, "earth.tga", 8);
 	TGA_Texture(TextureArray, "cloud_nobg.tga", 9);
-	TGA_Texture(TextureArray, "flare1.tga", 10);
+	TGA_Texture(TextureArray, "fireball.tga", 10); //was flare1
 	TGA_Texture(TextureArray, "flare2.tga", 11);
-	TGA_Texture(TextureArray, "flare3.tga", 12);
+	TGA_Texture(TextureArray, "asteroid.tga", 12); //was flare3
 	TGA_Texture(TextureArray, "flare4.tga", 13);
 	TGA_Texture(TextureArray, "flare5.tga", 14);
-	TGA_Texture(TextureArray, "fireball.tga", 15);
-	TGA_Texture(TextureArray, "asteroid.tga", 16);
+	TGA_Texture(TextureArray, "GunshipSheet.tga", 15);
+	TGA_Texture(TextureArray, "fireball.tga", 16);
 	TGA_Texture(TextureArray, "fireball.tga", 17);
-	TGA_Texture(TextureArray, "GunshipSheet.tga", 18);
-	TGA_Texture(TextureArray, "GunshipSheet_normal.tga", 19);
+	TGA_Texture(TextureArray, "fireball.tga", 18);
+	TGA_Texture(TextureArray, "fireball.tga", 19);
 	TGA_Texture(TextureArray, "fireball.tga", 20);
 	TGA_Texture(TextureArray, "fireball.tga", 21);
 	TGA_Texture(TextureArray, "fireball.tga", 22);
