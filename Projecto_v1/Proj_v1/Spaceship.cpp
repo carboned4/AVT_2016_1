@@ -42,7 +42,9 @@ Spaceship::Spaceship(int _objId, int* addedToId, bool toLoad, float _x, float _y
 		objv, objuv, objn, objtan, objbt,
 		vindices, indexed_vertices, indexed_uvs, indexed_normals, indexed_tangents, indexed_bitangents
 	);
-	handleOBJ(objectId, objv, objuv, objn);
+	handleIndexedOBJ(objectId,
+		vindices, indexed_vertices, indexed_uvs, indexed_normals, indexed_tangents);
+	//handleOBJ(objectId, objv, objuv, objn);
 }
 
 Spaceship::~Spaceship() {
@@ -141,8 +143,8 @@ void Spaceship::draw(VSShaderLib _shader) {
 	popMatrix(MODEL);
 	// Render mesh
 	glBindVertexArray(mesh[objectId].vao);
-	//glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
-	glDrawArrays(mesh[objectId].type, 0, mesh[objectId].numIndexes);
+	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
+	//glDrawArrays(mesh[objectId].type, 0, mesh[objectId].numIndexes);
 	glBindVertexArray(0);
 	
 
