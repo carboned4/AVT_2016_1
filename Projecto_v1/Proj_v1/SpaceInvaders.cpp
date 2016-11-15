@@ -720,10 +720,10 @@ void passKeys() {
 	if (keyState['b']) {
 		if (objIdShipShot == -1) {
 			objIdShipShot = objId;
-			spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+			spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 1.5f));
 			objId += objIdInc;
 		}
-		else spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 0.1f));
+		else spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 1.5f));
 		//printf("%d %d\n", objId, objIdShipShot);
 	}
 	if (keyState['s']) {							//Toggle pausewindow on or off
@@ -776,10 +776,10 @@ void alienShots() {
 		int output = 0 + (rand() % (int)(Aliens.size()));
 		if (objIdAlienShot == -1) {
 			objIdAlienShot = objId;
-			alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+			alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.5f));
 			objId += objIdInc;
 		}
-		else alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.1f));
+		else alienShotVector.push_back(new Alien_Shot(objIdAlienShot, &objIdInc, Aliens[output]->position.getX(), Aliens[output]->position.getY(), Aliens[output]->position.getZ() - 0.5f));
 		lastTime = timeElapsed;
 		//printf("%d %d\n", objId, objIdAlienShot);
 	}

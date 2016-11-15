@@ -18,8 +18,8 @@ Spaceship_Shot::Spaceship_Shot(int _objId, int* addedToId, float _x, float _y, f
 	mesh[objectId + 1].mat.shininess = shininess;
 	mesh[objectId + 1].mat.texCount = texcount;
 	//createSphere(objectId, 0.1f, 12);
-	createCylinder(objectId,0.4f, 0.1f, 12);
-	createCone(objectId+1, 0.3f, 0.2f, 12);
+	createCylinder(objectId,0.4f, 0.05f, 12);
+	createCone(objectId+1, 0.3f, 0.1f, 12);
 
 	*addedToId = addToId;
 }
