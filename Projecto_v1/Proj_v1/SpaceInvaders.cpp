@@ -138,9 +138,7 @@ GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
 GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
 GLint tex_loc10, tex_loc11, tex_loc12, tex_loc13, tex_loc14;
-GLint tex_loc15, tex_loc16, tex_loc17, tex_loc18, tex_loc19;
-//nothing yet
-GLint tex_loc20, tex_loc21, tex_loc22, tex_loc23, tex_loc24;
+GLint tex_loc15;
 GLint texMode_uniformId;
 GLuint TextureArray[25];
 
@@ -374,15 +372,6 @@ GLuint setupShaders() {
 	tex_loc13 = glGetUniformLocation(shader.getProgramIndex(), "texmap13");
 	tex_loc14 = glGetUniformLocation(shader.getProgramIndex(), "texmap14");
 	tex_loc15 = glGetUniformLocation(shader.getProgramIndex(), "texmap15");
-	tex_loc16 = glGetUniformLocation(shader.getProgramIndex(), "texmap16");
-	tex_loc17 = glGetUniformLocation(shader.getProgramIndex(), "texmap17");
-	tex_loc18 = glGetUniformLocation(shader.getProgramIndex(), "texmap18");
-	tex_loc19 = glGetUniformLocation(shader.getProgramIndex(), "texmap19");
-	tex_loc20 = glGetUniformLocation(shader.getProgramIndex(), "texmap20");
-	tex_loc21 = glGetUniformLocation(shader.getProgramIndex(), "texmap21");
-	tex_loc22 = glGetUniformLocation(shader.getProgramIndex(), "texmap22");
-	tex_loc23 = glGetUniformLocation(shader.getProgramIndex(), "texmap23");
-	tex_loc24 = glGetUniformLocation(shader.getProgramIndex(), "texmap24");
 
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
 	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
@@ -487,24 +476,6 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[14]);
 	glActiveTexture(GL_TEXTURE15);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[15]);
-	glActiveTexture(GL_TEXTURE16);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[16]);
-	glActiveTexture(GL_TEXTURE17);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[17]);
-	glActiveTexture(GL_TEXTURE18);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[18]);
-	glActiveTexture(GL_TEXTURE19);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[19]);
-	glActiveTexture(GL_TEXTURE20);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[20]);
-	glActiveTexture(GL_TEXTURE21);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[21]);
-	glActiveTexture(GL_TEXTURE22);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[22]);
-	glActiveTexture(GL_TEXTURE23);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[23]);
-	glActiveTexture(GL_TEXTURE24);
-	glBindTexture(GL_TEXTURE_2D, TextureArray[24]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
@@ -522,15 +493,6 @@ void renderScene()
 	glUniform1i(tex_loc13, 13);
 	glUniform1i(tex_loc14, 14);
 	glUniform1i(tex_loc15, 15);
-	glUniform1i(tex_loc16, 16);
-	glUniform1i(tex_loc17, 17);
-	glUniform1i(tex_loc18, 18);
-	glUniform1i(tex_loc19, 19);
-	glUniform1i(tex_loc20, 20);
-	glUniform1i(tex_loc21, 21);
-	glUniform1i(tex_loc22, 22);
-	glUniform1i(tex_loc23, 23);
-	glUniform1i(tex_loc24, 24);
 
 	
 	//OBJECTS
@@ -1158,7 +1120,7 @@ void setupThings() {
 	initTextureMappedFont();
 
 
-	glGenTextures(25, TextureArray);
+	glGenTextures(16, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
@@ -1175,15 +1137,6 @@ void setupThings() {
 	TGA_Texture(TextureArray, "flare4.tga", 13);
 	TGA_Texture(TextureArray, "flare5.tga", 14);
 	TGA_Texture(TextureArray, "GunshipSheet.tga", 15);
-	TGA_Texture(TextureArray, "fireball.tga", 16);
-	TGA_Texture(TextureArray, "fireball.tga", 17);
-	TGA_Texture(TextureArray, "fireball.tga", 18);
-	TGA_Texture(TextureArray, "fireball.tga", 19);
-	TGA_Texture(TextureArray, "fireball.tga", 20);
-	TGA_Texture(TextureArray, "fireball.tga", 21);
-	TGA_Texture(TextureArray, "fireball.tga", 22);
-	TGA_Texture(TextureArray, "fireball.tga", 23);
-	TGA_Texture(TextureArray, "fireball.tga", 24);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);
