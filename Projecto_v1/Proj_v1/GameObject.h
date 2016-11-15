@@ -94,19 +94,21 @@ public:
 	}
 
 	void handleIndexedOBJ(int objidForOBJ,
+		std::vector<unsigned int> vindices,
 		std::vector<glm::vec4> in_vertices,
 		std::vector<glm::vec4> in_uvs,
-		std::vector<glm::vec4> in_normals)
+		std::vector<glm::vec4> in_normals,
+		std::vector<glm::vec4> in_tangents)
 	{
 		glGenVertexArrays(1, &(mesh[objidForOBJ].vao));
 		glBindVertexArray(mesh[objidForOBJ].vao);
-		mesh[objidForOBJ].numIndexes = in_vertices.size();
+		
 
-
+		mesh[objidForOBJ].numIndexes = vindices.size();
 
 		//Implementation without glBufferSubData so we will need 3 bufers for vertex attributes 
-		GLuint buffers[3];
-		glGenBuffers(3, buffers);
+		GLuint buffers[5];
+		glGenBuffers(5, buffers);
 
 		//vertex coordinates buffer
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
@@ -126,6 +128,15 @@ public:
 		glEnableVertexAttribArray(NORMAL_ATTRIB);
 		glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
 
+		//tangents buffer
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[3]);
+		glBufferData(GL_ARRAY_BUFFER, in_tangents.size() * sizeof(glm::vec4), &in_tangents[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(TANGENT_ATTRIB);
+		glVertexAttribPointer(TANGENT_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[4]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, vindices.size() * sizeof(unsigned int), &vindices[0], GL_STATIC_DRAW);
+
 		// unbind the VAO
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -133,6 +144,7 @@ public:
 		glDisableVertexAttribArray(VERTEX_COORD_ATTRIB);
 		glDisableVertexAttribArray(NORMAL_ATTRIB);
 		glDisableVertexAttribArray(TEXTURE_COORD_ATTRIB);
+		glDisableVertexAttribArray(TANGENT_ATTRIB);
 
 		mesh[objidForOBJ].type = GL_TRIANGLES;
 	}

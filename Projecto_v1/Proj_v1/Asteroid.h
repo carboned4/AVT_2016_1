@@ -5,8 +5,6 @@
 #include "StaticObject.h"
 #include "VSShaderLib.h"
 
-#define ASTEROIDNUMBER
-
 class Asteroid : public StaticObject {
 private:
 	float amb[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
