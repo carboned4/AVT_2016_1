@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft,float _limitRight) : DynamicObject(_objId,_x,_y, _z) {
+Spaceship::Spaceship(int _objId, int* addedToId, bool toLoad, float _x, float _y, float _z,float _limitLeft,float _limitRight) : DynamicObject(_objId,_x,_y, _z) {
 	
 	colBox = Box(SPACESHIP_DIMENSION_XMIN, SPACESHIP_DIMENSION_XMAX, SPACESHIP_DIMENSION_ZMIN, SPACESHIP_DIMENSION_ZMAX);
 	speed = Vec3(0.0f, 0.0f, 0.0f);
@@ -12,6 +12,8 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 	speedAngleEffectVec = Vec3(0.0f, 0.0f, 0.0f);
 	limitLeft = _limitLeft;
 	limitRight = _limitRight;
+	*addedToId = addToId;
+	if (!toLoad) return;
 
 	memcpy(mesh[objectId].mat.ambient, amb, 4 * sizeof(float));
 	memcpy(mesh[objectId].mat.diffuse, diff, 4 * sizeof(float));
@@ -20,14 +22,26 @@ Spaceship::Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,fl
 	mesh[objectId].mat.shininess = shininess;
 	mesh[objectId].mat.texCount = texcount;
 	
-	*addedToId = addToId;
+	
 
 	std::vector <glm::vec4> objv;
 	std::vector <glm::vec4> objuv;
 	std::vector <glm::vec4> objn;
-
 	loadOBJ("gunship.obj", objv, objuv, objn);
 	//loadOBJ("cube.obj", objv, objuv, objn); 
+	std::vector <glm::vec4> objtan;
+	std::vector <glm::vec4> objbt;
+	computeTangentBasis(objv, objuv, objn, objtan, objbt);
+	std::vector<unsigned int> vindices;
+	std::vector<glm::vec4> indexed_vertices;
+	std::vector<glm::vec4> indexed_uvs;
+	std::vector<glm::vec4> indexed_normals;
+	std::vector<glm::vec4> indexed_tangents;
+	std::vector<glm::vec4> indexed_bitangents;
+	indexVBO_TBN(
+		objv, objuv, objn, objtan, objbt,
+		vindices, indexed_vertices, indexed_uvs, indexed_normals, indexed_tangents, indexed_bitangents
+	);
 	handleOBJ(objectId, objv, objuv, objn);
 }
 

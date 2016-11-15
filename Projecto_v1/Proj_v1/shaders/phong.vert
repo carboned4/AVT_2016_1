@@ -30,6 +30,8 @@ in vec2 vtexCoord;
 out Data {
 	vec3 normal;
 	vec3 eye;
+	vec3 tangent;
+	vec3 bitangent;
 	vec3 lightDir[8];
 	vec2 tex_coord;
 } DataOut;

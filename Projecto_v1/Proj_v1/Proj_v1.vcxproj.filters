@@ -75,6 +75,12 @@
     <ClCompile Include="objloader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tangentcalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertexindexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVTmathLib.h">
@@ -156,6 +162,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tangentcalculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vertexindexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

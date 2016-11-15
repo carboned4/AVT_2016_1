@@ -10,6 +10,8 @@
 #include "Box.h"
 #include "VertexAttrDef.h"
 #include "objloader.h"
+#include "tangentcalculator.h"
+#include "vertexindexer.h"
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -48,6 +50,50 @@ public:
 	}
 
 	void handleOBJ(int objidForOBJ,
+		std::vector<glm::vec4> in_vertices,
+		std::vector<glm::vec4> in_uvs,
+		std::vector<glm::vec4> in_normals)
+	{
+		glGenVertexArrays(1, &(mesh[objidForOBJ].vao));
+		glBindVertexArray(mesh[objidForOBJ].vao);
+		mesh[objidForOBJ].numIndexes = in_vertices.size();
+
+
+
+		//Implementation without glBufferSubData so we will need 3 bufers for vertex attributes 
+		GLuint buffers[3];
+		glGenBuffers(3, buffers);
+
+		//vertex coordinates buffer
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+		glBufferData(GL_ARRAY_BUFFER, in_vertices.size() * sizeof(glm::vec4), &in_vertices[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(VERTEX_COORD_ATTRIB);
+		glVertexAttribPointer(VERTEX_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+
+		//texture coordinates buffer
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+		glBufferData(GL_ARRAY_BUFFER, in_uvs.size() * sizeof(glm::vec4), &in_uvs[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
+		glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+
+		//normals buffer
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
+		glBufferData(GL_ARRAY_BUFFER, in_normals.size() * sizeof(glm::vec4), &in_normals[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(NORMAL_ATTRIB);
+		glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+
+		// unbind the VAO
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDisableVertexAttribArray(VERTEX_COORD_ATTRIB);
+		glDisableVertexAttribArray(NORMAL_ATTRIB);
+		glDisableVertexAttribArray(TEXTURE_COORD_ATTRIB);
+
+		mesh[objidForOBJ].type = GL_TRIANGLES;
+	}
+
+	void handleIndexedOBJ(int objidForOBJ,
 		std::vector<glm::vec4> in_vertices,
 		std::vector<glm::vec4> in_uvs,
 		std::vector<glm::vec4> in_normals)

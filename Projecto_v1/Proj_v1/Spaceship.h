@@ -34,7 +34,7 @@ private:
 	
 public:
 	
-	Spaceship(int _objId, int* addedToId, float _x, float _y, float _z,float _limitLeft, float _limitRight);
+	Spaceship(int _objId, int* addedToId, bool toLoad, float _x, float _y, float _z,float _limitLeft, float _limitRight);
 	~Spaceship();
 
 	void update(int delta);

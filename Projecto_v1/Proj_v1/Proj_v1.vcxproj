@@ -165,8 +165,10 @@
     <ClCompile Include="Spaceship_Shot.cpp" />
     <ClCompile Include="StarsBackground.cpp" />
     <ClCompile Include="StencilPortal.cpp" />
+    <ClCompile Include="tangentcalculator.cpp" />
     <ClCompile Include="TGA.cpp" />
     <ClCompile Include="TopOrthoCamera.cpp" />
+    <ClCompile Include="vertexindexer.cpp" />
     <ClCompile Include="vsShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,10 +194,12 @@
     <ClInclude Include="StarsBackground.h" />
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="StencilPortal.h" />
+    <ClInclude Include="tangentcalculator.h" />
     <ClInclude Include="TGA.h" />
     <ClInclude Include="TopOrthoCamera.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="VertexAttrDef.h" />
+    <ClInclude Include="vertexindexer.h" />
     <ClInclude Include="vsShaderLib.h" />
   </ItemGroup>
   <ItemGroup>
