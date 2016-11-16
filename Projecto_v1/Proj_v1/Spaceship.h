@@ -15,7 +15,7 @@ private:
 	float diff[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
 	float spec[4] = { 0.25f, 0.25f, 0.25, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float shininess = 10.0f;
+	float shininess = 100.0f;
 	float limitRight;
 	float limitLeft;
 	int texcount = 15;
