@@ -6,7 +6,7 @@ uniform int texMode;
 uniform sampler2D texmap0;
 uniform sampler2D texmap1;
 uniform sampler2D texmap2;
-uniform sampler2D texmap3;
+uniform sampler2D texmap3; //ship bump
 uniform sampler2D texmap4;
 uniform sampler2D texmap5;
 uniform sampler2D texmap6;
@@ -18,7 +18,7 @@ uniform sampler2D texmap11;
 uniform sampler2D texmap12;
 uniform sampler2D texmap13;
 uniform sampler2D texmap14;
-uniform sampler2D texmap15;
+uniform sampler2D texmap15; //ship
 
 uniform vec2 doingtextv2;
 
@@ -52,13 +52,13 @@ in Data {
 
 void main() {
 
-  vec3 finalColor = vec3(0, 0, 0);
- //distance
-  float dist = 0;
-  float fogFactor = 0;
-  dist = length(DataIn.eye.z);
-  fogFactor = 1.0 /exp( (dist * FogDensity)* (dist * FogDensity));
-  fogFactor = clamp( fogFactor, 0.0, 1.0 );
+	vec3 finalColor = vec3(0, 0, 0);
+	//distance
+	float dist = 0;
+	float fogFactor = 0;
+	dist = length(DataIn.eye.z);
+	fogFactor = 1.0 /exp( (dist * FogDensity)* (dist * FogDensity));
+	fogFactor = clamp( fogFactor, 0.0, 1.0 );
 
 	float intensity = 0.0f;
 	float spotCutOff=0.9;
@@ -72,17 +72,25 @@ void main() {
 	float distance;
 	vec4 texel, texel1, texel2;
 	//int lol = doingText;
-
+	
+	vec3 v;
+	vec3 n;
+	if(mat.texCount != 15){
+		n = normalize(DataIn.normal);
+	} else {
+		n = normalize(2.0 * texture(texmap3, DataIn.tex_coord).rgb-1.0);
+	}
+	vec3 l;
+	vec3 e = normalize(DataIn.eye);
+	vec3 sd = normalize(vec3(-l_spotdir));
 	
 //OPTION A - NORMAL FRAGMENTS
 
 //STEP 1 - spec & diff
-	//se doingtext == 0
+	
 	for(int i = 0; i<8; i++){
-		vec3 n = normalize(DataIn.normal);
-		vec3 l = normalize(DataIn.lightDir[i]);
-		vec3 e = normalize(DataIn.eye);
-		vec3 sd = normalize(vec3(-l_spotdir)); 
+		l = normalize(DataIn.lightDir[i]);
+		
 		if(i<=5){ //POINT	
 			distance = length(DataIn.lightDir[i]);
 			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
