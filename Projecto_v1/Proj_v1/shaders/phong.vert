@@ -46,6 +46,7 @@ out Data {
 	vec3 bitangent;
 	vec3 lightDir[8];
 	vec2 tex_coord;
+	vec3 halfVec[8];
 } DataOut;
 
 void main () {
@@ -75,6 +76,11 @@ void main () {
 					v.y = dot (DataOut.lightDir[i], DataOut.bitangent);
 					v.z = dot (DataOut.lightDir[i], DataOut.normal);
 					DataOut.lightDir[i] = normalize(v);
+					vec3 halfVector = normalize(DataOut.lightDir[i] - DataOut.eye);
+					v.x = dot (halfVector, DataOut.tangent);
+					v.y = dot (halfVector, DataOut.bitangent);
+					v.z = dot (halfVector, DataOut.normal);
+					DataOut.halfVec[i] = normalize(v);
 				}
 			}
 		}
@@ -91,6 +97,11 @@ void main () {
 					v.y = dot (DataOut.lightDir[i], DataOut.bitangent);
 					v.z = dot (DataOut.lightDir[i], DataOut.normal);
 					DataOut.lightDir[i] = normalize(v);
+					vec3 halfVector = normalize(DataOut.lightDir[i] - DataOut.eye);
+					v.x = dot (halfVector, DataOut.tangent);
+					v.y = dot (halfVector, DataOut.bitangent);
+					v.z = dot (halfVector, DataOut.normal);
+					DataOut.halfVec[i] = normalize(v);
 				}
 			}
 		}
@@ -101,6 +112,11 @@ void main () {
 				v.y = dot (DataOut.lightDir[6], DataOut.bitangent);
 				v.z = dot (DataOut.lightDir[6], DataOut.normal);
 				DataOut.lightDir[6] = normalize(v);
+				vec3 halfVector = normalize(DataOut.lightDir[6] - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec[6] = normalize(v);
 			}
 		}
 		else{
@@ -110,6 +126,11 @@ void main () {
 				v.y = dot (DataOut.lightDir[6], DataOut.bitangent);
 				v.z = dot (DataOut.lightDir[6], DataOut.normal);
 				DataOut.lightDir[6] = normalize(v);
+				vec3 halfVector = normalize(DataOut.lightDir[6] - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec[6] = normalize(v);
 			}
 		}
 		if(lightState[I_SPOT] == 1.0f){
@@ -119,6 +140,11 @@ void main () {
 				v.y = dot (DataOut.lightDir[7], DataOut.bitangent);
 				v.z = dot (DataOut.lightDir[7], DataOut.normal);
 				DataOut.lightDir[7] = normalize(v);
+				vec3 halfVector = normalize(DataOut.lightDir[7] - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec[7] = normalize(v);
 			}
 		}
 		else{
@@ -128,6 +154,11 @@ void main () {
 				v.y = dot (DataOut.lightDir[7], DataOut.bitangent);
 				v.z = dot (DataOut.lightDir[7], DataOut.normal);
 				DataOut.lightDir[7] = normalize(v);
+				vec3 halfVector = normalize(DataOut.lightDir[7] - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec[7] = normalize(v);
 			}
 		}
 		DataOut.tex_coord = texCoord.st;
