@@ -97,6 +97,12 @@ void main() {
 			intensity += max(dot(n,l), 0.0) * attenuation;
 			if (intensity > 0.0) {
 				h = normalize(l + e);
+				if(mat.texCount == 15){
+					v.x= dot (h,  DataIn.tangent);
+					v.y= dot (h,  DataIn.bitangent);
+					v.z= dot (h,  DataIn.normal);
+					h= normalize(v);
+				}
 				intSpec = max(dot(h,n), 0.0);
 				spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 			}
@@ -105,6 +111,12 @@ void main() {
 			intensity += max(dot(n,l), 0.0);
 			if (intensity > 0.0) {
 				h = normalize(l + e);
+				if(mat.texCount == 15){
+					v.x= dot (h,  DataIn.tangent);
+					v.y= dot (h,  DataIn.bitangent);
+					v.z= dot (h,  DataIn.normal);
+					h= normalize(v);
+				}
 				intSpec = max(dot(h,n), 0.0);
 				spec = spec + mat.specular * pow(intSpec, mat.shininess);
 			}
@@ -118,6 +130,12 @@ void main() {
 				intensity += max(dot(n,l), 0.0) * attenuation;
 				if (intensity > 0.0) {
 					h = normalize(l + e);
+					if(mat.texCount == 15){
+						v.x= dot (h,  DataIn.tangent);
+						v.y= dot (h,  DataIn.bitangent);
+						v.z= dot (h,  DataIn.normal);
+						h= normalize(v);
+					}
 					intSpec = max(dot(h,n), 0.0);
 					spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 				}
