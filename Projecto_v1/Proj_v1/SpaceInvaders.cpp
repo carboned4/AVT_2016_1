@@ -204,6 +204,8 @@ Planet* planet;
 LensFlare* lensFlare;
 std::vector <Explosion*> explosionVector;
 std::vector <Asteroid*> asteroidVector;
+GLint uniform_foggy;
+int fog = 0;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -377,6 +379,8 @@ GLuint setupShaders() {
 	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
 	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
 
+	uniform_foggy = glGetUniformLocation(shader.getProgramIndex(), "fogMode");
+
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
 	return(shader.isProgramValid());
@@ -495,6 +499,8 @@ void renderScene()
 	glUniform1i(tex_loc14, 14);
 	glUniform1i(tex_loc15, 15);
 
+	//glUniform1i(uniform_foggy, fog);
+
 	
 	//OBJECTS
 	spaceship->draw(shader);
@@ -529,8 +535,8 @@ void renderScene()
 	
 	
 	//COISAS TRANSPARENTES DA CENA
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDepthMask(GL_FALSE); // Don't write to depth buffer
 	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
 	for (int i = 0; i < explosionVector.size(); i++) {
@@ -539,7 +545,7 @@ void renderScene()
 	for (int i = 0; i < asteroidVector.size(); i++) {
 		asteroidVector[i]->draw(shader);
 	}
-	glDepthMask(GL_TRUE); // Write to depth buffer
+	//glDepthMask(GL_TRUE); // Write to depth buffer
 
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -952,11 +958,12 @@ void processKeys(unsigned char key, int xx, int yy)
 	case 27:
 		glutLeaveMainLoop();
 		break;
-	case 'f': switchFramerate(); break;
+	case 'g': switchFramerate(); break;
 	case 'n': if (lightsOnGlobal == 1.0f) lightsOnGlobal = 0.0f; else lightsOnGlobal = 1.0f; break;
 	case 'c': if (lightsOnStars == 1.0f) lightsOnStars = 0.0f; else lightsOnStars = 1.0f; break;
 	case 'h': if (lightsOnMiner == 1.0f) lightsOnMiner = 0.0f; else lightsOnMiner = 1.0f; break;
 	case 'p': projectionIsPerspective = !projectionIsPerspective; break;
+	case 'f': if (fog == 1) fog = 0; else fog = 1; break;
 	}
 	passKeys();
 }

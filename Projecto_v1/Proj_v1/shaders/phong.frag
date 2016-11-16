@@ -3,6 +3,7 @@
 
 
 uniform int texMode;
+uniform int fogMode;
 uniform sampler2D texmap0;
 uniform sampler2D texmap1;
 uniform sampler2D texmap2;
@@ -211,7 +212,7 @@ void main() {
 		colorOut = max((intensity * mat.diffuse + spec),mat.ambient);
 	}
 
-	if(mat.texCount!=0 && mat.texCount!=2 && mat.texCount!=11  && mat.texCount!=13 && mat.texCount!=14 ){
+	if(fogMode == 1 && mat.texCount!=0 && mat.texCount!=2 && mat.texCount!=11  && mat.texCount!=13 && mat.texCount!=14 ){
 		finalColor=colorOut.rgb;
 		colorOut.rgb = mix(fogColor, finalColor, fogFactor);
 	}
