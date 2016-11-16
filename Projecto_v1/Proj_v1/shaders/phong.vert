@@ -8,7 +8,6 @@ uniform mat4 m_pvm;
 uniform mat4 m_viewModel;
 uniform mat3 m_normal;
 uniform vec3 lightState;
-uniform vec2 doingtextv2;
 
 uniform int texMode;
 
@@ -19,7 +18,6 @@ uniform int l_pointOn;
 uniform bool l_dirOn;
 uniform bool l_spotOn;
 
-uniform int doingText;
 
 struct Materials {
 	vec4 diffuse;
@@ -46,7 +44,7 @@ out Data {
 	vec3 bitangent;
 	vec3 lightDir[8];
 	vec2 tex_coord;
-	vec3 halfVec[8];
+	vec3 halfVec;
 } DataOut;
 
 void main () {
@@ -56,7 +54,7 @@ void main () {
 	}
 	else {
 		vec4 pos = m_viewModel * position;
-
+		int lightForBump = 2;
 		DataOut.normal = normalize(m_normal * normal.xyz);
 		DataOut.tangent = normalize(m_normal * tangent.xyz);
 		DataOut.bitangent = tangent.w * cross (DataOut.normal,DataOut.tangent);
@@ -71,17 +69,15 @@ void main () {
 			DataOut.lightDir[4] = vec3(l_pospoint4 - pos);
 			DataOut.lightDir[5] = vec3(l_pospoint5 - pos);
 			if(mat.texCount == 15){
-				for(int i = 0; i<6; i++){
-					v.x = dot (DataOut.lightDir[i], DataOut.tangent);
-					v.y = dot (DataOut.lightDir[i], DataOut.bitangent);
-					v.z = dot (DataOut.lightDir[i], DataOut.normal);
-					DataOut.lightDir[i] = normalize(v);
-					vec3 halfVector = normalize(DataOut.lightDir[i] - DataOut.eye);
-					v.x = dot (halfVector, DataOut.tangent);
-					v.y = dot (halfVector, DataOut.bitangent);
-					v.z = dot (halfVector, DataOut.normal);
-					DataOut.halfVec[i] = normalize(v);
-				}
+				v.x = dot (DataOut.lightDir[ lightForBump ], DataOut.tangent);
+				v.y = dot (DataOut.lightDir[ lightForBump ], DataOut.bitangent);
+				v.z = dot (DataOut.lightDir[ lightForBump ], DataOut.normal);
+				DataOut.lightDir[ lightForBump ] = normalize(v);
+				vec3 halfVector = normalize(vec3(l_pospoint0 - pos) - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec = normalize(v);
 			}
 		}
 		else{
@@ -92,74 +88,28 @@ void main () {
 			DataOut.lightDir[4] = vec3(0);
 			DataOut.lightDir[5] = vec3(0);
 			if(mat.texCount == 15){
-				for(int i = 0; i<6; i++){
-					v.x = dot (DataOut.lightDir[i], DataOut.tangent);
-					v.y = dot (DataOut.lightDir[i], DataOut.bitangent);
-					v.z = dot (DataOut.lightDir[i], DataOut.normal);
-					DataOut.lightDir[i] = normalize(v);
-					vec3 halfVector = normalize(DataOut.lightDir[i] - DataOut.eye);
-					v.x = dot (halfVector, DataOut.tangent);
-					v.y = dot (halfVector, DataOut.bitangent);
-					v.z = dot (halfVector, DataOut.normal);
-					DataOut.halfVec[i] = normalize(v);
-				}
+				v.x = dot (DataOut.lightDir[ lightForBump ], DataOut.tangent);
+				v.y = dot (DataOut.lightDir[ lightForBump ], DataOut.bitangent);
+				v.z = dot (DataOut.lightDir[ lightForBump ], DataOut.normal);
+				DataOut.lightDir[ lightForBump ] = normalize(v);
+				vec3 halfVector = normalize(vec3(0) - DataOut.eye);
+				v.x = dot (halfVector, DataOut.tangent);
+				v.y = dot (halfVector, DataOut.bitangent);
+				v.z = dot (halfVector, DataOut.normal);
+				DataOut.halfVec = normalize(v);
 			}
 		}
 		if(lightState[I_DIR] == 1.0f){
 			DataOut.lightDir[6] = vec3(l_posdir - pos);
-			if(mat.texCount == 15){
-				v.x = dot (DataOut.lightDir[6], DataOut.tangent);
-				v.y = dot (DataOut.lightDir[6], DataOut.bitangent);
-				v.z = dot (DataOut.lightDir[6], DataOut.normal);
-				DataOut.lightDir[6] = normalize(v);
-				vec3 halfVector = normalize(DataOut.lightDir[6] - DataOut.eye);
-				v.x = dot (halfVector, DataOut.tangent);
-				v.y = dot (halfVector, DataOut.bitangent);
-				v.z = dot (halfVector, DataOut.normal);
-				DataOut.halfVec[6] = normalize(v);
-			}
 		}
 		else{
 			DataOut.lightDir[6] = vec3(0);
-			if(mat.texCount == 15){
-				v.x = dot (DataOut.lightDir[6], DataOut.tangent);
-				v.y = dot (DataOut.lightDir[6], DataOut.bitangent);
-				v.z = dot (DataOut.lightDir[6], DataOut.normal);
-				DataOut.lightDir[6] = normalize(v);
-				vec3 halfVector = normalize(DataOut.lightDir[6] - DataOut.eye);
-				v.x = dot (halfVector, DataOut.tangent);
-				v.y = dot (halfVector, DataOut.bitangent);
-				v.z = dot (halfVector, DataOut.normal);
-				DataOut.halfVec[6] = normalize(v);
-			}
 		}
 		if(lightState[I_SPOT] == 1.0f){
 			DataOut.lightDir[7] = vec3(l_posspot - pos);
-			if(mat.texCount == 15){
-				v.x = dot (DataOut.lightDir[7], DataOut.tangent);
-				v.y = dot (DataOut.lightDir[7], DataOut.bitangent);
-				v.z = dot (DataOut.lightDir[7], DataOut.normal);
-				DataOut.lightDir[7] = normalize(v);
-				vec3 halfVector = normalize(DataOut.lightDir[7] - DataOut.eye);
-				v.x = dot (halfVector, DataOut.tangent);
-				v.y = dot (halfVector, DataOut.bitangent);
-				v.z = dot (halfVector, DataOut.normal);
-				DataOut.halfVec[7] = normalize(v);
-			}
 		}
 		else{
 			DataOut.lightDir[7] = vec3(0);
-			if(mat.texCount == 15){
-				v.x = dot (DataOut.lightDir[7], DataOut.tangent);
-				v.y = dot (DataOut.lightDir[7], DataOut.bitangent);
-				v.z = dot (DataOut.lightDir[7], DataOut.normal);
-				DataOut.lightDir[7] = normalize(v);
-				vec3 halfVector = normalize(DataOut.lightDir[7] - DataOut.eye);
-				v.x = dot (halfVector, DataOut.tangent);
-				v.y = dot (halfVector, DataOut.bitangent);
-				v.z = dot (halfVector, DataOut.normal);
-				DataOut.halfVec[7] = normalize(v);
-			}
 		}
 		DataOut.tex_coord = texCoord.st;
 		gl_Position = m_pvm * position;

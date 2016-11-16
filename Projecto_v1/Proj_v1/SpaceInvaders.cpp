@@ -345,11 +345,11 @@ GLuint setupShaders() {
 	vm_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_viewModel");
 	normal_uniformId = glGetUniformLocation(shader.getProgramIndex(), "m_normal");
 	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint0");
-	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint1");
-	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint2");
-	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint3");
-	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint4");
-	lPos_uniformIdPoint0 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint5");
+	lPos_uniformIdPoint1 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint1");
+	lPos_uniformIdPoint2 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint2");
+	lPos_uniformIdPoint3 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint3");
+	lPos_uniformIdPoint4 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint4");
+	lPos_uniformIdPoint5 = glGetUniformLocation(shader.getProgramIndex(), "l_pospoint5");
 	lPos_uniformIdGlobal = glGetUniformLocation(shader.getProgramIndex(), "l_posdir");
 	lPos_uniformIdSpot = glGetUniformLocation(shader.getProgramIndex(), "l_posspot");
 	lPos_uniformIdSpotDirection = glGetUniformLocation(shader.getProgramIndex(), "l_spotdir");
@@ -375,9 +375,6 @@ GLuint setupShaders() {
 	tex_loc13 = glGetUniformLocation(shader.getProgramIndex(), "texmap13");
 	tex_loc14 = glGetUniformLocation(shader.getProgramIndex(), "texmap14");
 	tex_loc15 = glGetUniformLocation(shader.getProgramIndex(), "texmap15");
-
-	doingText_uniformId = glGetUniformLocation(shader.getProgramIndex(), "doingText");
-	doingTextV_uniformId = glGetUniformLocation(shader.getProgramIndex(), "dointtextv2");
 
 	uniform_foggy = glGetUniformLocation(shader.getProgramIndex(), "fogMode");
 
@@ -499,7 +496,7 @@ void renderScene()
 	glUniform1i(tex_loc14, 14);
 	glUniform1i(tex_loc15, 15);
 
-	//glUniform1i(uniform_foggy, fog);
+	glUniform1i(uniform_foggy, fog);
 
 	
 	//OBJECTS
@@ -536,16 +533,17 @@ void renderScene()
 	
 	//COISAS TRANSPARENTES DA CENA
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glDepthMask(GL_FALSE); // Don't write to depth buffer
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
 	portalLiquid->drawTransparent(shader);
 	planet->drawAtmosphere(shader);
-	for (int i = 0; i < explosionVector.size(); i++) {
-		explosionVector[i]->draw(shader);
-	}
 	for (int i = 0; i < asteroidVector.size(); i++) {
 		asteroidVector[i]->draw(shader);
 	}
-	//glDepthMask(GL_TRUE); // Write to depth buffer
+	for (int i = 0; i < explosionVector.size(); i++) {
+		explosionVector[i]->draw(shader);
+	}
+
+	glDepthMask(GL_TRUE); // Write to depth buffer
 
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);

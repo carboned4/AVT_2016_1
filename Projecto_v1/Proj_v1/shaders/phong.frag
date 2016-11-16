@@ -21,7 +21,6 @@ uniform sampler2D texmap13;
 uniform sampler2D texmap14;
 uniform sampler2D texmap15; //ship
 
-uniform vec2 doingtextv2;
 
 out vec4 colorOut;
 const vec3 fogColor = vec3(0.25, 0.1, 0.1);
@@ -40,7 +39,6 @@ uniform Materials mat;
 
 uniform vec4 l_spotdir;
 
-uniform int doingText;
 
 in Data {
 	vec3 normal;
@@ -49,7 +47,7 @@ in Data {
 	vec3 bitangent;
 	vec3 lightDir[8];
 	vec2 tex_coord;
-	vec3 halfVec[8];
+	vec3 halfVec;
 } DataIn;
 
 void main() {
@@ -73,15 +71,9 @@ void main() {
 	float attenuation;
 	float distance;
 	vec4 texel, texel1, texel2;
-	//int lol = doingText;
 	
 	vec3 v;
 	vec3 n;
-	if(mat.texCount != 15){
-		n = normalize(DataIn.normal);
-	} else {
-		n = normalize(2.0 * texture(texmap3, DataIn.tex_coord).rgb-1.0);
-	}
 	vec3 l;
 	vec3 e = normalize(DataIn.eye);
 	vec3 sd = normalize(vec3(-l_spotdir));
@@ -92,16 +84,17 @@ void main() {
 	
 	for(int i = 0; i<8; i++){
 		l = normalize(DataIn.lightDir[i]);
-		
+		n = normalize(DataIn.normal);
 		if(i<=5){ //POINT	
+			h = normalize(l + e);
 			distance = length(DataIn.lightDir[i]);
 			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
+			if(i == 2 && mat.texCount == 15){
+				n = normalize(2.0 * texture(texmap3, DataIn.tex_coord).rgb-1.0);
+				h = DataIn.halfVec;
+			}
 			intensity += max(dot(n,l), 0.0) * attenuation;
 			if (intensity > 0.0) {
-				h = normalize(l + e);
-				if(mat.texCount == 16){
-					h = DataIn.halfVec[i];
-				}
 				intSpec = max(dot(h,n), 0.0);
 				spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 			}
@@ -110,9 +103,6 @@ void main() {
 			intensity += max(dot(n,l), 0.0);
 			if (intensity > 0.0) {
 				h = normalize(l + e);
-				if(mat.texCount == 16){
-					h = DataIn.halfVec[i];
-				}
 				intSpec = max(dot(h,n), 0.0);
 				spec = spec + mat.specular * pow(intSpec, mat.shininess);
 			}
@@ -126,9 +116,6 @@ void main() {
 				intensity += max(dot(n,l), 0.0) * attenuation;
 				if (intensity > 0.0) {
 					h = normalize(l + e);
-					if(mat.texCount == 16){
-						h = DataIn.halfVec[i];
-					}
 					intSpec = max(dot(h,n), 0.0);
 					spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 				}
