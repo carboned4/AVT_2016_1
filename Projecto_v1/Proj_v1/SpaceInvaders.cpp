@@ -209,6 +209,7 @@ std::vector <Asteroid*> asteroidVector;
 StencilMirror* mirror;
 GLint uniform_foggy;
 int fog = 0;
+GLint uniform_shadowOn;
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -380,6 +381,8 @@ GLuint setupShaders() {
 	tex_loc15 = glGetUniformLocation(shader.getProgramIndex(), "texmap15");
 
 	uniform_foggy = glGetUniformLocation(shader.getProgramIndex(), "fogMode");
+	uniform_shadowOn = glGetUniformLocation(shader.getProgramIndex(), "shadowOn");
+
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 
@@ -552,7 +555,6 @@ void renderScene()
 
 
 
-
 	glEnable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glStencilFunc(GL_NEVER, 0x1, 0x1); // Set any stencil to 1
@@ -576,6 +578,10 @@ void renderScene()
 	glDepthMask(GL_FALSE); // Don't write to depth buffer
 	mirror->draw(shader);
 	glDepthMask(GL_TRUE);
+	
+	glUniform1i(uniform_shadowOn, 1);
+	glUniform1i(uniform_shadowOn, 0);
+
 	drawObjects(true);
 
 	/*

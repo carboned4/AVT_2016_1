@@ -4,6 +4,7 @@
 
 uniform int texMode;
 uniform int fogMode;
+uniform int shadowOn;
 uniform sampler2D texmap0;
 uniform sampler2D texmap1;
 uniform sampler2D texmap2;
@@ -51,7 +52,10 @@ in Data {
 } DataIn;
 
 void main() {
-
+	if(shadowOn == 1){
+		colorOut = vec4(0.5, 0.5, 0.5, 1.0);
+		return;
+	}
 	vec3 finalColor = vec3(0, 0, 0);
 	//distance
 	float dist = 0;
