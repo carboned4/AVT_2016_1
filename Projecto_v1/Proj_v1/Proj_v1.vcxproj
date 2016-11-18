@@ -165,6 +165,7 @@
     <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="Spaceship_Shot.cpp" />
     <ClCompile Include="StarsBackground.cpp" />
+    <ClCompile Include="StencilMirror.cpp" />
     <ClCompile Include="StencilPortal.cpp" />
     <ClCompile Include="tangentcalculator.cpp" />
     <ClCompile Include="TGA.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Spaceship_Shot.h" />
     <ClInclude Include="StarsBackground.h" />
     <ClInclude Include="StaticObject.h" />
+    <ClInclude Include="StencilMirror.h" />
     <ClInclude Include="StencilPortal.h" />
     <ClInclude Include="tangentcalculator.h" />
     <ClInclude Include="TGA.h" />

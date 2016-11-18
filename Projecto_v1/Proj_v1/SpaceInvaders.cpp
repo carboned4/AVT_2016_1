@@ -26,6 +26,7 @@
 #include "LensFlare.h"
 #include "Explosion.h"
 #include "Asteroid.h"
+#include "StencilMirror.h"
 
 #include "Camera.h"
 #include "TopOrthoCamera.h"
@@ -54,10 +55,10 @@
 #define GRAVITYPOINTY 2.0f
 #define GRAVITYPOINTZ FARTHESTALIEN + 6.0f
 
-#define ASTEROIDNUMBER 300
+#define ASTEROIDNUMBER 250
 #define ASTEROID_XMIN -20.0f
 #define ASTEROID_XMAX 20.0f
-#define ASTEROID_YMIN -20.0f
+#define ASTEROID_YMIN -5.0f
 #define ASTEROID_YMAX 20.0f
 #define ASTEROID_ZMIN -10.0f
 #define ASTEROID_ZMAX 30.0f
@@ -103,6 +104,7 @@ int objIdPlanet = -1;
 int objIdLensFlare = -1;
 int objIdExplosion = -1;
 int objIdAsteroid = -1;
+int objIdMirror = -1;
 
 GLuint VertexShaderId, FragmentShaderId, ProgramId;
 //GLint UniformId;
@@ -204,6 +206,7 @@ Planet* planet;
 LensFlare* lensFlare;
 std::vector <Explosion*> explosionVector;
 std::vector <Asteroid*> asteroidVector;
+StencilMirror* mirror;
 GLint uniform_foggy;
 int fog = 0;
 
@@ -385,7 +388,56 @@ GLuint setupShaders() {
 
 /////////////////////////////////////////////////////////////////////// VAOs & VBOs
 
+void drawObjects(bool original) {
+	//OBJECTS
+	spaceship->draw(shader);
+	for (int i = 0; i < Aliens.size(); i++) {
+		Aliens[i]->draw(shader);
+	}
+	for (int i = 0; i < spaceshipShotVector.size(); i++) {
+		spaceshipShotVector[i]->draw(shader);
+	}
+	for (int i = 0; i < alienShotVector.size(); i++) {
+		alienShotVector[i]->draw(shader);
+	}
+	background1->draw(shader);
 
+	portalLiquid->draw(shader);
+	planet->draw(shader);
+	if (original) {
+		//STENCIL
+		glUniform1i(texMode_uniformId, 0);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0x1); // Set any stencil to 1
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilMask(0xFF); // Write to stencil buffer
+		glDepthMask(GL_FALSE); // Don't write to depth buffer
+		glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+		stencilPortal->fillStencil(shader);
+		glStencilFunc(GL_EQUAL, 1, 0x1); // Pass test if stencil value is 1
+		glStencilMask(0x00); // Don't write anything to stencil buffer
+		glDepthMask(GL_TRUE); // Write to depth buffer
+		stencilPortal->draw(shader);
+		glDisable(GL_STENCIL_TEST);
+	}
+
+	//COISAS TRANSPARENTES DA CENA
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	portalLiquid->drawTransparent(shader);
+	planet->drawAtmosphere(shader);
+	glCullFace(GL_BACK);  //porque apontam sempre para a câmara 
+	for (int i = 0; i < asteroidVector.size(); i++) {
+		asteroidVector[i]->draw(shader);
+	}
+	for (int i = 0; i < explosionVector.size(); i++) {
+		explosionVector[i]->draw(shader);
+	}
+	glDepthMask(GL_TRUE); // Write to depth buffer
+
+
+}
 
 void renderScene()
 {
@@ -441,8 +493,8 @@ void renderScene()
 	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
 	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//TEXTURES
 	//Associar os Texture Units aos Objects Texture
 	//stone.tga loaded in TU0; checker.tga loaded in TU1;  lightwood.tga loaded in TU2
@@ -498,24 +550,35 @@ void renderScene()
 
 	glUniform1i(uniform_foggy, fog);
 
+
+
+
+	glEnable(GL_STENCIL_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glStencilFunc(GL_NEVER, 0x1, 0x1); // Set any stencil to 1
+	glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);
+	glStencilMask(0xFF);
+	mirror->fillStencil(shader);
 	
-	//OBJECTS
-	spaceship->draw(shader);
-	for (int i = 0; i < Aliens.size(); i++) {
-		Aliens[i]->draw(shader);
-	}
-	for (int i = 0; i < spaceshipShotVector.size(); i++) {
-		spaceshipShotVector[i]->draw(shader);
-	}
-	for (int i = 0; i < alienShotVector.size(); i++) {
-		alienShotVector[i]->draw(shader);
-	}
-	background1->draw(shader);
+	glStencilFunc(GL_EQUAL, 1, 0x1); // Set any stencil to 1
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	pushMatrix(MODEL);
+	translate(MODEL, 0.0f, -10.0f, 0.0f);
+	scale(MODEL, 1.0f, -1.0f, 1.0f);
+	glCullFace(GL_FRONT);
+	drawObjects(false);
+	glCullFace(GL_BACK);
+	popMatrix(MODEL);
 	
-	portalLiquid->draw(shader);
-	planet->draw(shader);
-	
-	//STENCIL
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	mirror->draw(shader);
+	glDepthMask(GL_TRUE);
+	drawObjects(true);
+
+	/*
 	glUniform1i(texMode_uniformId, 0);
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 0x1); // Set any stencil to 1
@@ -529,23 +592,8 @@ void renderScene()
 	glDepthMask(GL_TRUE); // Write to depth buffer
 	stencilPortal->draw(shader);
 	glDisable(GL_STENCIL_TEST);
-	
-	
-	//COISAS TRANSPARENTES DA CENA
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthMask(GL_FALSE); // Don't write to depth buffer
-	portalLiquid->drawTransparent(shader);
-	planet->drawAtmosphere(shader);
-	for (int i = 0; i < asteroidVector.size(); i++) {
-		asteroidVector[i]->draw(shader);
-	}
-	for (int i = 0; i < explosionVector.size(); i++) {
-		explosionVector[i]->draw(shader);
-	}
+	*/
 
-	glDepthMask(GL_TRUE); // Write to depth buffer
-
-	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	//COORDENADAS DO LENSFLARE + desenhar
 	//http://www.songho.ca/opengl/gl_transform.html
@@ -1234,6 +1282,15 @@ void setupThings() {
 		}
 		asteroidVector.push_back(new Asteroid(objIdAsteroid, &objIdInc, iax, iay, iaz));
 	}
+
+	if (objIdMirror == -1) {
+		objIdMirror = objId;
+		mirror = new StencilMirror(objIdMirror, &objIdInc, 0.0f, -5.0f, 0.0f);
+		//printf("stencil %d\n", objId);
+		objId += objIdInc;
+	}
+	else mirror = new StencilMirror(objIdMirror, &objIdInc, 0.0f, -5.0f, 0.0f);
+
 }
 
 void init(int argc, char* argv[])
