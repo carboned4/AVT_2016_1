@@ -133,6 +133,14 @@ float lightPosPoint4[4] = { 0.0f, -10.0f, 5.0f, 1.0f };
 float lightPosPoint5[4] = { 0.0f, 10.0f, 5.0f, 1.0f };
 float lightPosSpot[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDirSpot[4] = { 0.0f, 10.0f, 5.0f, 0.0f };
+float lightPosGlobalmir[4] = { 5.0f, 0.0f, -5.0f, 0.0f };
+float lightPosPoint0mir[4] = { 5.0f, -20.0f, 15.0f, 1.0f };
+float lightPosPoint1mir[4] = { -5.0f, -20.0f, 15.0f, 1.0f };
+float lightPosPoint2mir[4] = { 5.0f, -20.0f, 5.0f, 1.0f };
+float lightPosPoint3mir[4] = { -5.0f, -20.0f, 5.0f, 1.0f };
+float lightPosPoint4mir[4] = { 0.0f, 0.0f, 5.0f, 1.0f };
+float lightPosPoint5mir[4] = { 0.0f, -20.0f, 5.0f, 1.0f };
+float lightPosSpotmir[4] = { 0.0f, -10.0f, 0.0f, 1.0f };
 
 //texturas
 GLint tex_loc0, tex_loc1, tex_loc2, tex_loc3, tex_loc4;
@@ -481,45 +489,6 @@ void renderScene()
 	currentCamera->doView();
 	glUseProgram(shader.getProgramIndex());
 
-
-	//LIGHTS
-	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
-	float resstate[3];
-	resstate[I_DIR] = lightsOnGlobal;
-	resstate[I_POINT] = lightsOnStars;
-	resstate[I_SPOT] = lightsOnMiner;
-	glUniform3fv(uniform_lightState, 1, resstate);
-	
-	float res[4];
-	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint0, 1, res);
-	multMatrixPoint(VIEW, lightPosPoint1, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint1, 1, res);
-	multMatrixPoint(VIEW, lightPosPoint2, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint2, 1, res);
-	multMatrixPoint(VIEW, lightPosPoint3, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint3, 1, res);
-	multMatrixPoint(VIEW, lightPosPoint4, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint4, 1, res);
-	multMatrixPoint(VIEW, lightPosPoint5, res);   //lightPos WCS -> Camera space
-	glUniform4fv(lPos_uniformIdPoint5, 1, res);
-	
-	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightDirection WCS -> Camera space
-	glUniform4fv(lPos_uniformIdGlobal, 1, res);
-	
-	lightPosSpot[0] = spaceship->getPosition().getX();
-	lightPosSpot[1] = spaceship->getPosition().getY();
-	lightPosSpot[2] = spaceship->getPosition().getZ();
-	lightPosSpot[3] = 1.0f;
-	multMatrixPoint(VIEW, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
-	glUniform4fv(lPos_uniformIdSpot, 1, res);
-	lightDirSpot[0] = spaceship->getSpeedAngle().getX();
-	lightDirSpot[1] = spaceship->getSpeedAngle().getY();
-	lightDirSpot[2] = spaceship->getSpeedAngle().getZ();
-	lightDirSpot[3] = 0.0f;
-	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
-	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
-
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//TEXTURES
@@ -577,8 +546,30 @@ void renderScene()
 
 	glUniform1i(uniform_foggy, fog);
 
+	//LIGHTS
+	//glUniform4fv(lPos_uniformIdPoint0, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
+	float resstate[3];
+	resstate[I_DIR] = lightsOnGlobal;
+	resstate[I_POINT] = lightsOnStars;
+	resstate[I_SPOT] = lightsOnMiner;
+	glUniform3fv(uniform_lightState, 1, resstate);
+	
+	lightPosSpot[0] = spaceship->getPosition().getX();
+	lightPosSpot[1] = spaceship->getPosition().getY();
+	lightPosSpot[2] = spaceship->getPosition().getZ();
+	lightPosSpotmir[0] = spaceship->getPosition().getX();
+	lightPosSpotmir[1] = -10.0f-spaceship->getPosition().getY();
+	lightPosSpotmir[2] = spaceship->getPosition().getZ();
+	lightPosSpot[3] = 1.0f;
+	lightDirSpot[0] = spaceship->getSpeedAngle().getX();
+	lightDirSpot[1] = spaceship->getSpeedAngle().getY();
+	lightDirSpot[2] = spaceship->getSpeedAngle().getZ();
+	lightDirSpot[3] = 0.0f;
 
+	float res[4];
+	
 
+	
 	glEnable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glStencilFunc(GL_NEVER, 0x1, 0x1); // Set any stencil to 1
@@ -589,11 +580,31 @@ void renderScene()
 	glStencilFunc(GL_EQUAL, 1, 0x1); // Set any stencil to 1
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	pushMatrix(MODEL);
-	translate(MODEL, 0.0f, -10.0f, 0.0f);
-	scale(MODEL, 1.0f, -1.0f, 1.0f);
-	glCullFace(GL_FRONT);
-	drawObjects(1);
-	glCullFace(GL_BACK);
+		translate(MODEL, 0.0f, -10.0f, 0.0f);
+		scale(MODEL, 1.0f, -1.0f, 1.0f);
+
+		multMatrixPoint(VIEW, lightPosPoint0mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint0, 1, res);
+		multMatrixPoint(VIEW, lightPosPoint1mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint1, 1, res);
+		multMatrixPoint(VIEW, lightPosPoint2mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint2, 1, res);
+		multMatrixPoint(VIEW, lightPosPoint3mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint3, 1, res);
+		multMatrixPoint(VIEW, lightPosPoint4mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint4, 1, res);
+		multMatrixPoint(VIEW, lightPosPoint5mir, res);   //lightPos WCS -> Camera space
+		glUniform4fv(lPos_uniformIdPoint5, 1, res);
+		multMatrixPoint(VIEW, lightPosGlobalmir, res);   //lightDirection WCS -> Camera space
+		glUniform4fv(lPos_uniformIdGlobal, 1, res);
+		multMatrixPoint(VIEW, lightPosSpotmir, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+		glUniform4fv(lPos_uniformIdSpot, 1, res);
+		multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+		glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
+
+		glCullFace(GL_FRONT);
+		drawObjects(1);
+		glCullFace(GL_BACK);
 	popMatrix(MODEL);
 	
 	glDisable(GL_STENCIL_TEST);
@@ -620,6 +631,25 @@ void renderScene()
 	popMatrix(MODEL);
 	glUniform1i(uniform_shadowOn, 0);
 	
+	multMatrixPoint(VIEW, lightPosPoint0, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint0, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint1, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint1, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint2, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint2, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint3, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint3, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint4, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint4, 1, res);
+	multMatrixPoint(VIEW, lightPosPoint5, res);   //lightPos WCS -> Camera space
+	glUniform4fv(lPos_uniformIdPoint5, 1, res);
+	multMatrixPoint(VIEW, lightPosGlobal, res);   //lightDirection WCS -> Camera space
+	glUniform4fv(lPos_uniformIdGlobal, 1, res);
+	multMatrixPoint(VIEW, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpot, 1, res);
+	multMatrixPoint(VIEW, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	glUniform4fv(lPos_uniformIdSpotDirection, 1, res);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
