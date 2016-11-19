@@ -11,17 +11,17 @@
 
 class Spaceship_Shot : public DynamicObject {
 private:
-	float amb[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	float diff[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	float spec[4] = { 0.9f, 0.9f, 0.9f, 1.0f };
+	float amb[4] = { 0.1f, 0.1f, 0.2f, 1.0f };
+	float diff[4] = { 0.1f, 0.1f, 0.5f, 1.0f };
+	float spec[4] = { 0.9f, 0.9f, 0.1f, 1.0f };
 	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float shininess = 1000.0f;
+	float shininess = 10.0f;
 	int texcount = 0;
 	int addToId = 2;
 
 	bool changeRow = false;
 	float speedModulus = 2.0f;
-
+	float elapsedLife = 0.0f;
 public:
 	Spaceship_Shot(int _objId, int* addedToId, float _x, float _y, float _z);
 	~Spaceship_Shot();

@@ -31,6 +31,8 @@ Spaceship_Shot::~Spaceship_Shot() {
 void Spaceship_Shot::update(int delta) {
 	//speed.set(0.0f, 0.0f, speedModulus);
 	position = position + speed*(delta / 1000.0f);
+	elapsedLife += (delta / 1000.0f);
+	
 }
 
 void Spaceship_Shot::draw(VSShaderLib _shader) {
@@ -96,6 +98,35 @@ void Spaceship_Shot::draw(VSShaderLib _shader) {
 	glDrawElements(mesh[objectId + 1].type, mesh[objectId + 1].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+	pushMatrix(MODEL);
+	translate(MODEL, 0.0f, -0.35f, 0.0f);
+	rotate(MODEL, elapsedLife*90.0f, 0.0f, 1.0f, 0.0f);
+	scale(MODEL, 0.1f, 1.0f, 2.0f);
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	computeNormalMatrix3x3();
+	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+	popMatrix(MODEL);
+	// Render mesh
+	glBindVertexArray(mesh[objectId + 1].vao);
+	glDrawElements(mesh[objectId + 1].type, mesh[objectId + 1].numIndexes, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	pushMatrix(MODEL);
+	translate(MODEL, 0.0f, -0.35f, 0.0f);
+	rotate(MODEL, elapsedLife*90.0f, 0.0f, 1.0f, 0.0f);
+	scale(MODEL, 2.0f, 1.0f, 0.1f);
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	computeNormalMatrix3x3();
+	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+	popMatrix(MODEL);
+	// Render mesh
+	glBindVertexArray(mesh[objectId + 1].vao);
+	glDrawElements(mesh[objectId + 1].type, mesh[objectId + 1].numIndexes, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 	popMatrix(MODEL);
 }
