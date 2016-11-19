@@ -182,7 +182,7 @@ bool keyLeft = false;
 bool keyRight = false;
 
 // Camera Spherical Coordinates
-float alpha = 180.0f, beta = 10.0f;
+float alpha = 180.0f, beta = 20.0f;
 float r = 4.5f;
 float camPos[3];
 float objPos[3];
@@ -882,6 +882,20 @@ void collisions() {
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		shipcollided = spaceship->checkCollisionShot(alienShotVector[i]->getPosition(), alienShotVector[i]->getCollisionBox());
 		if (shipcollided) {
+			//CREATE EXPLOSION
+			if (objIdExplosion == -1) {
+				objIdExplosion = objId;
+				explosionVector.push_back(new Explosion(objIdExplosion, &objIdInc,
+					spaceship->getPosition().getX(), spaceship->getPosition().getY(), spaceship->getPosition().getZ(),
+					spaceship->getSpeed().getX(), 0.0f, -1.0f,
+					GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ));
+				objId += objIdInc;
+			}
+			else explosionVector.push_back(new Explosion(objIdExplosion, &objIdInc,
+				spaceship->getPosition().getX(), spaceship->getPosition().getY(), spaceship->getPosition().getZ(),
+				spaceship->getSpeed().getX(), 0.0f, -1.0f,
+				GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ));
+
 			alienShotVector.erase(alienShotVector.begin() + i);
 			score += DEATHPENALTY;
 			break;
