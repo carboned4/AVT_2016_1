@@ -602,23 +602,24 @@ void renderScene()
 	mirror->draw(shader);
 	glDepthMask(GL_TRUE);
 	
-	float groundPlane[4] = {0.0f, 1.0f, 0.0f, 0.0f};
+	float groundPlane[4] = {0.0f, 1.0f, 0.0f, 5.0f};
 	float shadowMat[4][4];
 	glUniform1i(uniform_shadowOn, 1);
 	shadow_matrix(shadowMat, groundPlane, lightPosPoint5); 
 	glDisable(GL_DEPTH_TEST);
-	/*glBlendFunc(GL_DST_COLOR, GL_ZERO);
+	glBlendFunc(GL_DST_COLOR, GL_ZERO);
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_EQUAL, 0x1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 	pushMatrix(MODEL);
 	pushMatrix(VIEW);
-		//glMultMatrixf(&mat[0][0]);
-		//draw_scene();
+		multMatrix(VIEW, &shadowMat[0][0]);
+		drawObjects(false);
 	popMatrix(VIEW);
-	popMatrix(MODEL);*/
+	popMatrix(MODEL);
 	glUniform1i(uniform_shadowOn, 0);
 	
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
 	drawObjects(true);
