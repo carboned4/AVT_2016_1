@@ -53,7 +53,7 @@ in Data {
 
 void main() {
 	if(shadowOn == 1){
-		colorOut = vec4(0.5, 0.5, 0.5, 1.0);
+		colorOut = vec4(0.5, 0.5, 0.5, 0.1);
 		return;
 	}
 	vec3 finalColor = vec3(0, 0, 0);

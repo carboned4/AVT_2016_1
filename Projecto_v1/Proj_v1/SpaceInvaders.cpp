@@ -389,7 +389,30 @@ GLuint setupShaders() {
 	return(shader.isProgramValid());
 }
 
-/////////////////////////////////////////////////////////////////////// VAOs & VBOs
+
+void shadow_matrix(float m[4][4], float plane[4], float light[4])
+{
+	float dot = plane[0] * light[0] + plane[1] * light[1] + plane[2] * light[2] + plane[3] * light[3];
+
+	m[0][0] = dot - light[0] * plane[0];
+	m[1][0] = -light[0] * plane[1];
+	m[2][0] = -light[0] * plane[2];
+	m[3][0] = -light[0] * plane[3];
+	m[0][1] = -light[1] * plane[0];
+
+	m[1][1] = dot - light[1] * plane[1];
+	m[2][1] = -light[1] * plane[2];
+	m[3][1] = -light[1] * plane[3];
+	m[0][2] = -light[2] * plane[0];
+	m[1][2] = -light[2] * plane[1];
+
+	m[2][2] = dot - light[2] * plane[2];
+	m[3][2] = -light[2] * plane[3];
+	m[0][3] = -light[3] * plane[0];
+	m[1][3] = -light[3] * plane[1];
+	m[2][3] = -light[3] * plane[2];
+	m[3][3] = dot - light[3] * plane[3];
+}
 
 void drawObjects(bool original) {
 	//OBJECTS
@@ -579,11 +602,28 @@ void renderScene()
 	mirror->draw(shader);
 	glDepthMask(GL_TRUE);
 	
+	float groundPlane[4] = {0.0f, 1.0f, 0.0f, 0.0f};
+	float shadowMat[4][4];
 	glUniform1i(uniform_shadowOn, 1);
+	shadow_matrix(shadowMat, groundPlane, lightPosPoint5); 
+	glDisable(GL_DEPTH_TEST);
+	/*glBlendFunc(GL_DST_COLOR, GL_ZERO);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_EQUAL, 0x1, 0x1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+	pushMatrix(MODEL);
+	pushMatrix(VIEW);
+		//glMultMatrixf(&mat[0][0]);
+		//draw_scene();
+	popMatrix(VIEW);
+	popMatrix(MODEL);*/
 	glUniform1i(uniform_shadowOn, 0);
-
+	
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
 	drawObjects(true);
 
+	
 	/*
 	glUniform1i(texMode_uniformId, 0);
 	glEnable(GL_STENCIL_TEST);
