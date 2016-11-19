@@ -89,14 +89,18 @@ void Spaceship::update(int delta) {
 
 	if (position.getX() <= limitLeft) {
 		position.set(limitLeft, 0.0f, 0.0f);
+		speedAngleEffect *= 0.5;
 		speed.set(0.0f, 0.0f, 0.0f);
 	}
-	if(position.getX() >= limitRight){
+	else if(position.getX() >= limitRight){
 		position.set(limitRight, 0.0f, 0.0f);
+		speedAngleEffect *= 0.5;
 		speed.set(0.0f, 0.0f, 0.0f);
 	}
-	speedAngleEffect = 20.0f*speed.getX() / maxX;
-	float aux = speedAngleEffect * 3.14f / 180.0f;
+	else {
+		speedAngleEffect = 20.0f*speed.getX() / maxX;
+	}
+
 	speedAngleEffectVec = Vec3(sin(speedAngleEffect* 3.14f / 180.0f), 0.0f, cos(speedAngleEffect* 3.14f / 180.0f));
 	//printf("%f: %f %f %f\n", speedAngleEffect, speedAngleEffectVec.getX(), speedAngleEffectVec.getY(), speedAngleEffectVec.getZ());
 
