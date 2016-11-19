@@ -414,7 +414,7 @@ void shadow_matrix(float m[4][4], float plane[4], float light[4])
 	m[3][3] = dot - light[3] * plane[3];
 }
 
-void drawObjects(bool original) {
+void drawObjects(int step) { //1 reflection, 2 shadow, 3 real thing
 	//OBJECTS
 	spaceship->draw(shader);
 	for (int i = 0; i < Aliens.size(); i++) {
@@ -426,11 +426,12 @@ void drawObjects(bool original) {
 	for (int i = 0; i < alienShotVector.size(); i++) {
 		alienShotVector[i]->draw(shader);
 	}
-	background1->draw(shader);
+	if (step != 2) background1->draw(shader);
 
 	portalLiquid->draw(shader);
 	planet->draw(shader);
-	if (original) {
+	
+	if (step == 3) {
 		//STENCIL
 		glUniform1i(texMode_uniformId, 0);
 		glEnable(GL_STENCIL_TEST);
@@ -591,7 +592,7 @@ void renderScene()
 	translate(MODEL, 0.0f, -10.0f, 0.0f);
 	scale(MODEL, 1.0f, -1.0f, 1.0f);
 	glCullFace(GL_FRONT);
-	drawObjects(false);
+	drawObjects(1);
 	glCullFace(GL_BACK);
 	popMatrix(MODEL);
 	
@@ -614,7 +615,7 @@ void renderScene()
 	pushMatrix(MODEL);
 	pushMatrix(VIEW);
 		multMatrix(VIEW, &shadowMat[0][0]);
-		drawObjects(false);
+		drawObjects(2);
 	popMatrix(VIEW);
 	popMatrix(MODEL);
 	glUniform1i(uniform_shadowOn, 0);
@@ -622,7 +623,7 @@ void renderScene()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
-	drawObjects(true);
+	drawObjects(3);
 
 	
 	/*
