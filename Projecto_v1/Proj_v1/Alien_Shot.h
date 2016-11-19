@@ -11,11 +11,6 @@
 
 class Alien_Shot : public DynamicObject {
 private:
-	/*float amb[4] = { 0.25f, 0.1f, 0.1f, 1.0f };
-	float diff[4] = { 0.9f, 0.2f, 0.2f, 1.0f };
-	float spec[4] = { 0.2f, 0.2f, 0.9f, 1.0f };
-	float emissive[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	*/
 	float amb[4] = { 0.25f, 0.25f, 0.1f, 1.0f };
 	float diff[4] = { 0.9f, 0.9f, 0.2f, 1.0f };
 	float spec[4] = { 0.2f, 0.9f, 0.9f, 1.0f };
@@ -27,6 +22,7 @@ private:
 
 	bool changeRow = false;
 	float speedModulus = 0.5f;
+	float elapsedLife = 0.0f;
 
 public:
 	Alien_Shot(int _objId, int* addedToId, float _x, float _y, float _z);

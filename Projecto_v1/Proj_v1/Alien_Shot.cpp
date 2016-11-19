@@ -22,6 +22,7 @@ Alien_Shot::~Alien_Shot() {
 void Alien_Shot::update(int delta) {
 	speed.set(0.0f, 0.0f, 1.0f);
 	position = position - speed*(delta / 1000.0f);
+	elapsedLife += (delta / 1000.0f);
 }
 
 void Alien_Shot::draw(VSShaderLib _shader) {
@@ -30,6 +31,10 @@ void Alien_Shot::draw(VSShaderLib _shader) {
 	GLint loc;
 	
 	glUniform1i(texMode_uniformId, 4);
+
+	float scx = 0.5*(sin(3*elapsedLife)+1.5);
+	float scy = 0.5*(sin(5*elapsedLife+1) + 1.5);
+	float scz = 0.5*(sin(8*elapsedLife + 1) + 1.5);
 
 	//SPHERE
 	// send the material
@@ -45,7 +50,7 @@ void Alien_Shot::draw(VSShaderLib _shader) {
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
 	pushMatrix(MODEL);
-	scale(MODEL, 1.5f, 1.5f, 1.5f);	
+	scale(MODEL, scx, scy, scz);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
