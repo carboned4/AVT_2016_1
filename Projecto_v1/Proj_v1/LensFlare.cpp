@@ -85,11 +85,11 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 	int centery = int(_winh / 2.0f + 0.5f);
 	int destx = int(centerx + (centerx - _lx));
 	int desty = int(centery + (centery - _ly));
-	int maxflaredist, flaredist, flaremaxsize, flarescale;
-
+	int flaredist, flaremaxsize, flarescale;
+	float maxflaredist;
 	float side, alpha;
 
-	maxflaredist = int(sqrt(centerx*centerx + centery*centery));
+	maxflaredist = 1.1*(sqrt(centerx*centerx + centery*centery));
 	flaredist = int(sqrt((_lx - centerx)*(_lx - centerx) + (_ly - centery)*(_ly - centery)));
 	flaremaxsize = int(_winw * fMaxSize);
 	flarescale = int(_winw * fScale);
@@ -99,9 +99,9 @@ void LensFlare::drawFlares(VSShaderLib shader, float _lx, float _ly, float _lz, 
 	for (int i = 0; i < numberCoronas; i++) {
 		px = (1-relativePositions[i])*startx + relativePositions[i]*destx;
 		py = (1 - relativePositions[i])*starty + relativePositions[i] * desty;
-		side = flaredist*flarescale*fsizes[i]/maxflaredist;
+		side = (maxflaredist-flaredist)*flarescale*fsizes[i]/maxflaredist;
 		if (side > flaremaxsize) side = flaremaxsize;
-		alpha = (flaredist*falphas[i]) / maxflaredist;
+		alpha = ((maxflaredist-flaredist)*falphas[i]) / maxflaredist;
 		//printf("%i + %i -> %f %f , %f %f\n",objectId, i, px, py, side, alpha);
 		mesh[objectId + i].mat.ambient[3] = alpha;
 
