@@ -2,7 +2,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Space Invaders Grupo 3</title>
+		
+		<script type="text/javascript" src="vec3.js"></script>
+		<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+		<script type="text/javascript" src="randomutilities.js"></script>
+		
+		<script type="text/javascript" src="spaceship.js"></script>
 		<script type="text/javascript" src="main.js"></script>
+		
+		
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script id="shader-vs" type="x-shader/x-vertex">
 precision mediump float;
@@ -118,7 +126,7 @@ void main () {
 	}
 }
 		</script>
-		<script id="shader-fs" type="x-shader/x-fragment" src="phong.frag">
+		<script id="shader-fs" type="x-shader/x-fragment">
 precision mediump float;
 precision highp int;
 
