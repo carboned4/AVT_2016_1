@@ -1,5 +1,5 @@
 function Asteroid(_x, _y,_z){
-	this.postion = v3(_x, _y, _z);
+	this.position = v3(_x, _y, _z);
 }
 
 Asteroid.prototype.draw = function() {

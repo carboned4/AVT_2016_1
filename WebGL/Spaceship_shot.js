@@ -1,5 +1,6 @@
 function Spaceship_Shot(_x, _y, _z){ 
-	this.speedModulud = 2;
+	this.position = v3(_x, _y, _z)
+	this.speedModulus = 2;
 	this.speed = v3(0.0, 0.0, speedModulus);
 
 /*	

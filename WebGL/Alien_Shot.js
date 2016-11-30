@@ -1,6 +1,6 @@
 function Alien_Shot(_x, _y, _z){
 	this.position = v3(_x, _y, _z);
-	this.speedModulolus = 0.5;
+	this.speedModulus = 0.5;
 	this.speed = v3(-speedModulus, 0.0, 0.0);
 }
 
