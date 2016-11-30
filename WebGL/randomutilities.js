@@ -1,3 +1,4 @@
+
 var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
@@ -20,4 +21,7 @@ function setMatrixUniforms() {
 	mat4.toInverseMat3(mvMatrix, normalMatrix);
 	mat3.transpose(normalMatrix);
 	gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+}
+function rad(degrees) {
+	return degrees * Math.PI / 180;
 }

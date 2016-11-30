@@ -44,12 +44,24 @@ function initShaders() {
 		alert("Could not initialise shaders");
 	}
 	gl.useProgram(shaderProgram);
-	shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "position");
+	shaderProgram.vertexposAttribute = gl.getAttribLocation(shaderProgram, "position");
 	shaderProgram.normalAttribute = gl.getAttribLocation(shaderProgram, "normal");
-	shaderProgram.texAttribute = gl.getAttribLocation(shaderProgram, "texCoord");
-	gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+	shaderProgram.texcoordAttribute = gl.getAttribLocation(shaderProgram, "texCoord");
+	shaderProgram.fontposAttribute = gl.getAttribLocation(shaderProgram, "vVertex");
+	shaderProgram.fonttexAttribute = gl.getAttribLocation(shaderProgram, "vtexCoord");
+	shaderProgram.tangentAttribute = gl.getAttribLocation(shaderProgram, "tangent");
+	
+	gl.enableVertexAttribArray(shaderProgram.vertexposAttribute);
 	gl.enableVertexAttribArray(shaderProgram.normalAttribute);
-	gl.enableVertexAttribArray(shaderProgram.texAttribute);
+	gl.enableVertexAttribArray(shaderProgram.texcoordAttribute);
+	
+	//têm de ser enabled apenas quando usados, senão dá erro
+	//gl.enableVertexAttribArray(shaderProgram.fontposAttribute);
+	//gl.enableVertexAttribArray(shaderProgram.fonttexAttribute);
+	//por exemplo assim
+	//gl.enableVertexAttribArray(shaderProgram.tangentAttribute);
+	//... bind tangents, drawElements ...
+	//gl.disableVertexAttribArray(shaderProgram.tangentAttribute);
 	
 	shaderProgram.pvm_uniformId = gl.getUniformLocation(shaderProgram, "m_pvm");
 	shaderProgram.vm_uniformId = gl.getUniformLocation(shaderProgram, "m_viewModel");

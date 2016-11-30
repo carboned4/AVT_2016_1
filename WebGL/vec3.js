@@ -4,7 +4,7 @@ function Vec3(x, y, z) {
     this.Z = z;
 }
 
-function vec3(x, y, z){
+function v3(x, y, z){
 	return new Vec3(x, y, z);
 }
 

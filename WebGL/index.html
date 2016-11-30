@@ -181,7 +181,7 @@ void main() {
 	//distance
 	float dist = 0.0;
 	float fogFactor = 0.0;
-	dist = length(doeye.z);
+	dist = length(doeye);
 	fogFactor = 1.0 /exp( (dist * FogDensity)* (dist * FogDensity));
 	fogFactor = clamp( fogFactor, 0.0, 1.0 );
 
