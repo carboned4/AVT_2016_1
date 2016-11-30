@@ -1,5 +1,6 @@
 <html>
 <head>
+<script type="text/javascript" src="vec3.js"></script>
 <script type="text/javascript">
 /**
  * This code was adapted from the Apple-developed WebGL demo at
@@ -43,15 +44,23 @@ function processLoadObj(req)
         doLoadObj(req.responseText);
     }
 }
+
+function prodInt(v1, v2){
+	return v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2];
+}
+
+
 function doLoadObj(text)
 {
     vertexArray = [ ];
     normalArray = [ ];
     textureArray = [ ];
     indexArray = [ ];
+	tangentArray = [ ];
     var vertex = [ ];
     var normal = [ ];
     var texture = [ ];
+	var tangent = [ ];
     var facemap = { };
     var index = 0;
     var lines = text.split("\n");
@@ -84,8 +93,15 @@ function doLoadObj(text)
                 //obj.ctx.console.log("*** Error: face '"+line+"' not handled");
                 continue;
             }
+			var vspos = [0,0,0];
+			var vsuv = [0,0];
+			/*
+			var vspos = [[0,0,0],[0,0,0],[0,0,0]];
+			var vsuv = [[0,0],[0,0],[0,0]];
+			*/
+			var isinfacemap = [false, false, false];
             for (var i = 1; i < 4; ++i) {
-                if (!(array[i] in facemap)) {
+                //if (!(array[i] in facemap)) {
                     // add a new entry to the map and arrays
                     var f = array[i].split("/");
                     var vtx, nor, tex;
@@ -115,45 +131,92 @@ function doLoadObj(text)
                     vertexArray.push(x);
                     vertexArray.push(y);
                     vertexArray.push(z);
+					vspos[i-1] = v3(x,y,z);
                     // do the textures
-                    x = 0;
-                    y = 0;
+                    var u = 0;
+                    var v = 0;
                     if (tex * 2 + 1 < texture.length) {
-                        x = texture[tex*2];
-                        y = texture[tex*2+1];
+                        u = texture[tex*2];
+                        v = texture[tex*2+1];
                     }
-                    textureArray.push(x);
-                    textureArray.push(y);
-                    // do the normals
-                    x = 0;
-                    y = 0;
-                    z = 1;
+                    textureArray.push(u);
+                    textureArray.push(v);
+					vsuv[i-1] = v3(u,v,0);
+                    
+					// do the normals
+                    var nx = 0;
+                    var ny = 0;
+                    var nz = 1;
                     if (nor * 3 + 2 < normal.length) {
-                        x = normal[nor*3];
-                        y = normal[nor*3+1];
-                        z = normal[nor*3+2];
+                        nx = normal[nor*3];
+                        ny = normal[nor*3+1];
+                        nz = normal[nor*3+2];
                     }
-                    normalArray.push(x);
-                    normalArray.push(y);
-                    normalArray.push(z);
+                    normalArray.push(nx);
+                    normalArray.push(ny);
+                    normalArray.push(nz);
+					//do the indices
                     facemap[array[i]] = index++;
-                }
+                //}
                 indexArray.push(facemap[array[i]]);
+				console.log("a");
             }
+			//do the tangents -- isto está tudo mal mas provavelmente funciona porque
+			//ele se "esquece" de guardar os vertices para os indices
+			
+			console.log(vspos[0]);
+			console.log(vspos[1]);
+			console.log(vspos[2]);
+			var deltaPos1 = v3sub(vspos[1],vspos[0]);
+			var deltaPos2 = v3sub(vspos[2],vspos[0]);
+			var deltaUV1 = v3sub(vsuv[1],vsuv[0]);
+			var deltaUV2 = v3sub(vsuv[2],vsuv[0]);
+			var r = 1.0 / (deltaUV1.X * deltaUV2.Y - deltaUV1.Y * deltaUV2.X);
+			
+			//ler ao contrario
+			//glm::vec4 tangent = (deltaPos1 * deltaUV2.Y - deltaPos2 * deltaUV1.Y)*r;
+			var tang = v3mul(r,v3sub(v3mul(deltaUV2.Y,deltaPos1),v3mul(deltaUV1.Y,deltaPos2)));
+			//glm::vec4 bitangent = (deltaPos2 * deltaUV1.X - deltaPos1 * deltaUV2.X)*r;
+			var bitan = v3mul(r,v3sub(v3mul(deltaUV1.X,deltaPos2),v3mul(deltaUV2.X,deltaPos1)));
+			
+			//missing handedness
+			
+			//push each of the 3 coords plus w, for each of the 3 vertices
+			//tangentArray.push(" v index"+index);
+			//if(!isinfacemap[0]){
+				tangentArray.push(tang.X);
+				tangentArray.push(tang.Y);
+				tangentArray.push(tang.Z);
+				tangentArray.push(1.0); //w
+			//}
+			//if(!isinfacemap[0]){
+				tangentArray.push(tang.X);
+				tangentArray.push(tang.Y);
+				tangentArray.push(tang.Z);
+				tangentArray.push(1.0); //w
+			//}
+			//if(!isinfacemap[0]){
+				tangentArray.push(tang.X);
+				tangentArray.push(tang.Y);
+				tangentArray.push(tang.Z);
+				tangentArray.push(1.0); //w
+			//}
+			
         }
     }
     result = {};
     result["vertexPositions"] = vertexArray;
     result["vertexNormals"] = normalArray;
     result["vertexTextureCoords"] = textureArray;
-    result["indices"] = indexArray;;
+    result["indices"] = indexArray;
+	result["tangents"] = tangentArray;
     document.write(JSON.stringify(result));
 }
 </script>
 </head>
 
 
-<body onload="loadObj('sky_test2.obj');">
+<body onload="loadObj('gunship.obj');">
 </body>
 
 </html>

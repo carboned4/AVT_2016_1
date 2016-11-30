@@ -74,6 +74,12 @@ function handleLoadedSpaceship(spaceshipData) {
 	spaceshipVertexPositionBuffer.itemSize = 3;
 	spaceshipVertexPositionBuffer.numItems = spaceshipData.vertexPositions.length / 3;
 
+	spaceshipTangentBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipTangentBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(spaceshipData.tangents), gl.STATIC_DRAW);
+	spaceshipTangentBuffer.itemSize = 4;
+	spaceshipTangentBuffer.numItems = spaceshipData.tangents.length / 4;
+
 	spaceshipVertexIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, spaceshipVertexIndexBuffer);
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(spaceshipData.indices), gl.STREAM_DRAW);
@@ -83,7 +89,7 @@ function handleLoadedSpaceship(spaceshipData) {
 
 function loadSpaceship() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJgunship.json");
+	request.open("GET", "OBJ_gunship.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedSpaceship(JSON.parse(request.responseText));

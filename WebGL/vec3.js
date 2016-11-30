@@ -18,27 +18,27 @@ Vec3.prototype.len = function(){
 	return Math.sqrt(this.X * this.X, this.Y * this.Y, this.Z * this.Z);
 }
 
-function mul(m, vec){
-	return vec3(vec.X * m, vec.Y * m, vec.Z * m);
+function v3mul(m, vec){
+	return v3(vec.X * m, vec.Y * m, vec.Z * m);
 }
 
-function div(m, vec){
-	return vec3(vec.X / m, vec.Y / m, vec.Z / m);
+function v3div(m, vec){
+	return v3(vec.X / m, vec.Y / m, vec.Z / m);
 }
 
-function add(vec1, vec2){
-	return vec3(vec1.X + vec2.X, vec1.Y + vec2.Y, vec1.Z + vec2.Z);
+function v3add(vec1, vec2){
+	return v3(vec1.X + vec2.X, vec1.Y + vec2.Y, vec1.Z + vec2.Z);
 }
 
-function sub(vec1, vec2){
-	return vec3(vec1.X - vec2.X, vec1.Y - vec2.Y, vec1.Z - vec2.Z);
+function v3sub(vec1, vec2){
+	return v3(vec1.X - vec2.X, vec1.Y - vec2.Y, vec1.Z - vec2.Z);
 }
 
-function neg(vec){
-	return vec3(-vec.X, -vec.Y, -vec.Z);
+function v3neg(vec){
+	return v3(-vec.X, -vec.Y, -vec.Z);
 }
 
-function norm(vec){
+function v3norm(vec){
 	var mcdonald = this.len();
-	return vec3(vec.X / mcdonald, vec.Y / mcdonald, vec.Z / mcdonald);
+	return v3(vec.X / mcdonald, vec.Y / mcdonald, vec.Z / mcdonald);
 }
