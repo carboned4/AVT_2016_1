@@ -1,20 +1,20 @@
 function Alien_Shot(_x, _y, _z){
 	this.position = v3(_x, _y, _z);
-	this.speedModulus = 0.5;
-	this.speed = v3(-speedModulus, 0.0, 0.0);
+	this.speedModulus = 1.0;
+	this.speed = v3(0.0, 0.0, -this.speedModulus);
 }
 
+var Alien_ShotVertexPositionBuffer;
 var Alien_ShotVertexNormalBuffer;
 var Alien_ShotVertexTextureCoordBuffer;
 var Alien_ShotVertexIndexBuffer;
 
-Alien.prototype.update = function(delta) {
-	this.speed = v3(0.0, 0.0, 1.0);
-	this.position = v3sub(this.position, this.speed*(delta / 1000);
+Alien_Shot.prototype.update = function(delta) {
+	this.position = v3add(this.position, v3mul(delta / 1000,this.speed));
 	this.elapsedLife += (delta / 1000);
 }
 
-Alien.prototype.draw = function() {
+Alien_Shot.prototype.draw = function() {
 	mvPushMatrix(mvMatrix);
 	mat4.translate(mvMatrix, this.position.X, this.position.Y, this.position.Z);
 	
@@ -85,7 +85,7 @@ function handleLoadedAlien_Shot(Alien_ShotData) {
 
 function loadAlien_Shot() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJ_bullet.json");
+	request.open("GET", "OBJalienshot.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedAlien_Shot(JSON.parse(request.responseText));

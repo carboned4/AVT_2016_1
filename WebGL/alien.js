@@ -12,11 +12,23 @@ function Alien(_x,_y,_z,_left,_width,_rowheight) {
 	this.texcount = 5;
 }
 
-var alienVertexPositionBuffer;
-var alienVertexNormalBuffer;
-var alienVertexTextureCoordBuffer;
-var alienVertexIndexBuffer;
-var alienVertexTangentBuffer;
+var alienVertexPositionBuffer1;
+var alienVertexNormalBuffer1;
+var alienVertexTextureCoordBuffer1;
+var alienVertexIndexBuffer1;
+var alienVertexTangentBuffer1;
+
+var alienVertexPositionBuffer2;
+var alienVertexNormalBuffer2;
+var alienVertexTextureCoordBuffer2;
+var alienVertexIndexBuffer2;
+var alienVertexTangentBuffer2;
+
+var alienVertexPositionBuffer3;
+var alienVertexNormalBuffer3;
+var alienVertexTextureCoordBuffer3;
+var alienVertexIndexBuffer3;
+var alienVertexTangentBuffer3;
 
 
 Alien.prototype.draw = function(){
@@ -71,7 +83,7 @@ mvPopMatrix(mvMatrix);
 
 }
 
-alien.prototype.sendGeometry1 = function(){
+Alien.prototype.sendGeometry1 = function(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer1);
 	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer1.itemSize, gl.FLOAT, false, 0, 0);
 
@@ -90,7 +102,7 @@ alien.prototype.sendGeometry1 = function(){
 	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer1.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
-alien.prototype.sendGeometry2 = function(){
+Alien.prototype.sendGeometry2 = function(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer2);
 	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer2.itemSize, gl.FLOAT, false, 0, 0);
 
@@ -109,7 +121,7 @@ alien.prototype.sendGeometry2 = function(){
 	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer2.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
-alien.prototype.sendGeometry3 = function(){
+Alien.prototype.sendGeometry3 = function(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer3);
 	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer3.itemSize, gl.FLOAT, false, 0, 0);
 
