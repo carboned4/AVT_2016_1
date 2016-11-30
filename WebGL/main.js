@@ -3,6 +3,49 @@ var shaderProgram;
 var vertexShader;
 var fragmentShader;
 
+var timeDelta = 0;
+var timeElapsed = 0;
+var timePrevious = 0;
+
+var lives = 5;
+var game_running = true;
+var lostGame = false;
+var wonGame = false;
+
+var spaceship = [];
+var aliens = [];
+var alienShots = [];
+var spaceshipShots = [];
+
+function renderScene(){
+	
+}
+
+function update(){
+	//timeElapsed = glutGet(GLUT_ELAPSED_TIME);
+	//timeDelta = timeElapsed - timePrevious;
+	timeDelta = 33;
+	//timePrevious = timeElapsed;
+	if (game_running == true) {
+		//physics(timeDelta);
+
+		//alienShots(timeDelta);
+		//followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
+		//followCam->setCamXYZ(camX, camY, camZ);
+		//cleanupProjectiles();
+		//collisions();
+		if (lives <= 0) {
+			lostGame = true;
+			game_running = false;
+		}
+		if (aliens.length <= 0) {
+			wonGame = true;
+			game_running = false;
+		}
+	}
+}
+
+
 function getShader(gl, id) {
 	var shaderScript = document.getElementById(id);
 	if (!shaderScript)
@@ -118,6 +161,13 @@ function setupThings(){
 	
 }
 
+
+function cycle(){
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	update();
+	renderScene();
+}
+
 function webGLStart() {
 	var canvas = document.createElement('canvas');
 	canvas.id = "myCanvas";
@@ -139,5 +189,5 @@ function webGLStart() {
 	//initBuffers();
 	setupThings();
 	setupGLDetails();
-
+	cycle();
 }
