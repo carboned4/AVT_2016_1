@@ -23,7 +23,7 @@ Spaceship.prototype.draw = function(){
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
-	gl.uniform1i(shaderProgram.texting_mode,1);
+	gl.uniform1i(shaderProgram.texMode_uniformId,1);
 	
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);

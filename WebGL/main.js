@@ -29,7 +29,7 @@ function renderScene(){
 	
 	gl.useProgram(shaderProgram);
 	
-	gl.uniform1i(shaderProgram.uniform_shadowOn,1);
+	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
 	//console.log(spaceshipVertexPositionBuffer);
 	spaceship.draw();
