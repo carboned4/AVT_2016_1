@@ -1,6 +1,6 @@
 
 
-var texturesLeft = 16;
+var texturesLeft = 0;
 var gunshipnormalTex;
 
 
@@ -26,6 +26,7 @@ function handleLoadedTexture(texture) {
 
 
 function loadSpaceshipTexture(){
+	texturesLeft+=1;
 	gunshipnormalTex = gl.createTexture();
 	gunshipnormalTex.image = new Image();
 	gunshipnormalTex.image.onload = function () {

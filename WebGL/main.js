@@ -11,6 +11,7 @@ var lives = 5;
 var game_running = true;
 var lostGame = false;
 var wonGame = false;
+var pauseWindowShow = false;
 
 var spaceship = [];
 var aliens = [];
@@ -63,14 +64,14 @@ function renderScene(){
 function update(){
 	//timeElapsed = glutGet(GLUT_ELAPSED_TIME);
 	//timeDelta = timeElapsed - timePrevious;
-	timeDelta = 33;
+	timeDelta = 16;
 	//timePrevious = timeElapsed;
 	if (game_running == true) {
-		//physics(timeDelta);
+		physics(timeDelta);
 
 		//alienShots(timeDelta);
-		//followCam->updatePosition(spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ());
-		//followCam->setCamXYZ(camX, camY, camZ);
+		cameras[2].updatePosition(spaceship.position.X, spaceship.position.Y, spaceship.position.Z);
+		cameras[2].setCamXYZ(camX, camY, camZ);
 		//cleanupProjectiles();
 		//collisions();
 		if (lives <= 0) {
@@ -79,7 +80,7 @@ function update(){
 		}
 		if (aliens.length <= 0) {
 			wonGame = true;
-			game_running = false;
+			//game_running = false;
 		}
 	}
 }
@@ -206,7 +207,8 @@ function setupGLDetails(){
 function setupThings(){
 	ratio = gl.viewportWidth/gl.viewportHeight;
 	cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 10.0, 5.0);
-	
+	cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
+	cameras[2] = new FollowPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0);
 	
 	loadSpaceshipTexture();
 	loadSpaceship();
@@ -227,6 +229,13 @@ function webGLStart() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	document.body.appendChild(canvas);
+	
+	document.onkeydown = processKeys;
+	document.onkeyup = processUpKeys;
+	canvas.onmousedown = handleMouseDown;
+	document.onmouseup = handleMouseUp; // capturar fora do canvas
+	document.onmousemove = handleMouseMove;
+
 	
 	try {
 		gl = canvas.getContext("experimental-webgl");

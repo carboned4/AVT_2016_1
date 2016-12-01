@@ -7,8 +7,57 @@ function Spaceship(limitL, limitR) {
 	this.maxSpeed = v3(4.0, 0.0, 0.0);
 	this.speedAngleEffectVec = v3(0.0, 0.0, 0.0);
 	this.speedAngleEffect=0.0;
-	this.draw;
-	this.sendGeometry;
+	this.leftPressed = false;
+	this.rightPressed = false;
+}
+
+Spaceship.prototype.updateKeys = function(_left,_right){
+	this.leftPressed = _left;
+	this.rightPressed = _right;
+}
+
+Spaceship.prototype.update = function(delta){
+	var maxX = this.maxSpeed.X;
+	
+
+	if (this.leftPressed) {
+		this.speed = v3add(this.speed,v3mul((delta / 1000.0),this.accelerationModulus));
+		if (this.speed.X > maxX) this.speed.set(maxX, 0.0, 0.0);
+	}
+	else if (this.rightPressed) {
+		this.speed = v3sub(this.speed,v3mul((delta / 1000.0),this.accelerationModulus));
+		if (this.speed.X < -maxX) this.speed.set(-maxX, 0.0, 0.0);
+	}
+	else {
+		var xspeed = this.speed.X;
+		if (0.05 <= xspeed)
+			this.speed = v3sub(this.speed,v3mul((delta / 1000.0),this.accelerationModulus));
+		else if (xspeed <= -0.05)
+			this.speed = v3add(this.speed,v3mul((delta / 1000.0),this.accelerationModulus));
+		else/* if (-0.05 < xthis.speed < 0.05)*/ {
+			this.speed.set(0.0, 0.0, 0.0);
+		}
+	}
+	this.position = v3add(this.position,v3mul((delta / 1000.0),this.speed));
+
+	if (this.position.X <= this.limitLeft) {
+		this.position.set(this.limitLeft, 0.0, 0.0);
+		this.speedAngleEffect *= 0.5;
+		this.speed.set(0.0, 0.0, 0.0);
+	}
+	else if(this.position.X >= this.limitRight){
+		this.position.set(this.limitRight, 0.0, 0.0);
+		this.speedAngleEffect *= 0.5;
+		if(this.speedAngleEffect < 0.05) this.speedAngleEffect = 0.0;
+		this.speed.set(0.0, 0.0, 0.0);
+	}
+	else {
+		this.speedAngleEffect = 20.0*this.speed.X / maxX;
+	}
+
+	this.speedAngleEffectVec = v3(Math.sin(this.speedAngleEffect* 3.14 / 180.0), 0.0, Math.cos(this.speedAngleEffect* 3.14 / 180.0));
+	//printf("%f: %f %f %f\n", this.speedAngleEffect, this.speedAngleEffectVec.X, this.speedAngleEffectVec.getY(), this.speedAngleEffectVec.getZ());
+
 }
 
 var spaceshipVertexPositionBuffer;
@@ -23,7 +72,7 @@ Spaceship.prototype.draw = function(){
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
-	gl.uniform1i(shaderProgram.texMode_uniformId,1);
+	gl.uniform1i(shaderProgram.texMode_uniformId,4);
 	
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);

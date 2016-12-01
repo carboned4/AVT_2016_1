@@ -9,6 +9,8 @@
 		<script type="text/javascript" src="randomutilities.js"></script>
 		<script type="text/javascript" src="cameras.js"></script>
 		<script type="text/javascript" src="textures.js"></script>
+		<script type="text/javascript" src="worldupdate.js"></script>
+		<script type="text/javascript" src="controls.js"></script>
 		
 		<script type="text/javascript" src="spaceship.js"></script>
 		<script type="text/javascript" src="alien.js"></script>
@@ -338,6 +340,8 @@ void main() {
 
 		</script>
 	</head>
-	<body onload="webGLStart();">
+	<body oncontextmenu="return false;" onload="webGLStart();">
+	<p id="mousepos" style="color:white;position:absolute;left:20px;right:20px;z-index:999">
+	</p>
 	</body>
 </html>
