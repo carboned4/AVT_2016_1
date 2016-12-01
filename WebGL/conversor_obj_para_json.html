@@ -159,14 +159,14 @@ function doLoadObj(text)
                     facemap[array[i]] = index++;
                 //}
                 indexArray.push(facemap[array[i]]);
-				console.log("a");
+				//console.log("a");
             }
 			//do the tangents -- isto está tudo mal mas provavelmente funciona porque
 			//ele se "esquece" de guardar os vertices para os indices
 			
-			console.log(vspos[0]);
-			console.log(vspos[1]);
-			console.log(vspos[2]);
+			//console.log(vspos[0]);
+			//console.log(vspos[1]);
+			//console.log(vspos[2]);
 			var deltaPos1 = v3sub(vspos[1],vspos[0]);
 			var deltaPos2 = v3sub(vspos[2],vspos[0]);
 			var deltaUV1 = v3sub(vsuv[1],vsuv[0]);
@@ -178,9 +178,13 @@ function doLoadObj(text)
 			var tang = v3mul(r,v3sub(v3mul(deltaUV2.Y,deltaPos1),v3mul(deltaUV1.Y,deltaPos2)));
 			//glm::vec4 bitangent = (deltaPos2 * deltaUV1.X - deltaPos1 * deltaUV2.X)*r;
 			var bitan = v3mul(r,v3sub(v3mul(deltaUV1.X,deltaPos2),v3mul(deltaUV2.X,deltaPos1)));
-			
 			//missing handedness
-			
+			if(isNaN(tang.X) || !isFinite(tang.X)){ //  || isNaN(tang)
+				//console.log("nan"+index);
+				tang.X = 1.0;
+				tang.Y = 0.0;
+				tang.Z = 0.0;
+			}
 			//push each of the 3 coords plus w, for each of the 3 vertices
 			//tangentArray.push(" v index"+index);
 			//if(!isinfacemap[0]){
@@ -216,7 +220,7 @@ function doLoadObj(text)
 </head>
 
 
-<body onload="loadObj('Bullet2.obj');">
+<body onload="loadObj('gunship.obj');">
 </body>
 
 </html>

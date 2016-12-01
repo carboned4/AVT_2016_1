@@ -17,8 +17,47 @@ var aliens = [];
 var alienShots = [];
 var spaceshipShots = [];
 
+var adjustedLD, ndc, sunWinCoords, l_pos;
+
 function renderScene(){
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
+	cameras[currentCamera].doProjection();
+	cameras[currentCamera].doView();
 	
+	gl.useProgram(shaderProgram);
+	
+	gl.uniform1i(shaderProgram.uniform_shadowOn,1);
+	
+	//console.log(spaceshipVertexPositionBuffer);
+	spaceship.draw();
+	gl.activeTexture(gl.TEXTURE0);
+	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
+	gl.uniform1i(shaderProgram.tex_loc0, 0);
+	drawSquareParticula();
+	
+	
+	//COISAS UTEIS PARA O LENS FLARE
+	/*
+	calculateDerivedMatrices();
+	l_pos = [0,0,0,1];
+	adjustedLD = [0,0,0,0];
+	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
+	console.log("ALD\n" + adjustedLD);
+	console.log("pvm\n" + pvmMatrix);
+	//console.log("pos\n" + l_pos);
+	ndc = adjustedLD;
+	ndc[0] = adjustedLD[0] / adjustedLD[3];
+	ndc[1] = adjustedLD[1] / adjustedLD[3];
+	ndc[2] = adjustedLD[2] / adjustedLD[3];
+	sunWinCoords = [0,0,0];
+	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
+	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
+	//using n=0.f, f=1000.f (also used in ortho and perspective)
+	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
+	*/
 }
 
 function update(){
@@ -106,6 +145,13 @@ function initShaders() {
 	//... bind tangents, drawElements ...
 	//gl.disableVertexAttribArray(shaderProgram.tangentAttribute);
 	
+	shaderProgram.materialAmbientColorUniform = gl.getUniformLocation(shaderProgram, "matambient");
+	shaderProgram.materialDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "matdiffuse");
+	shaderProgram.materialSpecularColorUniform = gl.getUniformLocation(shaderProgram, "matspecular");
+	shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "matshininess");
+	shaderProgram.materialTexCount = gl.getUniformLocation(shaderProgram, "mattexCount");
+	
+	
 	shaderProgram.pvm_uniformId = gl.getUniformLocation(shaderProgram, "m_pvm");
 	shaderProgram.vm_uniformId = gl.getUniformLocation(shaderProgram, "m_viewModel");
 	shaderProgram.normal_uniformId = gl.getUniformLocation(shaderProgram, "m_normal");
@@ -158,13 +204,20 @@ function setupGLDetails(){
 }
 
 function setupThings(){
+	ratio = gl.viewportWidth/gl.viewportHeight;
+	cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 10.0, 5.0);
 	
+	
+	loadSpaceshipTexture();
+	loadSpaceship();
+	spaceship = new Spaceship(-5.8, 5.8);
 }
 
 
 function cycle(){
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	update();
+	requestAnimFrame(cycle);
+	if(texturesLeft >0) return;
+    update();
 	renderScene();
 }
 

@@ -32,7 +32,7 @@ var alienVertexTangentBuffer3;
 
 
 Alien.prototype.draw = function(){
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	mat4.translate(mvMatrix,[this.position.X,this.position.Y-3,this.position.Z]);
 
 	//SPHERE
@@ -43,11 +43,11 @@ Alien.prototype.draw = function(){
 	gl.activeTexture(gl.TEXTURE9);
 	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
 	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 		 mat4.scale(mvMatrix, [1.5,0.5,1.0]);
 		 mat4.rotate(mvMatrix,rad(90),[0,1,0]);
 	this.sendGeometry1();
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 
 	//CONE1
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
@@ -57,12 +57,12 @@ Alien.prototype.draw = function(){
 	gl.activeTexture(gl.TEXTURE9);
 	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
 	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 		 mat4.translate(mvMatrix,[0.5,0,0]);
 		 mat4.rotate(mvMatrix,rad(135),[-1,0,-1]);
 		 mat4.scale(mvMatrix, [0.5,0.5,0.5]);
 	this.sendGeometry2();
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 
 	//CONE2
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
@@ -72,14 +72,14 @@ Alien.prototype.draw = function(){
 	gl.activeTexture(gl.TEXTURE9);
 	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
 	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 		 mat4.translate(mvMatrix,[-0.5,0,0]);
 		 mat4.rotate(mvMatrix,rad(-135),[1,0,-1]);
 		 mat4.scale(mvMatrix, [0.5,0.5,0.5]);
 	this.sendGeometry3();
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 
-mvPopMatrix(mvMatrix);
+popModelMatrix();
 
 }
 

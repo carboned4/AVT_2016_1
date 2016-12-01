@@ -4,8 +4,11 @@
 		<title>Space Invaders Grupo 3</title>
 		
 		<script type="text/javascript" src="vec3.js"></script>
+		<script type="text/javascript" src="webgl-utils.js"></script>
 		<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 		<script type="text/javascript" src="randomutilities.js"></script>
+		<script type="text/javascript" src="cameras.js"></script>
+		<script type="text/javascript" src="textures.js"></script>
 		
 		<script type="text/javascript" src="spaceship.js"></script>
 		<script type="text/javascript" src="alien.js"></script>
@@ -43,13 +46,12 @@ uniform bool l_spotOn;
 uniform vec4 matdiffuse;
 uniform vec4 matambient;
 uniform vec4 matspecular;
-uniform vec4 matemissive;
 uniform float matshininess;
 uniform int mattexCount;
 
-attribute vec4 position;
-attribute vec4 normal;    //por causa do gerador de geometria
-attribute vec4 texCoord;
+attribute vec3 position;
+attribute vec3 normal;    //por causa do gerador de geometria
+attribute vec2 texCoord;
 attribute vec4 tangent;
 attribute vec2 vVertex;
 attribute vec2 vtexCoord;
@@ -68,7 +70,7 @@ void main () {
 		gl_Position = m_pvm * vec4(vVertex, 0.0, 1.0);
 	}
 	else {
-		vec4 pos = m_viewModel * position;
+		vec4 pos = m_viewModel * vec4(position,1.0);
 		const int lightForBump = 2;
 		donormal = normalize(m_normal * normal.xyz);
 		dotangent = normalize(m_normal * tangent.xyz);
@@ -127,7 +129,7 @@ void main () {
 			dolightDir[7] = vec3(0);
 		}
 		dotex_coord = texCoord.st;
-		gl_Position = m_pvm * position;
+		gl_Position = m_pvm * vec4(position,1.0);
 	}
 }
 		</script>
@@ -162,7 +164,6 @@ const float FogDensity = 0.05;
 uniform vec4 matdiffuse;
 uniform vec4 matambient;
 uniform vec4 matspecular;
-uniform vec4 matemissive;
 uniform float matshininess;
 uniform int mattexCount;
 

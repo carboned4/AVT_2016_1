@@ -6,6 +6,7 @@ function Spaceship(limitL, limitR) {
 	this.accelerationModulus = v3(6.0, 0.0, 0.0);
 	this.maxSpeed = v3(4.0, 0.0, 0.0);
 	this.speedAngleEffectVec = v3(0.0, 0.0, 0.0);
+	this.speedAngleEffect=0.0;
 	this.draw;
 	this.sendGeometry;
 }
@@ -16,22 +17,28 @@ var spaceshipVertexTextureCoordBuffer;
 var spaceshipVertexIndexBuffer;
 var spaceshipVertexTangentBuffer;
 
-
 Spaceship.prototype.draw = function(){
-	mvPushMatrix(mvMatrix);
+	//console.log(modelMatrix);
+	pushModelMatrix();
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
 	gl.uniform1i(shaderProgram.texting_mode,1);
-	gl.activeTexture(gl.TEXTURE9);
-	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
-	gl.uniform1i(shaderProgram.samplerUniform, 9);
-		 mat4.translate(mvMatrix,[this.posX,this.posY-3,this.posZ]);
-		 mat4.rotate(mvMatrix,rad(180),[0,0,1]);
-		 mat4.scale(mvMatrix, [0.2,0.2,0.2]);
+	
+	gl.activeTexture(gl.TEXTURE0);
+	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
+	gl.uniform1i(shaderProgram.tex_loc0, 0);
+	
+		mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
+		mat4.rotate(modelMatrix,rad(this.speedAngleEffect),[0,1,0]);
+		mat4.rotate(modelMatrix,rad(-this.speedAngleEffect),[0,0,1]);
+		mat4.translate(modelMatrix,[0.1,0.3,-1.0]);
+		mat4.scale(modelMatrix, [0.01,0.01,0.01]);
+	//console.log(modelMatrix);
 	this.sendGeometry();
-	mvPopMatrix(mvMatrix);
-
+	popModelMatrix();
+	//console.log(modelMatrix);
+	
 
 }
 
@@ -53,6 +60,8 @@ Spaceship.prototype.sendGeometry = function(){
 	setMatrixUniforms();
 	gl.drawElements(gl.TRIANGLES, spaceshipVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
+
+
 var poop;
 function handleLoadedSpaceship(spaceshipData) {
 	poop = spaceshipData;
@@ -89,7 +98,7 @@ function handleLoadedSpaceship(spaceshipData) {
 
 function loadSpaceship() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJ_gunship.json");
+	request.open("GET", "OBJgunshipclean.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedSpaceship(JSON.parse(request.responseText));

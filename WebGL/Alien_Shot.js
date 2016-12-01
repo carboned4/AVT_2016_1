@@ -15,7 +15,7 @@ Alien_Shot.prototype.update = function(delta) {
 }
 
 Alien_Shot.prototype.draw = function() {
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	mat4.translate(mvMatrix, this.position.X, this.position.Y, this.position.Z);
 	
 /*	GLint loc;
@@ -40,20 +40,20 @@ Alien_Shot.prototype.draw = function() {
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	
 	// send matrices to OGL
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	scale(mvMatrix, scx, scy, scz);
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 	// Render mesh
 	glBindVertexArray(mesh[objectId].vao);
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 */
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 }
 
 function handleLoadedAlien_Shot(Alien_ShotData) {

@@ -40,7 +40,7 @@ Spaceship_Shot.prototype.update = function(delta) {
 }
 
 Spaceship_Shot.prototype.draw = function() {
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	mat4.translate(mvMatrix, this.position.X, this.position.Y, this.position.Z);
 	mat4.rotate(mvMatrix, rat(90), [1, 0, 0]);
 
@@ -62,7 +62,7 @@ Spaceship_Shot.prototype.draw = function() {
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	//scale(mvMatrix, 0.5f, 0.5f, 0.5f);	
 	mat4.translate(mvMatrix, 0 , -0.15, 0);
 	computeDerivedMatrix(PROJ_VIEW_mvMatrix);
@@ -70,7 +70,7 @@ Spaceship_Shot.prototype.draw = function() {
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_mvMatrix]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 	// Render mesh
 	glBindVertexArray(mesh[objectId].vao);
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
@@ -89,7 +89,7 @@ Spaceship_Shot.prototype.draw = function() {
 	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
 	glUniform1i(loc, mesh[objectId].mat.texCount);
 	// send matrices to OGL
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	mat4.translate(mvMatrix, 0.0, 0.05, 0);
 	//scale(mvMatrix, 0.5f, 0.5f, 0.5f);
 	computeDerivedMatrix(PROJ_VIEW_mvMatrix);
@@ -133,7 +133,7 @@ Spaceship_Shot.prototype.draw = function() {
 	glDrawElements(mesh[objectId + 1].type, mesh[objectId + 1].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 */
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 }
 
 function handleLoadedSpaceship_Shot(Spaceship_ShotData) {

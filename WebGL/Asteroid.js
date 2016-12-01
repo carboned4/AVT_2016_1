@@ -3,7 +3,7 @@ function Asteroid(_x, _y,_z){
 }
 
 Asteroid.prototype.draw = function() {
-	mvPushMatrix(mvMatrix);
+	pushModelMatrix();
 	mat4.translate(mvMatrix, this.position.X, this.position.Y, this.position.Z);
 /*	GLint loc;
 
@@ -48,5 +48,5 @@ Asteroid.prototype.draw = function() {
 	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 */
-	mvPopMatrix(mvMatrix);
+	popModelMatrix();
 }
