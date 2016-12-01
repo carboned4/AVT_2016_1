@@ -1,4 +1,4 @@
-var currentCamera = 0;
+var currentCamera = 2;
 var cameras = [0,0,0];
 var ratio;
 var camX= 0;

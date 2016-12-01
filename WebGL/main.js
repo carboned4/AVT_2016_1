@@ -6,6 +6,13 @@ var fragmentShader;
 var I_POINT=0;
 var I_DIR = 1;
 var I_SPOT= 2;
+var ALIENCOLUMNS =6; //6
+var ALIENROWS =2; //2
+var ALIENCOLUMNGAP =2.0;
+var ALIENROWGAP =1.5;
+var ALIENWIDTH =2.0;
+var ALIENROWSHIFT= 0.25;
+var FARTHESTALIEN =10.0;
 
 var lightsOnStars = 1.0;
 var lightsOnGlobal = 1.0;
@@ -43,12 +50,15 @@ var spaceship = [];
 var aliens = [];
 var alienShots = [];
 var spaceshipShots = [];
+var asteroids = [];
+var explosions = [];
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
 
 function renderScene(){
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.enable(gl.DEPTH_TEST);
 	mat4.identity(modelMatrix);
 	mat4.identity(viewMatrix);
 	mat4.identity(projectionMatrix);
@@ -89,6 +99,10 @@ function renderScene(){
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
 	gl.uniform1i(shaderProgram.tex_loc0, 0);
 	drawSquareParticula();
+	for(alieni in aliens){
+		//console.log(alieni + ": " +aliens[alieni].changeRow);
+		aliens[alieni].draw();
+	}
 	
 	
 	//COISAS UTEIS PARA O LENS FLARE
@@ -261,6 +275,12 @@ function setupThings(){
 	cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
 	cameras[2] = new FollowPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0);
 	
+	
+	for(var i = 0; i< ALIENROWS; i++){
+		for(var j=0; j<ALIENCOLUMNS; j++){
+			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))
+		}
+	}
 	loadSpaceshipTexture();
 	loadSpaceship();
 	spaceship = new Spaceship(-5.8, 5.8);

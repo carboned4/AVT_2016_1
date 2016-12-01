@@ -1,16 +1,51 @@
 function Alien(_x,_y,_z,_left,_width,_rowheight) {
 	this.position = v3(_x,_y,_z);
-    this.speed = v3(0.0, 0.0, 0.0);
-	this.left = 0;
-	this.width = 1;
-	this.prevRow;
-	this.rowHeight;	
+    this.speedModulus = 0.5;
+	this.speed = v3(-this.speedModulus, 0.0, 0.0);
+	this.left = _left;
+	this.width = _width;
+	this.prevRow = _z;
+	this.rowHeight = _rowheight;
 	this.changeRow = false;
-	this.speedModulus = 0.5;
 	this.draw;
 	this.sendGeometry;
 	this.texcount = 5;
+	console.log(this.left + " " +this.position.X + " "+ (this.left-this.width));
 }
+
+Alien.prototype.update = function(delta){
+	if (!this.changeRow) {
+		this.position = v3add(this.position,v3mul(delta / 1000.0,this.speed));
+		var xpos = this.position.X;
+		if (xpos > this.left) {
+			this.position.set(this.left, this.position.Y, this.position.Z);
+			this.changeRow = true;
+			this.speed = v3(0.0, 0.0, -this.speedModulus);
+		}
+		if (xpos < this.left - this.width) {
+			this.position.set(this.left-this.width, this.position.Y, this.position.Z);
+			this.changeRow = true;
+			this.speed = v3(0.0, 0.0, -this.speedModulus);
+		}
+	}
+	else if (this.changeRow) {
+		this.position = v3add(this.position,v3mul(delta / 1000.0,this.speed));
+		var zpos = this.position.Z;
+		if (zpos < this.prevRow-this.rowHeight) {
+			this.position.set(this.position.X, this.position.Y, this.prevRow - this.rowHeight);
+			this.prevRow -= this.rowHeight;
+			this.changeRow = false;
+			if (this.position.X == this.left) {
+				this.speed = v3(-this.speedModulus, 0.0, 0.0);
+			}
+			if (this.position.X == this.left - this.width) {
+				this.speed = v3(+this.speedModulus, 0.0, 0.0);
+			}
+		}
+	}
+	
+}
+
 
 var alienVertexPositionBuffer1;
 var alienVertexNormalBuffer1;
@@ -33,9 +68,11 @@ var alienVertexTangentBuffer3;
 
 Alien.prototype.draw = function(){
 	pushModelMatrix();
-	mat4.translate(mvMatrix,[this.position.X,this.position.Y-3,this.position.Z]);
-
-	//SPHERE
+	mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
+	mat4.rotate(modelMatrix,rad(180),[0,1,0]);
+	drawSquareParticula();
+	/*//SPHERE
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
@@ -50,6 +87,7 @@ Alien.prototype.draw = function(){
 	popModelMatrix();
 
 	//CONE1
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
@@ -65,6 +103,7 @@ Alien.prototype.draw = function(){
 	popModelMatrix();
 
 	//CONE2
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
@@ -77,7 +116,7 @@ Alien.prototype.draw = function(){
 		 mat4.rotate(mvMatrix,rad(-135),[1,0,-1]);
 		 mat4.scale(mvMatrix, [0.5,0.5,0.5]);
 	this.sendGeometry3();
-	popModelMatrix();
+	popModelMatrix();*/
 
 popModelMatrix();
 
