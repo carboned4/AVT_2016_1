@@ -3,6 +3,32 @@ var shaderProgram;
 var vertexShader;
 var fragmentShader;
 
+var I_POINT=0;
+var I_DIR = 1;
+var I_SPOT= 2;
+
+var lightsOnStars = 1.0;
+var lightsOnGlobal = 1.0;
+var lightsOnMiner = 1.0;
+var lightPosGlobal = [ 5.0, -10.0, -5.0, 0.0 ];
+var lightPosPoint0 = [ 5.0, 10.0, 15.0, 1.0 ];
+var lightPosPoint1 = [ -5.0, 10.0, 15.0, 1.0 ];
+var lightPosPoint2 = [ 5.0, 10.0, 5.0, 1.0 ];
+var lightPosPoint3 = [ -5.0, 10.0, 5.0, 1.0 ];
+var lightPosPoint4 = [ 0.0, -10.0, 5.0, 1.0 ];
+var lightPosPoint5 = [ 0.0, 10.0, 5.0, 1.0 ];
+var lightPosSpot = [ 0.0, 0.0, 0.0, 1.0 ];
+var lightDirSpot = [ 0.0, 10.0, 5.0, 0.0 ];
+var lightPosGlobalmir = [ 5.0, 0.0, -5.0, 0.0 ];
+var lightPosPoint0mir = [ 5.0, -20.0, 15.0, 1.0 ];
+var lightPosPoint1mir = [ -5.0, -20.0, 15.0, 1.0 ];
+var lightPosPoint2mir = [ 5.0, -20.0, 5.0, 1.0 ];
+var lightPosPoint3mir = [ -5.0, -20.0, 5.0, 1.0 ];
+var lightPosPoint4mir = [ 0.0, 0.0, 5.0, 1.0 ];
+var lightPosPoint5mir = [ 0.0, -20.0, 5.0, 1.0 ];
+var lightPosSpotmir = [ 0.0, -10.0, 0.0, 1.0 ];
+
+
 var timeDelta = 0;
 var timeElapsed = 0;
 var timePrevious = 0;
@@ -18,6 +44,7 @@ var aliens = [];
 var alienShots = [];
 var spaceshipShots = [];
 
+var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
 
 function renderScene(){
@@ -30,6 +57,30 @@ function renderScene(){
 	
 	gl.useProgram(shaderProgram);
 	
+	gl.uniform1i(gl.uniform_foggy, fog);
+
+	//LIGHTS
+	var resstate = [0.0,0.0,0.0];
+	resstate[I_DIR] = lightsOnGlobal;
+	resstate[I_POINT] = lightsOnStars;
+	resstate[I_SPOT] = lightsOnMiner;
+	gl.uniform3f(gl.uniform_lightState, 1, lightsOnGlobal, lightsOnStars, lightsOnMiner);
+	
+	lightPosSpot[0] = spaceship.position.X;
+	lightPosSpot[1] = spaceship.position.Y;
+	lightPosSpot[2] = spaceship.position.Z;
+	lightPosSpotmir[0] = spaceship.position.X;
+	lightPosSpotmir[1] = -10.0-spaceship.position.Y;
+	lightPosSpotmir[2] = spaceship.position.Z;
+	lightPosSpot[3] = 1.0;
+	lightDirSpot[0] = spaceship.speedAngleEffectVec.X;
+	lightDirSpot[1] = spaceship.speedAngleEffectVec.Y;
+	lightDirSpot[2] = spaceship.speedAngleEffectVec.Z;
+	lightDirSpot[3] = 0.0;
+	
+	
+	gl.enable(gl.BLEND);
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
 	//console.log(spaceshipVertexPositionBuffer);
