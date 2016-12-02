@@ -115,11 +115,11 @@ function renderScene(){
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
 	
-	gl.activeTexture(gl.TEXTURE1);
+	gl.activeTexture(gl.TEXTURE4);
 	gl.bindTexture(gl.TEXTURE_2D, earthTex);
-	gl.uniform1i(shaderProgram.tex_loc1, 1);
-	gl.uniform1i(shaderProgram.materialTexCount, 1);
-	drawSquareParticula(1,2);
+	gl.uniform1i(shaderProgram.tex_loc4, 4);
+	gl.uniform1i(shaderProgram.materialTexCount, 4);
+	//drawSquareParticula(1,2);
 	
 	for(alieni in aliens){
 		aliens[alieni].draw();

@@ -69,8 +69,8 @@ Explosion.prototype.draw = function(){
 		
 			mat4.translate(modelMatrix,[this.positions[iflare].X,this.positions[iflare].Y,this.positions[iflare].Z]);
 		//console.log(modelMatrix);
-		//this.sendGeometry();
-		drawSquareParticula(1,1);
+		this.sendGeometry();
+		//drawSquareParticula(1,1);
 		popModelMatrix();
 		//console.log(modelMatrix);
 	}
@@ -79,18 +79,41 @@ Explosion.prototype.draw = function(){
 
 Explosion.prototype.sendGeometry = function(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, explosionVertexPositionBuffer);
-	gl.vertexAttribPovarer(shaderProgram.vertexposAttribute, explosionVertexPositionBuffer.itemSize, gl.var, false, 0, 0);
+	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, explosionVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, explosionVertexTextureCoordBuffer);
-	gl.vertexAttribPovarer(shaderProgram.texcoordAttribute, explosionVertexTextureCoordBuffer.itemSize, gl.var, false, 0, 0);
+	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, explosionVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, explosionVertexNormalBuffer);
-	gl.vertexAttribPovarer(shaderProgram.normalAttribute, explosionVertexNormalBuffer.itemSize, gl.var, false, 0, 0);
+	gl.vertexAttribPointer(shaderProgram.normalAttribute, explosionVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, explosionVertexIndexBuffer);
+	//CHEATING
+	mat4.multiply(viewMatrix,modelMatrix,modelviewMatrix);
+	for(var i = 0; i<3; i++){
+		for(var j = 0; j<3; j++){
+			if(i==j) modelviewMatrix[i * 4 + j] = 1;
+			else modelviewMatrix[i * 4 + j] = 0;
+			
+		}
+	}
+	mat4.multiply(projectionMatrix,modelviewMatrix,pvmMatrix);
+	mat4.toInverseMat3(modelviewMatrix, normalMatrix);
+	mat3.transpose(normalMatrix);
 	
-	setMatrixUniforms();
+	gl.uniformMatrix4fv(shaderProgram.vm_uniformId, false, modelviewMatrix);
+	gl.uniformMatrix4fv(shaderProgram.pvm_uniformId, false, pvmMatrix);
+	gl.uniformMatrix3fv(shaderProgram.normal_uniformId, false, normalMatrix);
+    
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, explosionVertexIndexBuffer);
 	gl.drawElements(gl.TRIANGLES, explosionVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
 
+function loadExplosion() {
+	var quadindices = createQuad(0.5, 0.5);
+	explosionVertexPositionBuffer = quadindices[0];
+	explosionVertexNormalBuffer = quadindices[1];
+	explosionVertexTextureCoordBuffer = quadindices[2];
+	explosionVertexIndexBuffer = quadindices[3];
+
+}
