@@ -68,16 +68,19 @@ var spaceshipVertexTangentBuffer;
 Spaceship.prototype.draw = function(){
 	//console.log(modelMatrix);
 	pushModelMatrix();
-	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.1, 0.1, 0.2, 1.0);
-	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.1, 0.1, 0.5, 1.0);
-	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0.9, 0.9, 0.1, 1.0);
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.1, 0.1, 0.1, 1.0);
+	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.5, 0.5, 0.5, 1.0);
+	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 1.0, 1.0, 1.0, 1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 10.0);
 	
-	gl.uniform1i(shaderProgram.texMode_uniformId,2);
-	gl.uniform1i(shaderProgram.materialTexCount, 0);
-	gl.activeTexture(gl.TEXTURE0);
+	gl.uniform1i(shaderProgram.texMode_uniformId,0);
+	gl.uniform1i(shaderProgram.materialTexCount, 15);
+	gl.activeTexture(gl.TEXTURE15);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipTex);
-	gl.uniform1i(shaderProgram.tex_loc0, 0);
+	gl.uniform1i(shaderProgram.tex_loc15, 15);
+	gl.activeTexture(gl.TEXTURE3);
+	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
+	gl.uniform1i(shaderProgram.tex_loc3, 3);
 	
 		mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
 		mat4.rotate(modelMatrix,rad(this.speedAngleEffect),[0,1,0]);
@@ -93,6 +96,8 @@ Spaceship.prototype.draw = function(){
 }
 
 Spaceship.prototype.sendGeometry = function(){
+	gl.enableVertexAttribArray(shaderProgram.tangentAttribute);
+	
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexPositionBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, spaceshipVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
@@ -102,13 +107,15 @@ Spaceship.prototype.sendGeometry = function(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexNormalBuffer);
 	gl.vertexAttribPointer(shaderProgram.normalAttribute, spaceshipVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	//gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexTangentBuffer);
-	//gl.vertexAttribPointer(shaderProgram.tangentAttribute, spaceshipVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexTangentBuffer);
+	gl.vertexAttribPointer(shaderProgram.tangentAttribute, spaceshipVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, spaceshipVertexIndexBuffer);
 	
 	setMatrixUniforms();
 	gl.drawElements(gl.TRIANGLES, spaceshipVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+	
+	gl.disableVertexAttribArray(shaderProgram.tangentAttribute);
 }
 
 
@@ -133,11 +140,11 @@ function handleLoadedSpaceship(spaceshipData) {
 	spaceshipVertexPositionBuffer.itemSize = 3;
 	spaceshipVertexPositionBuffer.numItems = spaceshipData.vertexPositions.length / 3;
 
-	spaceshipTangentBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipTangentBuffer);
+	spaceshipVertexTangentBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexTangentBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(spaceshipData.tangents), gl.STATIC_DRAW);
-	spaceshipTangentBuffer.itemSize = 4;
-	spaceshipTangentBuffer.numItems = spaceshipData.tangents.length / 4;
+	spaceshipVertexTangentBuffer.itemSize = 4;
+	spaceshipVertexTangentBuffer.numItems = spaceshipData.tangents.length / 4;
 
 	spaceshipVertexIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, spaceshipVertexIndexBuffer);
