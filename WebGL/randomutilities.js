@@ -82,17 +82,17 @@ var squareNormalsBuffer;
 var squareVertexTexCoordBuffer;
 var squareVertexIndexBuffer;
 
-function drawSquareParticula(){
+function drawSquareParticula(sidex,sidey){
 
   
     
         squareVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         var vertices = [
-            -0.5*2, 0.5*2, 0.0, 1.0,
-            -0.5*2, -0.5*2, 0.0, 1.0,
-            0.5*2, -0.5*2, 0.0, 1.0,
-            0.5*2, 0.5*2, 0.0, 1.0
+            -0.5*sidex, -0.5*sidey, 0.0, 1.0,
+            0.5*sidex, -0.5*sidey, 0.0, 1.0,
+            0.5*sidex, 0.5*sidey, 0.0, 1.0,
+            -0.5*sidex, 0.5*sidey, 0.0, 1.0
             
         ];
 
@@ -123,9 +123,9 @@ function drawSquareParticula(){
         
         var textureCoords = [
             0.0, 0.0,
-            0.0, 1.0,
-            1.0, 1.0,
-            1.0, 0.0
+            1.0, 0.0,
+			1.0, 1.0,
+            0.0, 1.0
         ];
 
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
@@ -148,7 +148,7 @@ function drawSquareParticula(){
         squareVertexIndexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
         var squareVertexIndices = [
-            0, 1, 2, 0, 2, 3, // Front face
+            0,1,2,2,3,0, // Front face
         ];
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(squareVertexIndices), gl.STATIC_DRAW);
         squareVertexIndexBuffer.itemSize = 1;
@@ -164,7 +164,25 @@ function drawSquareParticula(){
     gl.vertexAttribPointer(shaderProgram.normalAttribute, squareNormalsBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
-    setMatrixUniforms();
+    //setMatrixUniforms();
+	
+	
+	//CHEATING
+	mat4.multiply(viewMatrix,modelMatrix,modelviewMatrix);
+	for(var i = 0; i<3; i++){
+		for(var j = 0; j<3; j++){
+			if(i==j) modelviewMatrix[i * 4 + j] = 1;
+			else modelviewMatrix[i * 4 + j] = 0;
+			
+		}
+	}
+	mat4.multiply(projectionMatrix,modelviewMatrix,pvmMatrix);
+	mat4.toInverseMat3(modelviewMatrix, normalMatrix);
+	mat3.transpose(normalMatrix);
+	
+	gl.uniformMatrix4fv(shaderProgram.vm_uniformId, false, modelviewMatrix);
+	gl.uniformMatrix4fv(shaderProgram.pvm_uniformId, false, pvmMatrix);
+	gl.uniformMatrix3fv(shaderProgram.normal_uniformId, false, normalMatrix);
     gl.drawElements(gl.TRIANGLES, squareVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
 }

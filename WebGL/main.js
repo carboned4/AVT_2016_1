@@ -114,15 +114,25 @@ function renderScene(){
 	
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
-	spaceship.draw();
+	
 	gl.activeTexture(gl.TEXTURE1);
-	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
+	gl.bindTexture(gl.TEXTURE_2D, earthTex);
 	gl.uniform1i(shaderProgram.tex_loc1, 1);
-	drawSquareParticula();
+	gl.uniform1i(shaderProgram.materialTexCount, 1);
+	drawSquareParticula(1,2);
+	
 	for(alieni in aliens){
 		aliens[alieni].draw();
 	}
+	spaceship.draw();
 	
+	gl.enable(gl.BLEND);
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
+	gl.depthMask(gl.FALSE);
+	for(explosioni in explosions){
+		explosions[explosioni].draw();
+	}
+	gl.depthMask(gl.TRUE);
 	
 	//COISAS UTEIS PARA O LENS FLARE
 	/*
@@ -173,7 +183,7 @@ function update(){
 		//alienShots(timeDelta);
 		cameras[2].updatePosition(spaceship.position.X, spaceship.position.Y, spaceship.position.Z);
 		cameras[2].setCamXYZ(camX, camY, camZ);
-		//cleanupProjectiles();
+		cleanupProjectiles();
 		//collisions();
 		if (lives <= 0) {
 			lostGame = true;

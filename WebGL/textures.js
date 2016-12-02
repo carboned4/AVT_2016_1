@@ -1,6 +1,6 @@
 
 
-var texturesLeft = 0;
+var texturesLeft = 16;
 var gunshipTex;
 var gunshipnormalTex;
 var alienTex;
@@ -41,7 +41,6 @@ function handleLoadedTexture(texture) {
 
 
 function loadSpaceshipTexture(){
-	texturesLeft+=1;
 	gunshipTex = gl.createTexture();
 	gunshipTex.image = new Image();
 	gunshipTex.image.onload = function () {
@@ -51,7 +50,6 @@ function loadSpaceshipTexture(){
 }
 
 function loadSpaceshipBumpTexture(){
-	texturesLeft+=1;
 	gunshipnormalTex = gl.createTexture();
 	gunshipnormalTex.image = new Image();
 	gunshipnormalTex.image.onload = function () {
@@ -61,7 +59,6 @@ function loadSpaceshipBumpTexture(){
 }
 
 function loadAlienTexture(){
-	texturesLeft+=1;
 	alienTex = gl.createTexture();
 	alienTex.image = new Image();
 	alienTex.image.onload = function () {
@@ -72,7 +69,6 @@ function loadAlienTexture(){
 }
 
 function loadFontTexture(){
-	texturesLeft+=1;
 	fontTex = gl.createTexture();
 	fontTex.image = new Image();
 	fontTex.image.onload = function () {
@@ -82,7 +78,6 @@ function loadFontTexture(){
 }
 
 function loadAsteroidTexture(){
-	texturesLeft+=1;
 	asteroidTex = gl.createTexture();
 	asteroidTex.image = new Image();
 	asteroidTex.image.onload = function () {
@@ -92,7 +87,6 @@ function loadAsteroidTexture(){
 }
 
 function loadCheckerColorsTexture(){
-	texturesLeft+=1;
 	checkercolorTex = gl.createTexture();
 	checkercolorTex.image = new Image();
 	checkercolorTex.image.onload = function () {
@@ -102,7 +96,6 @@ function loadCheckerColorsTexture(){
 }
 
 function loadCloudTexture(){
-	texturesLeft+=1;
 	cloudTex = gl.createTexture();
 	cloudTex.image = new Image();
 	cloudTex.image.onload = function () {
@@ -112,7 +105,6 @@ function loadCloudTexture(){
 }
 
 function loadMetalTexture(){
-	texturesLeft+=1;
 	metalTex = gl.createTexture();
 	metalTex.image = new Image();
 	metalTex.image.onload = function () {
@@ -122,7 +114,6 @@ function loadMetalTexture(){
 }
 
 function loadEarthTexture(){
-	texturesLeft+=1;
 	earthTex = gl.createTexture();
 	earthTex.image = new Image();
 	earthTex.image.onload = function () {
@@ -132,7 +123,6 @@ function loadEarthTexture(){
 }
 
 function loadExplosionTexture(){
-	texturesLeft+=1;
 	explosionTex = gl.createTexture();
 	explosionTex.image = new Image();
 	explosionTex.image.onload = function () {
@@ -142,7 +132,6 @@ function loadExplosionTexture(){
 }
 
 function loadFlare2Texture(){
-	texturesLeft+=1;
 	flare2Tex = gl.createTexture();
 	flare2Tex.image = new Image();
 	flare2Tex.image.onload = function () {
@@ -152,7 +141,6 @@ function loadFlare2Texture(){
 }
 
 function loadFlare4Texture(){
-	texturesLeft+=1;
 	flare4Tex = gl.createTexture();
 	flare4Tex.image = new Image();
 	flare4Tex.image.onload = function () {
@@ -162,7 +150,6 @@ function loadFlare4Texture(){
 }
 
 function loadFlare5Texture(){
-	texturesLeft+=1;
 	flare5Tex = gl.createTexture();
 	flare5Tex.image = new Image();
 	flare5Tex.image.onload = function () {
@@ -172,7 +159,6 @@ function loadFlare5Texture(){
 }
 
 function loadEyeTexture(){
-	texturesLeft+=1;
 	eyeTex = gl.createTexture();
 	eyeTex.image = new Image();
 	eyeTex.image.onload = function () {
@@ -182,7 +168,6 @@ function loadEyeTexture(){
 }
 
 function loadPortalTexture(){
-	texturesLeft+=1;
 	portalTex = gl.createTexture();
 	portalTex.image = new Image();
 	portalTex.image.onload = function () {
@@ -192,7 +177,6 @@ function loadPortalTexture(){
 }
 
 function loadStarsTexture(){
-	texturesLeft+=1;
 	starsTex = gl.createTexture();
 	starsTex.image = new Image();
 	starsTex.image.onload = function () {
