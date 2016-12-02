@@ -10,7 +10,7 @@ function Spaceship(limitL, limitR) {
 	this.speedAngleEffect=0.0;
 	this.leftPressed = false;
 	this.rightPressed = false;
-	this.colRadius = 0.5;
+	this.colRadius = 1.0;
 }
 
 Spaceship.prototype.updateKeys = function(_left,_right){

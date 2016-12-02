@@ -26,7 +26,7 @@ SpaceshipShot.prototype.draw = function(){
 	pushModelMatrix();
 	mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
 	mat4.rotate(modelMatrix,rad(-90),[0,1,0]);
-	mat4.scale(modelMatrix, [0.01,0.01,0.01]);
+	mat4.scale(modelMatrix, [0.003,0.003,0.002]);
 	
 	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.5, 0.5, 0.5, 1.0);

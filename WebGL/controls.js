@@ -40,7 +40,7 @@ function passKeys() {
 		currentCamera = 2;
 	}
 	if (keyState[66]) {
-		//spaceshipShotVector.push_back(new Spaceship_Shot(objIdShipShot, &objIdInc, spaceship->position.getX(), spaceship->position.getY(), spaceship->position.getZ() + 1.5));
+		spaceshipShots.push(new SpaceshipShot(spaceship.position.X, spaceship.position.Y, spaceship.position.Z + 1.5));
 	}
 	if (keyState[83]) {							//Toggle pausewindow on or off
 		if (!wonGame && !lostGame) {
@@ -51,7 +51,7 @@ function passKeys() {
 
 	if (keyState[82]) {
 		if (wonGame || lostGame) {
-			//restartGame();
+			restartGame();
 			game_running = true;
 			wonGame = false;
 			lostGame = false;

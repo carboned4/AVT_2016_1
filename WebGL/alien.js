@@ -14,7 +14,7 @@ function Alien(_x,_y,_z,_left,_width,_rowheight) {
 }
 
 
-Spaceship.prototype.checkCollisionShot = function(colshipshot){
+Alien.prototype.checkCollisionShot = function(colshipshot){
 	var dist = distance(this.position.X, this.position.Z, colshipshot.position.X, colshipshot.position.Z);
 	return dist < this.colRadius + colshipshot.colRadius;
 }

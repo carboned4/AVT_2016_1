@@ -14,6 +14,16 @@ var ALIENWIDTH =2.0;
 var ALIENROWSHIFT= 0.25;
 var FARTHESTALIEN =10.0;
 
+var GRAVITYPOINTX = -13;
+var GRAVITYPOINTY = 2;
+var GRAVITYPOINTZ = FARTHESTALIEN + 6;
+
+var TIMEBETWEENSHOTS = 6000;
+var lastShot = 0;
+
+var ALIENSCORE = 100;
+var DEATHPENALTY = -50;
+
 var lightsOnStars = 1;
 var lightsOnGlobal = 1;
 var lightsOnMiner = 1;
@@ -41,6 +51,7 @@ var timeElapsed = 0;
 var timePrevious = 0;
 
 var lives = 5;
+var score = 0;
 var game_running = true;
 var lostGame = false;
 var wonGame = false;
@@ -179,25 +190,22 @@ function renderScene(){
 }
 
 function update(){
-	//timeElapsed = glutGet(GLUT_ELAPSED_TIME);
-	//timeDelta = timeElapsed - timePrevious;
-	timeDelta = 16;
-	//timePrevious = timeElapsed;
+	
 	if (game_running == true) {
 		physics(timeDelta);
 
-		//alienShots(timeDelta);
+		genAlienShots();
 		cameras[2].updatePosition(spaceship.position.X, spaceship.position.Y, spaceship.position.Z);
 		cameras[2].setCamXYZ(camX, camY, camZ);
 		cleanupProjectiles();
-		//collisions();
+		collisions();
 		if (lives <= 0) {
 			lostGame = true;
 			game_running = false;
 		}
 		if (aliens.length <= 0) {
 			wonGame = true;
-			//game_running = false;
+			game_running = false;
 		}
 	}
 }
@@ -351,6 +359,7 @@ function setupThings(){
 	loadAlien();
 	loadSpaceshipShot();
 	loadAlienShot();
+	loadExplosion();
 	
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
@@ -363,6 +372,9 @@ function setupThings(){
 
 
 function cycle(){
+	timeElapsed = new Date().getTime();
+	timeDelta = timeElapsed - timePrevious;
+	timePrevious = timeElapsed;
 	requestAnimFrame(cycle);
 	if(texturesLeft >0) return;
     update();
