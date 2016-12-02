@@ -33,7 +33,9 @@ int I_SPOT = 2;
 uniform mat4 m_pvm;
 uniform mat4 m_viewModel;
 uniform mat3 m_normal;
-uniform vec3 lightState;
+uniform int lightPointOn;
+uniform int lightDirOn;
+uniform int lightSpotOn;
 
 uniform int texMode;
 
@@ -80,7 +82,7 @@ void main () {
 		doeye = vec3(-pos);
 		vec3 v;
 
-		if(lightState[I_POINT] == 1.0){
+		if(lightPointOn == 1){
 			dolightDir[0] = vec3(l_pospoint0 - pos);
 			dolightDir[1] = vec3(l_pospoint1 - pos);
 			dolightDir[2] = vec3(l_pospoint2 - pos);
@@ -118,13 +120,13 @@ void main () {
 				dohalfVec = normalize(v);
 			}
 		}
-		if(lightState[I_DIR] == 1.0){
+		if(lightDirOn == 1){
 			dolightDir[6] = vec3(l_posdir - pos);
 		}
 		else{
 			dolightDir[6] = vec3(0);
 		}
-		if(lightState[I_SPOT] == 1.0){
+		if(lightSpotOn == 1){
 			dolightDir[7] = vec3(l_posspot - pos);
 		}
 		else{
@@ -159,6 +161,10 @@ uniform sampler2D texmap13;
 uniform sampler2D texmap14;
 uniform sampler2D texmap15; //ship
 
+uniform int lightPointOn;
+uniform int lightDirOn;
+uniform int lightSpotOn;
+
 
 const vec3 fogColor = vec3(0.25, 0.1, 0.1);
 const float FogDensity = 0.05;
@@ -170,7 +176,6 @@ uniform float matshininess;
 uniform int mattexCount;
 
 uniform vec4 l_spotdir;
-
 
 varying vec3 donormal;
 varying vec3 doeye;

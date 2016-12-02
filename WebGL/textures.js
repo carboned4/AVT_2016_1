@@ -67,7 +67,8 @@ function loadAlienTexture(){
 	alienTex.image.onload = function () {
 		handleLoadedTexture(alienTex);
 	}
-	alienTex.image.src = "images/alien_body_D.png";
+	//alienTex.image.src = "images/alien_body_D.png";
+	alienTex.image.src = "images/reptil.png";
 }
 
 function loadFontTexture(){

@@ -14,9 +14,9 @@ var ALIENWIDTH =2.0;
 var ALIENROWSHIFT= 0.25;
 var FARTHESTALIEN =10.0;
 
-var lightsOnStars = 1.0;
-var lightsOnGlobal = 1.0;
-var lightsOnMiner = 1.0;
+var lightsOnStars = 1;
+var lightsOnGlobal = 1;
+var lightsOnMiner = 1;
 var lightPosGlobal = [ 5.0, -10.0, -5.0, 0.0 ];
 var lightPosPoint0 = [ 5.0, 10.0, 15.0, 1.0 ];
 var lightPosPoint1 = [ -5.0, 10.0, 15.0, 1.0 ];
@@ -67,14 +67,18 @@ function renderScene(){
 	
 	gl.useProgram(shaderProgram);
 	
-	gl.uniform1i(gl.uniform_foggy, fog);
+	gl.uniform1i(shaderProgram.uniform_foggy, fog);
 
+	
+	
 	//LIGHTS
-	var resstate = [0.0,0.0,0.0];
+	var resstate = [0,0,0];
 	resstate[I_DIR] = lightsOnGlobal;
 	resstate[I_POINT] = lightsOnStars;
 	resstate[I_SPOT] = lightsOnMiner;
-	gl.uniform3f(gl.uniform_lightState, 1, lightsOnGlobal, lightsOnStars, lightsOnMiner);
+	gl.uniform1i(shaderProgram.uniform_lightDirOn, lightsOnGlobal);
+	gl.uniform1i(shaderProgram.uniform_lightSpotOn, lightsOnMiner);
+	gl.uniform1i(shaderProgram.uniform_lightPointOn, lightsOnStars);
 	
 	lightPosSpot[0] = spaceship.position.X;
 	lightPosSpot[1] = spaceship.position.Y;
@@ -88,19 +92,34 @@ function renderScene(){
 	lightDirSpot[2] = spaceship.speedAngleEffectVec.Z;
 	lightDirSpot[3] = 0.0;
 	
+	var res = [];
+	mat4.multiplyVec4(viewMatrix, lightPosPoint0, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint1, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint2, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint3, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint4, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint5, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
+	mat4.multiplyVec4(viewMatrix, lightPosGlobal, res);   //lightDirection WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
+	mat4.multiplyVec4(viewMatrix, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
+	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
 	
-	gl.enable(gl.BLEND);
-	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
-	//console.log(spaceshipVertexPositionBuffer);
 	spaceship.draw();
 	gl.activeTexture(gl.TEXTURE1);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
 	gl.uniform1i(shaderProgram.tex_loc1, 1);
 	drawSquareParticula();
 	for(alieni in aliens){
-		//console.log(alieni + ": " +aliens[alieni].changeRow);
 		aliens[alieni].draw();
 	}
 	
@@ -108,11 +127,11 @@ function renderScene(){
 	//COISAS UTEIS PARA O LENS FLARE
 	/*
 	calculateDerivedMatrices();
-	l_pos = [0,0,0,1];
+	l_pos = [0,0,6,1];
 	adjustedLD = [0,0,0,0];
 	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
-	console.log("ALD\n" + adjustedLD);
-	console.log("pvm\n" + pvmMatrix);
+	//console.log("ALD\n" + adjustedLD);
+	//console.log("pvm\n" + pvmMatrix);
 	//console.log("pos\n" + l_pos);
 	ndc = adjustedLD;
 	ndc[0] = adjustedLD[0] / adjustedLD[3];
@@ -123,6 +142,23 @@ function renderScene(){
 	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
+	console.log("a\n"+adjustedLD);
+	l_pos = [0,0,5,1];
+	adjustedLD = [0,0,0,0];
+	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
+	//console.log("ALD\n" + adjustedLD);
+	//console.log("pvm\n" + pvmMatrix);
+	//console.log("pos\n" + l_pos);
+	ndc = adjustedLD;
+	ndc[0] = adjustedLD[0] / adjustedLD[3];
+	ndc[1] = adjustedLD[1] / adjustedLD[3];
+	ndc[2] = adjustedLD[2] / adjustedLD[3];
+	sunWinCoords = [0,0,0];
+	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
+	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
+	//using n=0.f, f=1000.f (also used in ortho and perspective)
+	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
+	console.log("b\n"+adjustedLD);
 	*/
 }
 
@@ -233,7 +269,9 @@ function initShaders() {
 	shaderProgram.uniform_pointOn = gl.getUniformLocation(shaderProgram, "l_pointOn");
 	shaderProgram.uniform_dirOn = gl.getUniformLocation(shaderProgram, "dirOn");
 	shaderProgram.uniform_spotOn = gl.getUniformLocation(shaderProgram, "spotOn");
-	shaderProgram.uniform_lightState = gl.getUniformLocation(shaderProgram, "lightState");
+	shaderProgram.uniform_lightPointOn = gl.getUniformLocation(shaderProgram, "lightPointOn");
+	shaderProgram.uniform_lightDirOn = gl.getUniformLocation(shaderProgram, "lightDirOn");
+	shaderProgram.uniform_lightSpotOn = gl.getUniformLocation(shaderProgram, "lightSpotOn");
 
 	shaderProgram.texMode_uniformId = gl.getUniformLocation(shaderProgram, "texMode");
 	shaderProgram.tex_loc0 = gl.getUniformLocation(shaderProgram, "texmap0");
@@ -271,20 +309,13 @@ function setupGLDetails(){
 
 function setupThings(){
 	ratio = gl.viewportWidth/gl.viewportHeight;
-	cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 10.0, 5.0);
+	cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 11.0, 5.0);
 	cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
 	cameras[2] = new FollowPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0);
 	
 	
-	for(var i = 0; i< ALIENROWS; i++){
-		for(var j=0; j<ALIENCOLUMNS; j++){
-			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))
-		}
-	}
 	loadSpaceshipTexture();
 	loadSpaceshipBumpTexture();
-	loadSpaceship();
-	spaceship = new Spaceship(-5.8, 5.8);
 	loadAlienTexture();
 	loadFontTexture();
 	loadAsteroidTexture();
@@ -299,6 +330,17 @@ function setupThings(){
 	loadEyeTexture();
 	loadPortalTexture();
 	loadStarsTexture();
+	
+	loadSpaceship();
+	loadAlien();
+	
+	for(var i = 0; i< ALIENROWS; i++){
+		for(var j=0; j<ALIENCOLUMNS; j++){
+			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))
+		}
+	}
+	spaceship = new Spaceship(-5.8, 5.8);
+	
 }
 
 

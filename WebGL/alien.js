@@ -46,140 +46,55 @@ Alien.prototype.update = function(delta){
 }
 
 
-var alienVertexPositionBuffer1;
-var alienVertexNormalBuffer1;
-var alienVertexTextureCoordBuffer1;
-var alienVertexIndexBuffer1;
-var alienVertexTangentBuffer1;
+var alienVertexPositionBuffer;
+var alienVertexNormalBuffer;
+var alienVertexTextureCoordBuffer;
+var alienVertexIndexBuffer;
 
-var alienVertexPositionBuffer2;
-var alienVertexNormalBuffer2;
-var alienVertexTextureCoordBuffer2;
-var alienVertexIndexBuffer2;
-var alienVertexTangentBuffer2;
-
-var alienVertexPositionBuffer3;
-var alienVertexNormalBuffer3;
-var alienVertexTextureCoordBuffer3;
-var alienVertexIndexBuffer3;
-var alienVertexTangentBuffer3;
 
 
 Alien.prototype.draw = function(){
 	pushModelMatrix();
-	mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
+	mat4.translate(modelMatrix,[this.position.X,this.position.Y-1,this.position.Z]);
 	mat4.rotate(modelMatrix,rad(180),[0,1,0]);
-	drawSquareParticula();
-	/*//SPHERE
-	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
-	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
-	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
-	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
-	gl.uniform1i(shaderProgram.texting_mode,1);
-	gl.activeTexture(gl.TEXTURE9);
-	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
-	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	pushModelMatrix();
-		 mat4.scale(mvMatrix, [1.5,0.5,1.0]);
-		 mat4.rotate(mvMatrix,rad(90),[0,1,0]);
-	this.sendGeometry1();
+	mat4.rotate(modelMatrix,rad(20),[1,0,0]);
+	mat4.scale(modelMatrix, [0.5,0.5,0.5]);
+	
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.9, 0.9, 0.9, 1.0);
+	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.9, 0.9, 0.9, 1.0);
+	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0.9, -0.5, 0.1, 1.0);
+	gl.uniform1f(shaderProgram.materialShininessUniform, 20.0);
+	gl.uniform1i(shaderProgram.texMode_uniformId,0);
+	
+	gl.uniform1i(shaderProgram.materialTexCount, 5);
+	gl.activeTexture(gl.TEXTURE5);
+	gl.bindTexture(gl.TEXTURE_2D, alienTex);
+	gl.uniform1i(shaderProgram.tex_loc5, 5);
+	
+	this.sendGeometry();
 	popModelMatrix();
 
-	//CONE1
-	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
-	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
-	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
-	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
-	gl.uniform1i(shaderProgram.texting_mode,1);
-	gl.activeTexture(gl.TEXTURE9);
-	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
-	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	pushModelMatrix();
-		 mat4.translate(mvMatrix,[0.5,0,0]);
-		 mat4.rotate(mvMatrix,rad(135),[-1,0,-1]);
-		 mat4.scale(mvMatrix, [0.5,0.5,0.5]);
-	this.sendGeometry2();
-	popModelMatrix();
-
-	//CONE2
-	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
-	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0, 0, 0,1.0);
-	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0, 0, 0,1.0);
-	gl.uniform1f(shaderProgram.materialShininessUniform, 5);
-	gl.uniform1i(shaderProgram.texting_mode,1);
-	gl.activeTexture(gl.TEXTURE9);
-	//gl.bindTexture(gl.TEXTURE_2D, candleTex);
-	gl.uniform1i(shaderProgram.samplerUniform, 9);
-	pushModelMatrix();
-		 mat4.translate(mvMatrix,[-0.5,0,0]);
-		 mat4.rotate(mvMatrix,rad(-135),[1,0,-1]);
-		 mat4.scale(mvMatrix, [0.5,0.5,0.5]);
-	this.sendGeometry3();
-	popModelMatrix();*/
-
-popModelMatrix();
-
 }
 
-Alien.prototype.sendGeometry1 = function(){
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer1);
-	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer1.itemSize, gl.FLOAT, false, 0, 0);
+Alien.prototype.sendGeometry = function(){
+	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTextureCoordBuffer1);
-	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, alienVertexTextureCoordBuffer1.itemSize, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTextureCoordBuffer);
+	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, alienVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexNormalBuffer1);
-	gl.vertexAttribPointer(shaderProgram.normalAttribute, alienVertexNormalBuffer1.itemSize, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexNormalBuffer);
+	gl.vertexAttribPointer(shaderProgram.normalAttribute, alienVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	//gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTangentBuffer);
-	//gl.vertexAttribPointer(shaderProgram.tangentAttribute, alienVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, alienVertexIndexBuffer1);
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, alienVertexIndexBuffer);
 	
 	setMatrixUniforms();
-	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer1.numItems, gl.UNSIGNED_SHORT, 0);
+	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
-Alien.prototype.sendGeometry2 = function(){
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer2);
-	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer2.itemSize, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTextureCoordBuffer2);
-	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, alienVertexTextureCoordBuffer2.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexNormalBuffer2);
-	gl.vertexAttribPointer(shaderProgram.normalAttribute, alienVertexNormalBuffer2.itemSize, gl.FLOAT, false, 0, 0);
-
-	//gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTangentBuffer);
-	//gl.vertexAttribPointer(shaderProgram.tangentAttribute, alienVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, alienVertexIndexBuffer2);
+function handleLoadedAlien(alienData) {
 	
-	setMatrixUniforms();
-	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer2.numItems, gl.UNSIGNED_SHORT, 0);
-}
-
-Alien.prototype.sendGeometry3 = function(){
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexPositionBuffer3);
-	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, alienVertexPositionBuffer3.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTextureCoordBuffer3);
-	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, alienVertexTextureCoordBuffer3.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexNormalBuffer3);
-	gl.vertexAttribPointer(shaderProgram.normalAttribute, alienVertexNormalBuffer3.itemSize, gl.FLOAT, false, 0, 0);
-
-	//gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexTangentBuffer);
-	//gl.vertexAttribPointer(shaderProgram.tangentAttribute, alienVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, alienVertexIndexBuffer3);
-	
-	setMatrixUniforms();
-	gl.drawElements(gl.TRIANGLES, alienVertexIndexBuffer3.numItems, gl.UNSIGNED_SHORT, 0);
-}
-var poop;
-function handleLoadedalien(alienData) {
-	poop = alienData;
 	alienVertexNormalBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, alienVertexNormalBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(alienData.vertexNormals), gl.STATIC_DRAW);
@@ -198,12 +113,6 @@ function handleLoadedalien(alienData) {
 	alienVertexPositionBuffer.itemSize = 3;
 	alienVertexPositionBuffer.numItems = alienData.vertexPositions.length / 3;
 
-	alienTangentBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, alienTangentBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(alienData.tangents), gl.STATIC_DRAW);
-	alienTangentBuffer.itemSize = 4;
-	alienTangentBuffer.numItems = alienData.tangents.length / 4;
-
 	alienVertexIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, alienVertexIndexBuffer);
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(alienData.indices), gl.STREAM_DRAW);
@@ -211,12 +120,12 @@ function handleLoadedalien(alienData) {
 	alienVertexIndexBuffer.numItems = alienData.indices.length;
 }
 
-function loadalien() {
+function loadAlien() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJ_gunship.json");
+	request.open("GET", "OBJalien.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
-			handleLoadedalien(JSON.parse(request.responseText));
+			handleLoadedAlien(JSON.parse(request.responseText));
 		}
 	}
 	request.send();
