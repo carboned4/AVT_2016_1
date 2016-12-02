@@ -56,8 +56,7 @@ Spaceship.prototype.update = function(delta){
 	}
 
 	this.speedAngleEffectVec = v3(Math.sin(this.speedAngleEffect* 3.14 / 180.0), 0.0, Math.cos(this.speedAngleEffect* 3.14 / 180.0));
-	//printf("%f: %f %f %f\n", this.speedAngleEffect, this.speedAngleEffectVec.X, this.speedAngleEffectVec.getY(), this.speedAngleEffectVec.getZ());
-
+	
 }
 
 var spaceshipVertexPositionBuffer;
@@ -73,10 +72,10 @@ Spaceship.prototype.draw = function(){
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0.9, 0.9, 0.9, 1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 5.0);
-	gl.uniform1i(shaderProgram.texMode_uniformId,2);
+	gl.uniform1i(shaderProgram.texMode_uniformId,3);
 	
 	gl.activeTexture(gl.TEXTURE0);
-	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
+	gl.bindTexture(gl.TEXTURE_2D, gunshipTex);
 	gl.uniform1i(shaderProgram.tex_loc0, 0);
 	
 		mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);

@@ -10,7 +10,6 @@ function Alien(_x,_y,_z,_left,_width,_rowheight) {
 	this.draw;
 	this.sendGeometry;
 	this.texcount = 5;
-	console.log(this.left + " " +this.position.X + " "+ (this.left-this.width));
 }
 
 Alien.prototype.update = function(delta){

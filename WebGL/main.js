@@ -95,9 +95,9 @@ function renderScene(){
 	
 	//console.log(spaceshipVertexPositionBuffer);
 	spaceship.draw();
-	gl.activeTexture(gl.TEXTURE0);
+	gl.activeTexture(gl.TEXTURE1);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
-	gl.uniform1i(shaderProgram.tex_loc0, 0);
+	gl.uniform1i(shaderProgram.tex_loc1, 1);
 	drawSquareParticula();
 	for(alieni in aliens){
 		//console.log(alieni + ": " +aliens[alieni].changeRow);
@@ -282,8 +282,23 @@ function setupThings(){
 		}
 	}
 	loadSpaceshipTexture();
+	loadSpaceshipBumpTexture();
 	loadSpaceship();
 	spaceship = new Spaceship(-5.8, 5.8);
+	loadAlienTexture();
+	loadFontTexture();
+	loadAsteroidTexture();
+	loadCheckerColorsTexture();
+	loadCloudTexture();
+	loadMetalTexture();
+	loadEarthTexture();
+	loadExplosionTexture();
+	loadFlare2Texture();
+	loadFlare4Texture();
+	loadFlare5Texture();
+	loadEyeTexture();
+	loadPortalTexture();
+	loadStarsTexture();
 }
 
 
