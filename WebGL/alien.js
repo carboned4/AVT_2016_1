@@ -10,7 +10,15 @@ function Alien(_x,_y,_z,_left,_width,_rowheight) {
 	this.draw;
 	this.sendGeometry;
 	this.texcount = 5;
+	this.colRadius = 0.25;
 }
+
+
+Spaceship.prototype.checkCollisionShot = function(colshipshot){
+	var dist = distance(this.position.X, this.position.Z, colshipshot.position.X, colshipshot.position.Z);
+	return dist < this.colRadius + colshipshot.colRadius;
+}
+
 
 Alien.prototype.update = function(delta){
 	if (!this.changeRow) {

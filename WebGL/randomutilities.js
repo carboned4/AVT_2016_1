@@ -48,15 +48,6 @@ function popProjectionMatrix() {
 }
 
 
-/*function setMatrixUniforms() {
-	gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-	gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-	 var normalMatrix = mat3.create();
-	mat4.toInverseMat3(mvMatrix, normalMatrix);
-	mat3.transpose(normalMatrix);
-	gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
-}*/
-
 function setMatrixUniforms() {
 	calculateDerivedMatrices();
 	gl.uniformMatrix4fv(shaderProgram.vm_uniformId, false, modelviewMatrix);
@@ -75,6 +66,10 @@ function calculateDerivedMatrices(){
 
 function rad(degrees) {
 	return degrees * Math.PI / 180;
+}
+
+function distance(x1,z1, x2,z2){
+	return Math.sqrt((x2-x1)*(x2-x1)+(z2-z1)*(z2-z1));
 }
 
 

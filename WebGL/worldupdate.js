@@ -7,7 +7,12 @@ function physics(delta){
 	for(explosioni in explosions){
 		explosions[explosioni].update(delta);
 	}
-	
+	for(shoti in spaceshipShots){
+		spaceshipShots[shoti].update(delta);
+	}
+	for(shoti in alienShots){
+		alienShots[shoti].update(delta);
+	}
 }
 
 function cleanupProjectiles(){

@@ -1,3 +1,4 @@
+
 function Spaceship(limitL, limitR) {
 	this.position = v3(0.0, 0.0, 0.0);
     this.speed = v3(0.0, 0.0, 0.0);
@@ -9,11 +10,17 @@ function Spaceship(limitL, limitR) {
 	this.speedAngleEffect=0.0;
 	this.leftPressed = false;
 	this.rightPressed = false;
+	this.colRadius = 0.5;
 }
 
 Spaceship.prototype.updateKeys = function(_left,_right){
 	this.leftPressed = _left;
 	this.rightPressed = _right;
+}
+
+Spaceship.prototype.checkCollisionShot = function(colalienshot){
+	var dist = distance(this.position.X, this.position.Z, colalienshot.position.X, colalienshot.position.Z);
+	return dist < this.colRadius + colalienshot.colRadius;
 }
 
 Spaceship.prototype.update = function(delta){

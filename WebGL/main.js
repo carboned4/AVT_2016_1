@@ -124,6 +124,12 @@ function renderScene(){
 	for(alieni in aliens){
 		aliens[alieni].draw();
 	}
+	for(shoti in spaceshipShots){
+		spaceshipShots[shoti].draw();
+	}
+	for(shoti in alienShots){
+		alienShots[shoti].draw();
+	}
 	spaceship.draw();
 	
 	gl.enable(gl.BLEND);
@@ -343,6 +349,8 @@ function setupThings(){
 	
 	loadSpaceship();
 	loadAlien();
+	loadSpaceshipShot();
+	loadAlienShot();
 	
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
