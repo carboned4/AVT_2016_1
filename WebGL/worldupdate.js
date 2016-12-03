@@ -84,6 +84,10 @@ function collisions(){
 	
 	for (var alieni = 0; alieni < aliens.length;) {
 		var erasedAlien = false;
+		if(aliens[alieni].position.Z <= 2.5){
+			lives = 0;
+			break;
+		}
 		for (j = 0; j < spaceshipShots.length; j++) {
 			var aliencollided = aliens[alieni].checkCollisionShot(spaceshipShots[j]);
 			if (aliencollided) {
