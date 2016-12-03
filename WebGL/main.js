@@ -141,7 +141,7 @@ function renderScene(){
 	for(shoti in alienShots){
 		alienShots[shoti].draw();
 	}
-	spaceship.draw();
+	spaceship.draw(true);
 	
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
@@ -187,6 +187,59 @@ function renderScene(){
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
 	console.log("b\n"+adjustedLD);
 	*/
+	gl.blendFunc(gl.ONE,gl.ZERO);
+	gl.disable(gl.BLEND);
+	gl.disable(gl.DEPTH_TEST);
+	pushModelMatrix();
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
+	mat4.ortho(0, gl.viewportWidth, 0, gl.viewportHeight, 0, 1, projectionMatrix);
+	gl.uniform1i(shaderProgram.materialTexCount, 5);
+	gl.activeTexture(gl.TEXTURE5);
+	gl.bindTexture(gl.TEXTURE_2D, fontTex);
+	gl.uniform1i(shaderProgram.tex_loc5, 5);
+	gl.uniform1i(shaderProgram.texMode_uniformId, 5);
+	/*
+	calculateDerivedMatrices();
+	console.log(pvmMatrix);
+	l_pos = [200,100,0.5,1];
+	adjustedLD = [0,0,0,0];
+	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
+	//console.log("ALD\n" + adjustedLD);
+	//console.log("pvm\n" + pvmMatrix);
+	//console.log("pos\n" + l_pos);
+	ndc = adjustedLD;
+	ndc[0] = adjustedLD[0] / adjustedLD[3];
+	ndc[1] = adjustedLD[1] / adjustedLD[3];
+	ndc[2] = adjustedLD[2] / adjustedLD[3];
+	sunWinCoords = [0,0,0];
+	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
+	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
+	//using n=0.f, f=1000.f (also used in ortho and perspective)
+	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
+	console.log("a\n"+sunWinCoords);
+	*/
+	_fontSize = 16;
+	initTextureMappedFont();
+	DrawString(200,100,"abc");
+	
+	
+	//LIVES
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
+	mat4.ortho(0, gl.viewportWidth, 0, gl.viewportHeight, -10, 10, projectionMatrix);
+	mat4.translate(modelMatrix,[150, 10, 0]);
+	mat4.scale(modelMatrix,[10,10,10]);
+	for (var ilives = 0; ilives < lives; ilives++) {
+		pushModelMatrix();
+		mat4.rotate(modelMatrix,rad(-90),[0,1,0]);
+		spaceship.draw(false);
+		popModelMatrix();
+		mat4.translate(modelMatrix,[5,0,0]);
+	}
+	popModelMatrix();
 }
 
 function update(){

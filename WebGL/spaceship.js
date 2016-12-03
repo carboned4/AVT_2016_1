@@ -72,7 +72,7 @@ var spaceshipVertexTextureCoordBuffer;
 var spaceshipVertexIndexBuffer;
 var spaceshipVertexTangentBuffer;
 
-Spaceship.prototype.draw = function(){
+Spaceship.prototype.draw = function(notHud){
 	//console.log(modelMatrix);
 	pushModelMatrix();
 	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.1, 0.1, 0.1, 1.0);
@@ -80,7 +80,8 @@ Spaceship.prototype.draw = function(){
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 1.0, 1.0, 1.0, 1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 10.0);
 	
-	gl.uniform1i(shaderProgram.texMode_uniformId,0);
+	if(notHud) gl.uniform1i(shaderProgram.texMode_uniformId,0);
+	else gl.uniform1i(shaderProgram.texMode_uniformId, 3);
 	gl.uniform1i(shaderProgram.materialTexCount, 15);
 	gl.activeTexture(gl.TEXTURE15);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipTex);
@@ -88,11 +89,12 @@ Spaceship.prototype.draw = function(){
 	gl.activeTexture(gl.TEXTURE3);
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
 	gl.uniform1i(shaderProgram.tex_loc3, 3);
-	
+	if(notHud){
 		mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
 		mat4.rotate(modelMatrix,rad(this.speedAngleEffect),[0,1,0]);
 		mat4.rotate(modelMatrix,rad(-this.speedAngleEffect),[0,0,1]);
 		mat4.translate(modelMatrix,[0.1,0.3,-1.0]);
+	}
 		mat4.scale(modelMatrix, [0.01,0.01,0.01]);
 	//console.log(modelMatrix);
 	this.sendGeometry();
