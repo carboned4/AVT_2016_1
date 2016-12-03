@@ -18,6 +18,14 @@ var GRAVITYPOINTX = -13;
 var GRAVITYPOINTY = 2;
 var GRAVITYPOINTZ = FARTHESTALIEN + 6;
 
+var ASTEROIDNUMBER = 250;
+var ASTEROID_XMIN = -20.0;
+var ASTEROID_XMAX = 20.0;
+var ASTEROID_YMIN = -5.0;
+var ASTEROID_YMAX = 20.0;
+var ASTEROID_ZMIN = -10.0;
+var ASTEROID_ZMAX = 30.0;
+
 var TIMEBETWEENSHOTS = 6000;
 var lastShot = 0;
 
@@ -130,7 +138,6 @@ function renderScene(){
 	gl.bindTexture(gl.TEXTURE_2D, earthTex);
 	gl.uniform1i(shaderProgram.tex_loc4, 4);
 	gl.uniform1i(shaderProgram.materialTexCount, 4);
-	//drawSquareParticula(1,2);
 	
 	for(alieni in aliens){
 		aliens[alieni].draw();
@@ -146,6 +153,9 @@ function renderScene(){
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
 	gl.depthMask(gl.FALSE);
+	for(asteroidi in asteroids){
+		asteroids[asteroidi].draw();
+	}
 	for(explosioni in explosions){
 		explosions[explosioni].draw();
 	}
@@ -415,6 +425,7 @@ function setupThings(){
 	loadSpaceshipShot();
 	loadAlienShot();
 	loadExplosion();
+	loadAsteroid();
 	
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
@@ -422,6 +433,13 @@ function setupThings(){
 		}
 	}
 	spaceship = new Spaceship(-5.8, 5.8);
+	
+	for (iasteroid = 0; iasteroid < ASTEROIDNUMBER; iasteroid++) {
+		var iax = ASTEROID_XMIN + Math.random()*(ASTEROID_XMAX-ASTEROID_XMIN);
+		var iay = ASTEROID_YMIN + Math.random()*(ASTEROID_YMAX - ASTEROID_YMIN);
+		var iaz = ASTEROID_ZMIN + Math.random()*(ASTEROID_ZMAX - ASTEROID_ZMIN);
+		asteroids.push(new Asteroid(iax, iay, iaz));
+	}
 	
 }
 

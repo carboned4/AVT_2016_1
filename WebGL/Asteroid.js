@@ -2,51 +2,67 @@ function Asteroid(_x, _y,_z){
 	this.position = v3(_x, _y, _z);
 }
 
-Asteroid.prototype.draw = function() {
+
+var asteroidVertexPositionBuffer;
+var asteroidVertexNormalBuffer;
+var asteroidVertexTextureCoordBuffer;
+var asteroidVertexIndexBuffer;
+
+Asteroid.prototype.draw = function(){
 	pushModelMatrix();
-	mat4.translate(mvMatrix, this.position.X, this.position.Y, this.position.Z);
-/*	GLint loc;
-
-	glUniform1i(texMode_uniformId, 1);
+	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.25, 0.25, 0.25, 1.0);
+	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.5, 0.5, 0.5, 1.0);
+	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0.2, 0.2, 0.2, 1.0);
+	gl.uniform1f(shaderProgram.materialShininessUniform, 10.0);
 	
-	float modelview[16];  //To be used in "Cheating" Matrix reset Billboard technique
-
-	//SPHERE
-	// send the material
-	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
-	glUniform4fv(loc, 1, mesh[objectId].mat.ambient);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
-	glUniform4fv(loc, 1, mesh[objectId].mat.diffuse);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
-	glUniform4fv(loc, 1, mesh[objectId].mat.specular);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
-	glUniform1f(loc, mesh[objectId].mat.shininess);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.texCount");
-	glUniform1i(loc, mesh[objectId].mat.texCount);
-	// send matrices to OGL
+	gl.uniform1i(shaderProgram.texMode_uniformId,1);
+	gl.uniform1i(shaderProgram.materialTexCount, 12);
+	gl.activeTexture(gl.TEXTURE12);
+	gl.bindTexture(gl.TEXTURE_2D, asteroidTex);
+	gl.uniform1i(shaderProgram.tex_loc12, 12);
 	
-	computeDerivedMatrix(VIEW_MODEL);
-	memcpy(modelview, mCompMatrix[VIEW_MODEL], sizeof(float) * 16);
-	// spherical cheating
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (i == j)
-				mCompMatrix[VIEW_MODEL][i * 4 + j] = 1.0;
-			else
-				mCompMatrix[VIEW_MODEL][i * 4 + j] = 0.0;
+	mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
+	this.sendGeometry();
+	popModelMatrix();
+}
+
+Asteroid.prototype.sendGeometry = function(){
+	gl.bindBuffer(gl.ARRAY_BUFFER, asteroidVertexPositionBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, asteroidVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, asteroidVertexTextureCoordBuffer);
+	gl.vertexAttribPointer(shaderProgram.texcoordAttribute, asteroidVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, asteroidVertexNormalBuffer);
+	gl.vertexAttribPointer(shaderProgram.normalAttribute, asteroidVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	//CHEATING
+	mat4.multiply(viewMatrix,modelMatrix,modelviewMatrix);
+	for(var i = 0; i<3; i++){
+		for(var j = 0; j<3; j++){
+			if(i==j) modelviewMatrix[i * 4 + j] = 1;
+			else modelviewMatrix[i * 4 + j] = 0;
+			
 		}
 	}
-	computeDerivedMatrix_PVM();
-
+	mat4.multiply(projectionMatrix,modelviewMatrix,pvmMatrix);
+	mat4.toInverseMat3(modelviewMatrix, normalMatrix);
+	mat3.transpose(normalMatrix);
 	
-	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-	computeNormalMatrix3x3();
-	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-	// Render mesh
-	glBindVertexArray(mesh[objectId].vao);
-	glDrawElements(mesh[objectId].type, mesh[objectId].numIndexes, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-*/
-	popModelMatrix();
+	gl.uniformMatrix4fv(shaderProgram.vm_uniformId, false, modelviewMatrix);
+	gl.uniformMatrix4fv(shaderProgram.pvm_uniformId, false, pvmMatrix);
+	gl.uniformMatrix3fv(shaderProgram.normal_uniformId, false, normalMatrix);
+    
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, asteroidVertexIndexBuffer);
+	gl.drawElements(gl.TRIANGLES, asteroidVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+}
+
+
+function loadAsteroid() {
+	var quadindices = createQuad(0.4, 0.4);
+	asteroidVertexPositionBuffer = quadindices[0];
+	asteroidVertexNormalBuffer = quadindices[1];
+	asteroidVertexTextureCoordBuffer = quadindices[2];
+	asteroidVertexIndexBuffer = quadindices[3];
+
 }
