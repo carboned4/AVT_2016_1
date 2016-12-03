@@ -73,6 +73,7 @@ var asteroids = [];
 var explosions = [];
 var planet;
 var skybox;
+var lensFlare;
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
@@ -165,15 +166,14 @@ function renderScene(){
 	}
 	gl.depthMask(true);
 	
-	//COISAS UTEIS PARA O LENS FLARE
 	
+	//COISAS UTEIS PARA O LENS FLARE
+	gl.blendFunc(gl.ONE,gl.ZERO);
+	gl.enable(gl.BLEND);
 	calculateDerivedMatrices();
-	l_pos = [0,0,6,1];
+	l_pos = [GRAVITYPOINTX,GRAVITYPOINTY,GRAVITYPOINTZ,1];
 	adjustedLD = [0,0,0,0];
 	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
-	//console.log("ALD\n" + adjustedLD);
-	//console.log("pvm\n" + pvmMatrix);
-	//console.log("pos\n" + l_pos);
 	ndc = adjustedLD;
 	ndc[0] = adjustedLD[0] / adjustedLD[3];
 	ndc[1] = adjustedLD[1] / adjustedLD[3];
@@ -181,26 +181,18 @@ function renderScene(){
 	sunWinCoords = [0,0,0];
 	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
 	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
-	//using n=0.f, f=1000.f (also used in ortho and perspective)
+	//using n=0.1f, f=1000.0f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	//console.log("a\n"+adjustedLD);
-	l_pos = [0,0,5,1];
-	adjustedLD = [0,0,0,0];
-	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
-	//console.log("ALD\n" + adjustedLD);
-	//console.log("pvm\n" + pvmMatrix);
-	//console.log("pos\n" + l_pos);
-	ndc = adjustedLD;
-	ndc[0] = adjustedLD[0] / adjustedLD[3];
-	ndc[1] = adjustedLD[1] / adjustedLD[3];
-	ndc[2] = adjustedLD[2] / adjustedLD[3];
-	sunWinCoords = [0,0,0];
-	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
-	sunWinCoords[1] = gl.rviewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
-	//using n=0.f, f=1000.f (also used in ortho and perspective)
-	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	//console.log("b\n"+adjustedLD);
-	
+	gl.disable(gl.DEPTH_TEST);
+	pushModelMatrix();
+	pushProjectionMatrix();
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
+	mat4.ortho(0, gl.viewportWidth, 0, gl.viewportHeight, 0, 1, projectionMatrix);
+	lensFlare.draw(sunWinCoords[0], sunWinCoords[1], sunWinCoords[2], gl.viewportWidth, gl.viewportHeight);
+	popModelMatrix();
+	popProjectionMatrix();
 	
 	//TEXT
 	gl.blendFunc(gl.ONE,gl.ZERO);
@@ -432,7 +424,10 @@ function setupThings(){
 	loadAsteroid();
 	loadPlanet();
 	loadSkybox();
+	loadLensFlare();
 	
+	
+	lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
