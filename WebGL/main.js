@@ -256,6 +256,7 @@ function update(){
 		physics(timeDelta);
 
 		genAlienShots();
+		updateCamera(timeElapsed,timeDelta);
 		cameras[2].updatePosition(spaceship.position.X, spaceship.position.Y, spaceship.position.Z);
 		cameras[2].setCamXYZ(camX, camY, camZ);
 		cleanupProjectiles();

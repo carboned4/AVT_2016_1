@@ -19,6 +19,7 @@ function physics(delta){
 function restartGame(){
 	lives = 5;
 	score = 0;
+	shakeLeft = 0.0;
 	alienShots = [];
 	spaceshipShots = [];
 	aliens = [];
@@ -75,6 +76,7 @@ function collisions(){
 					GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ));
 			alienShots.splice(i,1);
 			score += DEATHPENALTY;
+			startShake();
 			break;
 		}
 	}
