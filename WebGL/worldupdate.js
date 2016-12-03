@@ -32,7 +32,25 @@ function restartGame(){
 }
 
 function cleanupProjectiles(){
-
+	var shotz;
+	for (shoti = 0; shoti < alienShots.length; ) {
+		shotz = alienShots[shoti].position.Z;
+		if (shotz < -10.0) {
+			alienShots.splice(shoti,1);
+		}
+		else {
+			++shoti;
+		}
+	}
+	for (shoti = 0; shoti < spaceshipShots.length; ) {
+		shotz = spaceshipShots[shoti].position.Z;
+		if (shotz > FARTHESTALIEN+10.0) {
+			spaceshipShots.splice(shoti,1);
+		}
+		else {
+			++shoti;
+		}
+	}
 	for (var explosioni = 0; explosioni < explosions.length;) {
 		var lifel = explosions[explosioni].lifeLeft;
 		if (lifel <= 0.0) {

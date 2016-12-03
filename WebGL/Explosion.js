@@ -62,10 +62,10 @@ Explosion.prototype.draw = function(){
 		gl.uniform1f(shaderProgram.materialShininessUniform, 10.0);
 		
 		gl.uniform1i(shaderProgram.texMode_uniformId,6);
-		gl.uniform1i(shaderProgram.materialTexCount, 2);
-		gl.activeTexture(gl.TEXTURE2);
+		gl.uniform1i(shaderProgram.materialTexCount, 10);
+		gl.activeTexture(gl.TEXTURE10);
 		gl.bindTexture(gl.TEXTURE_2D, explosionTex);
-		gl.uniform1i(shaderProgram.tex_loc2, 2);
+		gl.uniform1i(shaderProgram.tex_loc10, 10);
 		
 			mat4.translate(modelMatrix,[this.positions[iflare].X,this.positions[iflare].Y,this.positions[iflare].Z]);
 		//console.log(modelMatrix);

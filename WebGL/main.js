@@ -182,7 +182,7 @@ function renderScene(){
 	ndc[2] = adjustedLD[2] / adjustedLD[3];
 	sunWinCoords = [0,0,0];
 	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
-	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
+	sunWinCoords[1] = gl.rviewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
 	console.log("b\n"+adjustedLD);
@@ -216,7 +216,7 @@ function renderScene(){
 		DrawString(gl.viewportWidth / 2 - 150, gl.viewportHeight / 2, "YOU WON!");
 	}
 	if (lostGame) {
-		DrawString(gl.viewportWidth / 2 - 150, gl.viewportHeight / 2, "GAME OVER");
+		DrawString(gl.viewportWidth / 2 - 200, gl.viewportHeight / 2, "GAME OVER");
 	}
 	_fontSize = 30;
 	initTextureMappedFont();
