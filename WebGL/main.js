@@ -80,7 +80,7 @@ var adjustedLD, ndc, sunWinCoords, l_pos;
 function renderScene(){
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
-	gl.depthMask(gl.TRUE);
+	gl.depthMask(true);
 	mat4.identity(modelMatrix);
 	mat4.identity(viewMatrix);
 	mat4.identity(projectionMatrix);
@@ -136,7 +136,7 @@ function renderScene(){
 	
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
-	gl.disable(gl.BLEND);
+	gl.enable(gl.BLEND);
 	
 	skybox.draw();
 	planet.draw();
@@ -155,7 +155,7 @@ function renderScene(){
 	//TRANSLUCID
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
-	gl.depthMask(gl.FALSE);
+	gl.depthMask(false);
 	for(asteroidi in asteroids){
 		asteroids[asteroidi].draw();
 	}
@@ -163,7 +163,7 @@ function renderScene(){
 	for(explosioni in explosions){
 		explosions[explosioni].draw();
 	}
-	gl.depthMask(gl.TRUE);
+	gl.depthMask(true);
 	
 	//COISAS UTEIS PARA O LENS FLARE
 	
@@ -392,7 +392,7 @@ function setupGLDetails(){
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 	gl.depthFunc(gl.LEQUAL);
-	gl.depthMask(gl.TRUE);
+	gl.depthMask(true);
 	gl.depthRange(0.0, 1.0);
 	gl.clearDepth(1.0);
 	gl.enable(gl.CULL_FACE);
