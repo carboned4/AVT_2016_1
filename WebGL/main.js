@@ -72,6 +72,7 @@ var spaceshipShots = [];
 var asteroids = [];
 var explosions = [];
 var planet;
+var skybox;
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
@@ -137,6 +138,7 @@ function renderScene(){
 	
 	gl.disable(gl.BLEND);
 	
+	skybox.draw();
 	planet.draw();
 	for(alieni in aliens){
 		aliens[alieni].draw();
@@ -429,7 +431,9 @@ function setupThings(){
 	loadExplosion();
 	loadAsteroid();
 	loadPlanet();
+	loadSkybox();
 	
+	skybox = new Skybox(0,0,0);
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
 			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))
