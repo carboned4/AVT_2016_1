@@ -71,13 +71,15 @@ var alienShots = [];
 var spaceshipShots = [];
 var asteroids = [];
 var explosions = [];
+var planet;
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
 
 function renderScene(){
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
+	gl.depthMask(gl.TRUE);
 	mat4.identity(modelMatrix);
 	mat4.identity(viewMatrix);
 	mat4.identity(projectionMatrix);
@@ -133,12 +135,9 @@ function renderScene(){
 	
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
+	gl.disable(gl.BLEND);
 	
-	gl.activeTexture(gl.TEXTURE4);
-	gl.bindTexture(gl.TEXTURE_2D, earthTex);
-	gl.uniform1i(shaderProgram.tex_loc4, 4);
-	gl.uniform1i(shaderProgram.materialTexCount, 4);
-	
+	planet.draw();
 	for(alieni in aliens){
 		aliens[alieni].draw();
 	}
@@ -150,19 +149,22 @@ function renderScene(){
 	}
 	spaceship.draw(true);
 	
+	
+	//TRANSLUCID
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
 	gl.depthMask(gl.FALSE);
 	for(asteroidi in asteroids){
 		asteroids[asteroidi].draw();
 	}
+	planet.drawAtmosphere();
 	for(explosioni in explosions){
 		explosions[explosioni].draw();
 	}
 	gl.depthMask(gl.TRUE);
 	
 	//COISAS UTEIS PARA O LENS FLARE
-	/*
+	
 	calculateDerivedMatrices();
 	l_pos = [0,0,6,1];
 	adjustedLD = [0,0,0,0];
@@ -179,7 +181,7 @@ function renderScene(){
 	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	console.log("a\n"+adjustedLD);
+	//console.log("a\n"+adjustedLD);
 	l_pos = [0,0,5,1];
 	adjustedLD = [0,0,0,0];
 	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
@@ -195,8 +197,8 @@ function renderScene(){
 	sunWinCoords[1] = gl.rviewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	console.log("b\n"+adjustedLD);
-	*/
+	//console.log("b\n"+adjustedLD);
+	
 	
 	//TEXT
 	gl.blendFunc(gl.ONE,gl.ZERO);
@@ -426,6 +428,7 @@ function setupThings(){
 	loadAlienShot();
 	loadExplosion();
 	loadAsteroid();
+	loadPlanet();
 	
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
@@ -441,6 +444,7 @@ function setupThings(){
 		asteroids.push(new Asteroid(iax, iay, iaz));
 	}
 	
+	planet = new Planet(GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
 }
 
 
@@ -469,7 +473,7 @@ function webGLStart() {
 
 	
 	try {
-		gl = canvas.getContext("experimental-webgl");
+		gl = canvas.getContext("experimental-webgl", {alpha: true, depth: true});
 		gl.viewportWidth = canvas.width;
 		gl.viewportHeight = canvas.height;
 	} catch (e) {
@@ -480,7 +484,7 @@ function webGLStart() {
 	
 	initShaders();
 	//initBuffers();
-	setupThings();
 	setupGLDetails();
+	setupThings();
 	cycle();
 }

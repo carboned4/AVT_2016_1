@@ -13,6 +13,7 @@ function physics(delta){
 	for(shoti in alienShots){
 		alienShots[shoti].update(delta);
 	}
+	planet.update(delta);
 }
 
 function restartGame(){
