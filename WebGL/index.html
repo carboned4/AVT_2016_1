@@ -74,6 +74,7 @@ void main () {
 	if(texMode == 5){
 		dotex_coord = vtexCoord;
 		gl_Position = m_pvm * vec4(vVertex, 0.0, 1.0);
+		//gl_Position = vec4(-0.57, -0.62, -1,1);
 	}
 	else {
 		vec4 pos = m_viewModel * vec4(position,1.0);
@@ -301,11 +302,13 @@ void main() {
 	
 	if(texMode == 0) // modulate diffuse color with texel color
 	{
+		if(texel.a == 0.0) discard;
 		gl_FragColor.rgb = max(intensity * matdiffuse.rgb * texel.rgb + spec.rgb,matambient.rgb * texel.rgb);
 		gl_FragColor.a = matambient.a * texel.a;
 	}
 	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
 	{
+		if(texel.a == 0.0) discard;
 		gl_FragColor.rgb = max(intensity*texel.rgb + spec.rgb, 0.1*texel.rgb);
 		gl_FragColor.a = matambient.a * texel.a;
 	}
@@ -331,7 +334,7 @@ void main() {
 	}
 	else if (texMode == 6) // full texel color, with specular area or ambient (0.1*texel)
 	{
-		if (matambient.a * texel.a == 0.0) discard;
+		if (texel.a == 0.0) discard;
 		gl_FragColor.rgb = max(texel.rgb + spec.rgb, 0.1*texel.rgb);
 		gl_FragColor.a = matambient.a * texel.a;
 	}

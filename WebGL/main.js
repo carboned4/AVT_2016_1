@@ -196,14 +196,14 @@ function renderScene(){
 	mat4.identity(projectionMatrix);
 	mat4.ortho(0, gl.viewportWidth, 0, gl.viewportHeight, 0, 1, projectionMatrix);
 	gl.uniform1i(shaderProgram.materialTexCount, 5);
-	gl.activeTexture(gl.TEXTURE5);
+	gl.activeTexture(gl.TEXTURE2);
 	gl.bindTexture(gl.TEXTURE_2D, fontTex);
-	gl.uniform1i(shaderProgram.tex_loc5, 5);
+	gl.uniform1i(shaderProgram.tex_loc2, 2);
 	gl.uniform1i(shaderProgram.texMode_uniformId, 5);
-	/*
+	
 	calculateDerivedMatrices();
-	console.log(pvmMatrix);
-	l_pos = [200,100,0.5,1];
+	//console.log(pvmMatrix);
+	l_pos = [200,100,0,1];
 	adjustedLD = [0,0,0,0];
 	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
 	//console.log("ALD\n" + adjustedLD);
@@ -218,11 +218,11 @@ function renderScene(){
 	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
 	//using n=0.f, f=1000.f (also used in ortho and perspective)
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	console.log("a\n"+sunWinCoords);
-	*/
+	//console.log("a\n"+sunWinCoords);
+	
 	_fontSize = 16;
 	initTextureMappedFont();
-	DrawString(200,100,"abc");
+	DrawString(15,2,"LIVES: "+ lives);
 	
 	
 	//LIVES

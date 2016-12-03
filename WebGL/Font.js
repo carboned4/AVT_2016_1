@@ -63,9 +63,9 @@ function DrawString(x, y, string) {
 		var aux = 1.0 / 16.0;
 
 		var ch = string.charCodeAt(stri);
-		var xPos = parseFloat(ch % 16) * aux;
-		var yPos = parseFloat(ch / 16) * aux;
-		//console.log(xPos + " "+yPos);
+		var xPos = (ch % 16) * aux;
+		var yPos = Math.floor(ch / 16.0) * aux;
+		console.log(string[stri] + "("+ch+ "): " + xPos + " "+yPos);
 		
 		text_texCoords[0] = xPos;
 		text_texCoords[1] = 1.0 - yPos - aux;
