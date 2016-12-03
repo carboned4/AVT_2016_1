@@ -187,6 +187,8 @@ function renderScene(){
 	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
 	console.log("b\n"+adjustedLD);
 	*/
+	
+	//TEXT
 	gl.blendFunc(gl.ONE,gl.ZERO);
 	gl.disable(gl.BLEND);
 	gl.disable(gl.DEPTH_TEST);
@@ -201,29 +203,29 @@ function renderScene(){
 	gl.uniform1i(shaderProgram.tex_loc2, 2);
 	gl.uniform1i(shaderProgram.texMode_uniformId, 5);
 	
-	calculateDerivedMatrices();
-	//console.log(pvmMatrix);
-	l_pos = [200,100,0,1];
-	adjustedLD = [0,0,0,0];
-	mat4.multiplyVec4(pvmMatrix,l_pos,adjustedLD);
-	//console.log("ALD\n" + adjustedLD);
-	//console.log("pvm\n" + pvmMatrix);
-	//console.log("pos\n" + l_pos);
-	ndc = adjustedLD;
-	ndc[0] = adjustedLD[0] / adjustedLD[3];
-	ndc[1] = adjustedLD[1] / adjustedLD[3];
-	ndc[2] = adjustedLD[2] / adjustedLD[3];
-	sunWinCoords = [0,0,0];
-	sunWinCoords[0] = gl.viewportWidth / 2.0*ndc[0] + 0 + gl.viewportWidth/2.0;
-	sunWinCoords[1] = gl.viewportHeight / 2.0*ndc[1] + 0 + gl.viewportHeight/2.0;
-	//using n=0.f, f=1000.f (also used in ortho and perspective)
-	sunWinCoords[2] = 0.5*(1000.0-0.1)*ndc[2] + (1000.0 + 0.1)*0.5;
-	//console.log("a\n"+sunWinCoords);
-	
 	_fontSize = 16;
 	initTextureMappedFont();
 	DrawString(15,2,"LIVES: "+ lives);
-	
+	DrawString(gl.viewportWidth-175,2,"SCORE: "+ score);
+	_fontSize = 50;
+	initTextureMappedFont();
+	if (pauseWindowShow) {
+		DrawString(gl.viewportWidth/2-100, gl.viewportHeight/2, "PAUSE");	
+	}
+	if (wonGame) {
+		DrawString(gl.viewportWidth / 2 - 150, gl.viewportHeight / 2, "YOU WON!");
+	}
+	if (lostGame) {
+		DrawString(gl.viewportWidth / 2 - 150, gl.viewportHeight / 2, "GAME OVER");
+	}
+	_fontSize = 30;
+	initTextureMappedFont();
+	if (pauseWindowShow) {
+		DrawString(gl.viewportWidth / 2 - 200, gl.viewportHeight / 2-30, "Press S to resume");
+	}
+	if (wonGame | lostGame) {
+		DrawString(gl.viewportWidth / 2 - 225, gl.viewportHeight / 2-30, "Press R to restart");
+	}
 	
 	//LIVES
 	mat4.identity(modelMatrix);
