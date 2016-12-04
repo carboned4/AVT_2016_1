@@ -12,7 +12,7 @@ var shakeShift = 0;
 function updateCamera(elapsed, delta){
 	shakeLeft -= shakeFade*(delta/1000);
 	if(shakeLeft < 0) shakeLeft = 0;
-	shakeShift = 0.125*shakeLeft * Math.sin(20*elapsed/1000);
+	shakeShift = 0.0625*shakeLeft * Math.sin(40*elapsed/1000);
 	
 }
 

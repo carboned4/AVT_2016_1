@@ -78,6 +78,42 @@ var lensFlare;
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
 
+function drawObjects(step){
+	//OBJECTS
+	if(step!=2) skybox.draw();
+	planet.draw();
+	for(alieni in aliens){
+		aliens[alieni].draw();
+	}
+	for(shoti in spaceshipShots){
+		spaceshipShots[shoti].draw();
+	}
+	for(shoti in alienShots){
+		alienShots[shoti].draw();
+	}
+	spaceship.draw(true);
+	
+	
+	//STENCIL PORTAL
+	
+	
+	//COISAS TRANSPARENTES
+	gl.enable(gl.BLEND);
+	//gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	gl.depthMask(false);
+	for(asteroidi in asteroids){
+		asteroids[asteroidi].draw();
+	}
+	planet.drawAtmosphere();
+	for(explosioni in explosions){
+		explosions[explosioni].draw();
+	}
+	gl.depthMask(true);
+	
+	
+}
+
 function renderScene(){
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
@@ -137,39 +173,16 @@ function renderScene(){
 	
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
-	gl.enable(gl.BLEND);
-	
-	skybox.draw();
-	planet.draw();
-	for(alieni in aliens){
-		aliens[alieni].draw();
-	}
-	for(shoti in spaceshipShots){
-		spaceshipShots[shoti].draw();
-	}
-	for(shoti in alienShots){
-		alienShots[shoti].draw();
-	}
-	spaceship.draw(true);
+	//gl.enable(gl.BLEND);
 	
 	
-	//TRANSLUCID
-	gl.enable(gl.BLEND);
-	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SOURCE_ALPHA);
-	gl.depthMask(false);
-	for(asteroidi in asteroids){
-		asteroids[asteroidi].draw();
-	}
-	planet.drawAtmosphere();
-	for(explosioni in explosions){
-		explosions[explosioni].draw();
-	}
-	gl.depthMask(true);
+	drawObjects(3);
 	
 	
 	//COISAS UTEIS PARA O LENS FLARE
-	gl.blendFunc(gl.ONE,gl.ZERO);
 	gl.enable(gl.BLEND);
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	//gl.blendFunc(gl.ONE,gl.ZERO);
 	calculateDerivedMatrices();
 	l_pos = [GRAVITYPOINTX,GRAVITYPOINTY,GRAVITYPOINTZ,1];
 	adjustedLD = [0,0,0,0];
@@ -203,7 +216,7 @@ function renderScene(){
 	mat4.identity(viewMatrix);
 	mat4.identity(projectionMatrix);
 	mat4.ortho(0, gl.viewportWidth, 0, gl.viewportHeight, 0, 1, projectionMatrix);
-	gl.uniform1i(shaderProgram.materialTexCount, 5);
+	gl.uniform1i(shaderProgram.materialTexCount, 2);
 	gl.activeTexture(gl.TEXTURE2);
 	gl.bindTexture(gl.TEXTURE_2D, fontTex);
 	gl.uniform1i(shaderProgram.tex_loc2, 2);
