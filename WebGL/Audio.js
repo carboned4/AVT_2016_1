@@ -19,10 +19,11 @@ function loadSounds(){
 	backgroundmusic = new Audio('sounds/hl2.mp3');
 	backgroundmusic.volume = backgroundvolume;
 	backgroundmusic.loop = true;
+	backgroundmusic.play();
 	missileSound = new Audio('sounds/missile.mp3');
 	striderShotSound = new Audio('sounds/stridershot.mp3');
 	wastedSound = new Audio('sounds/gta5wasted.mp3');
-	backgroundmusic.play();
+	
 }
 
 function playStriderDie(){

@@ -1,5 +1,6 @@
 function Skybox(_x,_y,_z) {
 	this.position = v3(_x,_y,_z);
+	this.elapsedTime = 0;
 }
 
 
@@ -8,8 +9,13 @@ var skyboxVertexNormalBuffer;
 var skyboxVertexTextureCoordBuffer;
 var skyboxVertexIndexBuffer;
 
+Skybox.prototype.update = function(delta){
+	this.elapsedTime += delta/1000;
+}
+
 Skybox.prototype.draw = function(){
 	pushModelMatrix();
+	mat4.rotate(modelMatrix, rad(this.elapsedTime*0.3), [0,1,0]);
 	mat4.translate(modelMatrix,[this.position.X-20,this.position.Y-20,this.position.Z+20]);
 	mat4.scale(modelMatrix, [1,20,1]);
 	

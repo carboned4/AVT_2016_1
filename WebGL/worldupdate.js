@@ -14,6 +14,7 @@ function physics(delta){
 		alienShots[shoti].update(delta);
 	}
 	planet.update(delta);
+	skybox.update(delta);
 }
 
 function restartGame(){
