@@ -168,40 +168,7 @@ function renderScene(){
 	lightDirSpot[3] = 0.0;
 	
 	var res = [];
-	mat4.multiplyVec4(viewMatrix, lightPosPoint0, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint1, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint2, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint3, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint4, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint5, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
-	mat4.multiplyVec4(viewMatrix, lightPosGlobal, res);   //lightDirection WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
-	mat4.multiplyVec4(viewMatrix, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
-	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
 	
-	
-	//gl.enable(gl.BLEND);
-	
-	/*
-	gl.clearStencil(0);
-        gl.clear(gl.STENCIL_BUFFER_BIT);
-        gl.enable(gl.STENCIL_TEST);
-        gl.stencilFunc(gl.NEVER, 1, 0xFF);
-        gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
-        stencil.draw();
-        gl.stencilFunc(gl.NOTEQUAL, 1, 0xFF);  
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-        stencil.drawSphere();
-        gl.disable(gl.STENCIL_TEST);
-	*/
 	
 	
 	gl.clearStencil(0);
@@ -218,6 +185,25 @@ function renderScene(){
 		mat4.translate(modelMatrix, [0, -10, 0]);
 		mat4.scale(modelMatrix,[1,-1,1]);
 		//falta aqui usar as luzes ao contrario
+		
+		mat4.multiplyVec4(viewMatrix, lightPosPoint0mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
+		mat4.multiplyVec4(viewMatrix, lightPosPoint1mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
+		mat4.multiplyVec4(viewMatrix, lightPosPoint2mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
+		mat4.multiplyVec4(viewMatrix, lightPosPoint3mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
+		mat4.multiplyVec4(viewMatrix, lightPosPoint4mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
+		mat4.multiplyVec4(viewMatrix, lightPosPoint5mir, res);   //lightPos WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
+		mat4.multiplyVec4(viewMatrix, lightPosGlobalmir, res);   //lightDirection WCS -> Camera space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
+		mat4.multiplyVec4(viewMatrix, lightPosSpotmir, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
+		mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+		gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
 		
 		gl.cullFace(gl.FRONT);
 		drawObjects(1);
@@ -253,6 +239,25 @@ function renderScene(){
 	popModelMatrix();
 	popViewMatrix();
 	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
+	
+	mat4.multiplyVec4(viewMatrix, lightPosPoint0, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint1, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint2, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint3, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint4, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint5, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
+	mat4.multiplyVec4(viewMatrix, lightPosGlobal, res);   //lightDirection WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
+	mat4.multiplyVec4(viewMatrix, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
+	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
 	
 	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 	gl.disable(gl.STENCIL_TEST);
