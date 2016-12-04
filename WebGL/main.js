@@ -264,6 +264,7 @@ function renderScene(){
 	gl.enable(gl.DEPTH_TEST);
 	
 	drawObjects(3);
+	guy.draw();
 	
 	//COISAS UTEIS PARA O LENS FLARE
 	gl.enable(gl.BLEND);
@@ -510,6 +511,8 @@ function setupThings(){
 	loadCloudTexture();
 	loadMetalTexture();
 	loadEarthTexture();
+	loadHeadTexture();
+	loadHead2Texture();
 	loadExplosionTexture();
 	loadFlare2Texture();
 	loadFlare4Texture();
@@ -522,6 +525,7 @@ function setupThings(){
 	loadAlien();
 	loadSpaceshipShot();
 	loadAlienShot();
+	loadHead();
 	loadExplosion();
 	loadAsteroid();
 	loadPlanet();
@@ -534,6 +538,7 @@ function setupThings(){
 	
 	lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);
+	guy = new Head(0,0,0);
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
 			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))

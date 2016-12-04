@@ -1,6 +1,6 @@
 
 
-var texturesLeft = 16;
+var texturesLeft = 18;
 var gunshipTex;
 var gunshipnormalTex;
 var alienTex;
@@ -10,6 +10,8 @@ var checkercolorTex;
 var cloudTex;
 var metalTex;
 var earthTex;
+var headTex;
+var head2Tex;
 var explosionTex;
 var flare2Tex;
 var flare4Tex;
@@ -102,6 +104,24 @@ function loadCloudTexture(){
 		handleLoadedTexture(cloudTex);
 	}
 	cloudTex.image.src = "images/cloud_nobg.png";
+}
+
+function loadHeadTexture(){
+	headTex = gl.createTexture();
+	headTex.image = new Image();
+	headTex.image.onload = function () {
+		handleLoadedTexture(headTex);
+	}
+	headTex.image.src = "images/head.png";
+}
+
+function loadHead2Texture(){
+	head2Tex = gl.createTexture();
+	head2Tex.image = new Image();
+	head2Tex.image.onload = function () {
+		handleLoadedTexture(head2Tex);
+	}
+	head2Tex.image.src = "images/head2.png";
 }
 
 function loadMetalTexture(){
