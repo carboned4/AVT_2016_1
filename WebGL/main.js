@@ -75,6 +75,7 @@ var planet;
 var skybox;
 var lensFlare;
 var mirror;
+var portal;
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
@@ -96,7 +97,20 @@ function drawObjects(step){
 	
 	
 	//STENCIL PORTAL
-	
+	if(step == 3){
+		gl.enable(gl.STENCIL_TEST);
+		gl.stencilFunc(gl.ALWAYS, 1, 0x1);
+		gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+		gl.stencilMask(0xff);
+		gl.depthMask(false);
+		gl.clear(gl.STENCIL_BUFFER_BIT);
+		portal.fillStencil();
+		gl.stencilFunc(gl.EQUAL, 1, 0x1);
+		gl.stencilMask(0x00);
+		gl.depthMask(true);
+		portal.drawEye();
+		gl.disable(gl.STENCIL_TEST);
+	}
 	
 	//COISAS TRANSPARENTES
 	gl.enable(gl.BLEND);
@@ -107,6 +121,7 @@ function drawObjects(step){
 		asteroids[asteroidi].draw();
 	}
 	planet.drawAtmosphere();
+	portal.drawLiquid();
 	for(explosioni in explosions){
 		explosions[explosioni].draw();
 	}
@@ -506,7 +521,7 @@ function setupThings(){
 	loadSkybox();
 	loadLensFlare();
 	loadMirror();
-	
+	loadPortal();
 	
 	lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);
@@ -527,6 +542,8 @@ function setupThings(){
 	planet = new Planet(GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
 	
 	mirror = new Mirror(0,-5,0);
+	
+	portal = new Portal(8.0, 2.0, FARTHESTALIEN);
 }
 
 

@@ -15,7 +15,7 @@ Vec3.prototype.set = function(x, y, z){
 }
 
 Vec3.prototype.len = function(){
-	return Math.sqrt(this.X * this.X, this.Y * this.Y, this.Z * this.Z);
+	return Math.sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
 }
 
 function v3mul(m, vec){

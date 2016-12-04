@@ -27,7 +27,7 @@ function Explosion(_x, _y, _z, _ivx, _ivy, _ivz, _gx, _gy, _gz) {
 			var vy = INITIALSPEEDMODULUS * Math.cos(phi);
 			var ispeed = v3add(this.speed,v3mul(sparsityMult,v3(vx, vy, vz)));
 			var iaccel = v3sub(this.gravityPoint,this.position);
-			iaccel = v3mul((ACCELERATIONMODULUS / Math.sqrt(iaccel.X*iaccel.X + iaccel.Y*iaccel.Y + iaccel.Z*iaccel.Z)),iaccel);
+			iaccel = v3mul(ACCELERATIONMODULUS / iaccel.len(),iaccel);
 			this.positions.push(ipos);
 			this.speeds.push(ispeed);
 			this.accelerations.push(iaccel);
@@ -39,8 +39,9 @@ Explosion.prototype.update = function(delta){
 	for(var iflare = 0; iflare < this.positions.length; iflare++){
 		this.positions[iflare] = v3add(this.positions[iflare],v3mul(delta / 1000.0,this.speeds[iflare]));
 		var iaccel = v3sub(this.gravityPoint,this.positions[iflare]);
-		iaccel = v3mul((ACCELERATIONMODULUS / Math.sqrt(iaccel.X*iaccel.X + iaccel.Y*iaccel.Y + iaccel.Z*iaccel.Z)),iaccel);
+		iaccel = v3mul(ACCELERATIONMODULUS / iaccel.len(),iaccel);
 		this.speeds[iflare] = v3add(this.speeds[iflare],v3mul(delta / 1000.0,this.accelerations[iflare]));
+		
 	}
 	this.lifeLeft -= this.lifeFade*(delta / 1000.0);
 	if (this.lifeLeft < 0.0) this.lifeLeft = 0.0;
