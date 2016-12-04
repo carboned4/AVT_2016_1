@@ -363,6 +363,8 @@ function update(){
 		if (lives <= 0) {
 			lostGame = true;
 			game_running = false;
+			backgroundmusic.volume = backgroundvolume/3;
+			playWasted();
 		}
 		if (aliens.length <= 0) {
 			wonGame = true;
@@ -527,6 +529,8 @@ function setupThings(){
 	loadLensFlare();
 	loadMirror();
 	loadPortal();
+	
+	loadSounds();
 	
 	lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);

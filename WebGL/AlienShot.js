@@ -1,6 +1,6 @@
 function AlienShot(_x,_y,_z) {
 	this.position = v3(_x,_y,_z);
-    this.speedModulus = 0.5;
+    this.speedModulus = 1.5;
 	this.speed = v3(0.0, 0.0, -this.speedModulus);
 	this.elapsedLife = 0.0;
 	this.texcount = 5;

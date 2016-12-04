@@ -40,7 +40,10 @@ function passKeys() {
 		currentCamera = 2;
 	}
 	if (keyState[66]) {
-		spaceshipShots.push(new SpaceshipShot(spaceship.position.X, spaceship.position.Y, spaceship.position.Z + 1.5));
+		if(game_running){
+			spaceshipShots.push(new SpaceshipShot(spaceship.position.X, spaceship.position.Y, spaceship.position.Z + 1.5));
+			playMissile();
+		}
 	}
 	if (keyState[83]) {							//Toggle pausewindow on or off
 		if (!wonGame && !lostGame) {

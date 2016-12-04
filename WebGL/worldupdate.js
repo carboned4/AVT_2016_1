@@ -31,6 +31,7 @@ function restartGame(){
 			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, 10.0 - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 		}
 	}
+	backgroundmusic.volume = backgroundvolume;
 }
 
 function cleanupProjectiles(){
@@ -81,8 +82,10 @@ function collisions(){
 		}
 	}
 
-	if (shipcollided) lives--;
-
+	if (shipcollided){
+		lives--;
+		if(lives > 0) playStriderPain();
+	}
 	
 	for (var alieni = 0; alieni < aliens.length;) {
 		var erasedAlien = false;
@@ -103,6 +106,7 @@ function collisions(){
 				aliens.splice(alieni,1);
 				spaceshipShots.splice(j,1);
 				erasedAlien = true;
+				playStriderDie();
 				score += ALIENSCORE;
 				break;
 			}
@@ -120,6 +124,7 @@ function genAlienShots(){
 		var output = parseInt(Math.random()*aliens.length);
 		alienShots.push(new AlienShot(aliens[output].position.X, aliens[output].position.Y, aliens[output].position.Z - 0.5));
 		lastShot = timeElapsed;
+		playStriderShot();
 		//printf("%d %d\n", objId, objIdAlienShot);
 	}
 }
