@@ -74,6 +74,7 @@ var explosions = [];
 var planet;
 var skybox;
 var lensFlare;
+var mirror;
 
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
@@ -171,13 +172,78 @@ function renderScene(){
 	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
 	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
 	
-	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
 	
 	//gl.enable(gl.BLEND);
 	
+	/*
+	gl.clearStencil(0);
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        gl.enable(gl.STENCIL_TEST);
+        gl.stencilFunc(gl.NEVER, 1, 0xFF);
+        gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
+        stencil.draw();
+        gl.stencilFunc(gl.NOTEQUAL, 1, 0xFF);  
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        stencil.drawSphere();
+        gl.disable(gl.STENCIL_TEST);
+	*/
+	
+	
+	gl.clearStencil(0);
+	gl.clear(gl.STENCIL_BUFFER_BIT);
+	gl.enable(gl.STENCIL_TEST);
+	gl.stencilFunc(gl.NEVER, 0x1, 0x1);
+	gl.stencilOp(gl.REPLACE, gl.KEEP, gl.KEEP);
+	gl.stencilMask(0xff);
+	mirror.fillStencil();
+	
+	gl.stencilFunc(gl.EQUAL, 1, 0x1);
+	gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+	pushModelMatrix();
+		mat4.translate(modelMatrix, [0, -10, 0]);
+		mat4.scale(modelMatrix,[1,-1,1]);
+		//falta aqui usar as luzes ao contrario
+		
+		gl.cullFace(gl.FRONT);
+		drawObjects(1);
+		gl.cullFace(gl.BACK);
+	popModelMatrix();
+	
+	gl.disable(gl.STENCIL_TEST);
+	gl.enable(gl.BLEND);
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	//gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+	gl.depthMask(false);
+	mirror.draw();
+	gl.depthMask(true);
+	
+	var groundPlane = [0,1,0,5];
+	var shadowMat = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	gl.uniform1i(shaderProgram.uniform_shadowOn,1);
+	//SHADOW MATRIX
+	shadow_matrix(shadowMat, groundPlane, lightPosPoint5);
+	//console.log(shadowMat);
+	gl.disable(gl.DEPTH_TEST);
+	//gl.blendFuncSeparate(gl.DST_COLOR, gl.ZERO,gl.DST_COLOR, gl.ZERO);
+	gl.blendFuncSeparate(gl.DST_COLOR, gl.ZERO,gl.DST_ALPHA, gl.ZERO);
+	gl.enable(gl.STENCIL_TEST);
+	gl.stencilFunc(gl.EQUAL, 0x1, 0x1);
+	gl.stencilOp(gl.KEEP, gl.KEEP, gl.ZERO);
+	pushModelMatrix();
+	pushViewMatrix();
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		//MULTIPLY view by shadowmatrix
+		mat4.multiply(viewMatrix,shadowMat,viewMatrix);
+		drawObjects(2);
+	popModelMatrix();
+	popViewMatrix();
+	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
+	
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	gl.disable(gl.STENCIL_TEST);
+	gl.enable(gl.DEPTH_TEST);
 	
 	drawObjects(3);
-	
 	
 	//COISAS UTEIS PARA O LENS FLARE
 	gl.enable(gl.BLEND);
@@ -439,6 +505,7 @@ function setupThings(){
 	loadPlanet();
 	loadSkybox();
 	loadLensFlare();
+	loadMirror();
 	
 	
 	lensFlare = new LensFlare();
@@ -458,6 +525,8 @@ function setupThings(){
 	}
 	
 	planet = new Planet(GRAVITYPOINTX, GRAVITYPOINTY, GRAVITYPOINTZ);
+	
+	mirror = new Mirror(0,-5,0);
 }
 
 
@@ -486,7 +555,7 @@ function webGLStart() {
 
 	
 	try {
-		gl = canvas.getContext("experimental-webgl", {alpha: true, depth: true});
+		gl = canvas.getContext("experimental-webgl", {alpha: true, depth: true, stencil:true});
 		gl.viewportWidth = canvas.width;
 		gl.viewportHeight = canvas.height;
 	} catch (e) {

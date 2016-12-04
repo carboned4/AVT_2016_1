@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="Planet.js"></script>
 		<script type="text/javascript" src="Skybox.js"></script>
 		<script type="text/javascript" src="LensFlare.js"></script>
+		<script type="text/javascript" src="Mirror.js"></script>
 		
 		<script type="text/javascript" src="main.js"></script>
 		
@@ -193,7 +194,7 @@ varying vec3 dohalfVec;
 
 void main() {
 	if(shadowOn == 1){
-		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.1);
+		gl_FragColor = vec4(0.1, 0.1, 0.1, 0.9);
 		//DEPTH TO COLOR - foi util
 		//gl_FragColor = vec4(length(doeye.z)/100.0, length(doeye.z)/100.0, length(doeye.z)/100.0, 1.0);
 		return;

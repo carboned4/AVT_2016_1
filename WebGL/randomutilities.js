@@ -157,3 +157,26 @@ function createQuad(sidex,sidey){
 	
 	*/
 }
+
+function shadow_matrix(m, plane, light){
+	var dot = plane[0] * light[0] + plane[1] * light[1] + plane[2] * light[2] + plane[3] * light[3];
+
+	m[0*4+0] = dot - light[0] * plane[0];
+	m[1*4+0] = -light[0] * plane[1];
+	m[2*4+0] = -light[0] * plane[2];
+	m[3*4+0] = -light[0] * plane[3];
+	m[0*4+1] = -light[1] * plane[0];
+
+	m[1*4+1] = dot - light[1] * plane[1];
+	m[2*4+1] = -light[1] * plane[2];
+	m[3*4+1] = -light[1] * plane[3];
+	m[0*4+2] = -light[2] * plane[0];
+	m[1*4+2] = -light[2] * plane[1];
+
+	m[2*4+2] = dot - light[2] * plane[2];
+	m[3*4+2] = -light[2] * plane[3];
+	m[0*4+3] = -light[3] * plane[0];
+	m[1*4+3] = -light[3] * plane[1];
+	m[2*4+3] = -light[3] * plane[2];
+	m[3*4+3] = dot - light[3] * plane[3];
+}
