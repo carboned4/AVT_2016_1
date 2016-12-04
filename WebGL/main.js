@@ -225,13 +225,13 @@ function renderScene(){
 	//console.log(shadowMat);
 	gl.disable(gl.DEPTH_TEST);
 	//gl.blendFuncSeparate(gl.DST_COLOR, gl.ZERO,gl.DST_COLOR, gl.ZERO);
-	gl.blendFuncSeparate(gl.DST_COLOR, gl.ZERO,gl.DST_ALPHA, gl.ZERO);
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 	gl.enable(gl.STENCIL_TEST);
 	gl.stencilFunc(gl.EQUAL, 0x1, 0x1);
 	gl.stencilOp(gl.KEEP, gl.KEEP, gl.ZERO);
 	pushModelMatrix();
 	pushViewMatrix();
-		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		//gl.blendFunc(gl.SRC_COLOR, gl.ZERO);
 		//MULTIPLY view by shadowmatrix
 		mat4.multiply(viewMatrix,shadowMat,viewMatrix);
 		drawObjects(2);
