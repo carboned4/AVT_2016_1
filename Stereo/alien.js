@@ -130,7 +130,7 @@ function handleLoadedAlien(alienData) {
 
 function loadAlien() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJalien.json");
+	request.open("GET", "OBJalienlow.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedAlien(JSON.parse(request.responseText));

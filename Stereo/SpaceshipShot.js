@@ -24,9 +24,9 @@ var spaceshipShotVertexIndexBuffer;
 
 SpaceshipShot.prototype.draw = function(){
 	pushModelMatrix();
-	mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
-	mat4.rotate(modelMatrix,rad(-90),[0,1,0]);
-	mat4.scale(modelMatrix, [0.003,0.003,0.002]);
+	mat4.translate(modelMatrix,[this.position.X+0.1,this.position.Y,this.position.Z]);
+	//mat4.rotate(modelMatrix,rad(-90),[0,1,0]);
+	mat4.scale(modelMatrix, [0.1,0.1,0.1]);
 	
 	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.5, 0.5, 0.5, 1.0);
@@ -86,7 +86,7 @@ function handleLoadedSpaceshipShot(spaceshipshotData) {
 
 function loadSpaceshipShot() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJbullet.json");
+	request.open("GET", "OBJbulletlow.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedSpaceshipShot(JSON.parse(request.responseText));

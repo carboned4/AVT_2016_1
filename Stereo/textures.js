@@ -1,6 +1,6 @@
 
 
-var texturesLeft = 18;
+var texturesLeft = 16;
 var gunshipTex;
 var gunshipnormalTex;
 var alienTex;
@@ -49,7 +49,7 @@ function loadSpaceshipTexture(){
 		handleLoadedTexture(gunshipTex);
 	}
 	//gunshipTex.image.src = "images/GunshipSheet.png";
-	gunshipTex.image.src = "images/stone.png";
+	gunshipTex.image.src = "images/galileo.png";
 }
 
 function loadSpaceshipBumpTexture(){
@@ -59,7 +59,7 @@ function loadSpaceshipBumpTexture(){
 		handleLoadedTexture(gunshipnormalTex);
 	}
 	//gunshipnormalTex.image.src = "images/GunshipSheet_bump.png";
-	gunshipnormalTex.image.src = "images/stonebump.png";
+	gunshipnormalTex.image.src = "images/waternormal.png";
 }
 
 function loadAlienTexture(){
@@ -68,8 +68,8 @@ function loadAlienTexture(){
 	alienTex.image.onload = function () {
 		handleLoadedTexture(alienTex);
 	}
-	//alienTex.image.src = "images/alien_body_D.png";
-	alienTex.image.src = "images/reptil.png";
+	alienTex.image.src = "images/alienlow.png";
+	//alienTex.image.src = "images/reptil.png";
 }
 
 function loadFontTexture(){

@@ -18,15 +18,15 @@ var GRAVITYPOINTX = -13;
 var GRAVITYPOINTY = 2;
 var GRAVITYPOINTZ = FARTHESTALIEN + 6;
 
-var ASTEROIDNUMBER = 250;
-var ASTEROID_XMIN = -20.0;
-var ASTEROID_XMAX = 20.0;
-var ASTEROID_YMIN = -5.0;
-var ASTEROID_YMAX = 20.0;
-var ASTEROID_ZMIN = -10.0;
-var ASTEROID_ZMAX = 30.0;
+var ASTEROIDNUMBER = 30;
+var ASTEROID_XMIN = -10.0;
+var ASTEROID_XMAX = 10.0;
+var ASTEROID_YMIN = -1.0;
+var ASTEROID_YMAX = 5.0;
+var ASTEROID_ZMIN = -5.0;
+var ASTEROID_ZMAX = 12.0;
 
-var TIMEBETWEENSHOTS = 6000;
+var TIMEBETWEENSHOTS = 4000;
 var lastShot = 0;
 
 var ALIENSCORE = 100;
@@ -264,7 +264,7 @@ function renderScene(){
 	gl.enable(gl.DEPTH_TEST);
 	
 	drawObjects(3);
-	guy.draw();
+	//guy.draw();
 	
 	//COISAS UTEIS PARA O LENS FLARE
 	gl.enable(gl.BLEND);
@@ -366,6 +366,7 @@ function update(){
 			game_running = false;
 			backgroundmusic.volume = backgroundvolume/3;
 			playWasted();
+			restartGame();
 		}
 		if (aliens.length <= 0) {
 			wonGame = true;
@@ -511,8 +512,8 @@ function setupThings(){
 	loadCloudTexture();
 	loadMetalTexture();
 	loadEarthTexture();
-	loadHeadTexture();
-	loadHead2Texture();
+	//loadHeadTexture();
+	//loadHead2Texture();
 	loadExplosionTexture();
 	loadFlare2Texture();
 	loadFlare4Texture();
@@ -525,7 +526,7 @@ function setupThings(){
 	loadAlien();
 	loadSpaceshipShot();
 	loadAlienShot();
-	loadHead();
+	//loadHead();
 	loadExplosion();
 	loadAsteroid();
 	loadPlanet();
@@ -538,7 +539,7 @@ function setupThings(){
 	
 	lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);
-	guy = new Head(0,0,0);
+	//guy = new Head(0,0,0);
 	for(var i = 0; i< ALIENROWS; i++){
 		for(var j=0; j<ALIENCOLUMNS; j++){
 			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, FARTHESTALIEN - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT))

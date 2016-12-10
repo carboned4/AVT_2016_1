@@ -90,12 +90,12 @@ Spaceship.prototype.draw = function(notHud){
 	gl.bindTexture(gl.TEXTURE_2D, gunshipnormalTex);
 	gl.uniform1i(shaderProgram.tex_loc3, 3);
 	if(notHud){
-		mat4.translate(modelMatrix,[this.position.X,this.position.Y,this.position.Z]);
+		mat4.translate(modelMatrix,[this.position.X-0.1,this.position.Y-0.5,this.position.Z]);
 		mat4.rotate(modelMatrix,rad(this.speedAngleEffect),[0,1,0]);
 		mat4.rotate(modelMatrix,rad(-this.speedAngleEffect),[0,0,1]);
 		mat4.translate(modelMatrix,[0.1,0.3,-1.0]);
 	}
-		mat4.scale(modelMatrix, [0.25,0.25,0.25]);
+		mat4.scale(modelMatrix, [0.125,0.125,0.25]);
 	//console.log(modelMatrix);
 	this.sendGeometry();
 	popModelMatrix();
@@ -164,7 +164,7 @@ function handleLoadedSpaceship(spaceshipData) {
 
 function loadSpaceship() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "OBJsphere.json");
+	request.open("GET", "OBJgalileo.json");
 	request.onreadystatechange = function () {
 		if (request.readyState == 4) {
 			handleLoadedSpaceship(JSON.parse(request.responseText));

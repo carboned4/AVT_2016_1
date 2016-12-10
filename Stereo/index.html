@@ -242,6 +242,7 @@ void main() {
 		l = normalize(dolightDir[i]);
 		n = normalize(donormal);
 		if(i<=5){ //POINT	
+			if (i!=2) continue;
 			h = normalize(l + e);
 			distance = length(dolightDir[i]);
 			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));

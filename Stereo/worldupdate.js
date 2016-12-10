@@ -84,7 +84,7 @@ function collisions(){
 	}
 
 	if (shipcollided){
-		lives--;
+		//lives--;
 		if(lives > 0) playStriderPain();
 	}
 	
