@@ -19,6 +19,52 @@ function startShake(){
 	//shakeLeft = 1.0;
 }
 
+
+function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
+	this.cameraPos = v3(0,0,0);
+	this.center = v3(_x,_y,_z);
+	this.ratio = _ratio;
+	this.fov = _fov;
+	this.nearPlane = _near;
+	this.farPlane = _far;
+
+	this.setRatio = function(_r){
+		this.ratio = _r;
+	}
+	
+	this.updatePosition = function(_x, _y, _z) {
+		this.center.set(_x, _y+1.0, _z);
+	}
+	
+	this.setCamXYZ = function(_x, _y, _z) {
+		this.cameraPos.set(_x, _y, _z);
+	}
+	
+	this.doProjectionLeft = function(){
+		mat4.perspective(this.fov, this.ratio, this.nearPlane,this.farPlane, projectionMatrix);
+	}
+	this.doViewLeft = function(){
+		mat4.lookAt([this.center.X+this.cameraPos.X+1,this.center.Y+this.cameraPos.Y,this.center.Z+this.cameraPos.Z],[this.center.X+1,this.center.Y,this.center.Z],[0+shakeShift, 1, 0],viewMatrix);
+	}
+	this.doProjectionRight = function(){
+		mat4.perspective(this.fov, this.ratio, this.nearPlane,this.farPlane, projectionMatrix);
+	}
+	this.doViewRight = function(){
+		mat4.lookAt([this.center.X+this.cameraPos.X,this.center.Y+this.cameraPos.Y,this.center.Z+this.cameraPos.Z],[this.center.X,this.center.Y,this.center.Z],[0+shakeShift, 1, 0],viewMatrix);
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 function TopOrthoCamera(_left, _right, _down, _up, _near, _far,
 		_x, _y, _z){
 	this.position = v3(_x,_y,_z);
@@ -61,30 +107,3 @@ function FixedPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z, _tx, _ty, _tz){
 	}
 }
 
-function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
-	this.cameraPos = v3(0,0,0);
-	this.center = v3(_x,_y,_z);
-	this.ratio = _ratio;
-	this.fov = _fov;
-	this.nearPlane = _near;
-	this.farPlane = _far;
-
-	this.setRatio = function(_r){
-		this.ratio = _r;
-	}
-	
-	this.updatePosition = function(_x, _y, _z) {
-		this.center.set(_x, _y+1.0, _z);
-	}
-	
-	this.setCamXYZ = function(_x, _y, _z) {
-		this.cameraPos.set(_x, _y, _z);
-	}
-	
-	this.doProjection = function(){
-		mat4.perspective(this.fov, this.ratio, this.nearPlane,this.farPlane, projectionMatrix);
-	}
-	this.doView = function(){
-		mat4.lookAt([this.center.X+this.cameraPos.X,this.center.Y+this.cameraPos.Y,this.center.Z+this.cameraPos.Z],[this.center.X,this.center.Y,this.center.Z],[0+shakeShift, 1, 0],viewMatrix);
-	}
-}

@@ -3,6 +3,7 @@ var shaderProgram;
 var vertexShader;
 var fragmentShader;
 
+
 var I_POINT=0;
 var I_DIR = 1;
 var I_SPOT= 2;
@@ -14,9 +15,11 @@ var ALIENWIDTH =2.0;
 var ALIENROWSHIFT= 0.25;
 var FARTHESTALIEN =10.0;
 
+
 var GRAVITYPOINTX = -13;
 var GRAVITYPOINTY = 2;
 var GRAVITYPOINTZ = FARTHESTALIEN + 6;
+
 
 var ASTEROIDNUMBER = 30;
 var ASTEROID_XMIN = -10.0;
@@ -26,11 +29,18 @@ var ASTEROID_YMAX = 5.0;
 var ASTEROID_ZMIN = -5.0;
 var ASTEROID_ZMAX = 12.0;
 
+
 var TIMEBETWEENSHOTS = 4000;
 var lastShot = 0;
 
+
 var ALIENSCORE = 100;
 var DEATHPENALTY = -50;
+
+
+var VR_LEFT = 666420;
+var VR_RIGHT = 696969;
+
 
 var lightsOnStars = 1;
 var lightsOnGlobal = 1;
@@ -80,9 +90,34 @@ var portal;
 var fog=0;
 var adjustedLD, ndc, sunWinCoords, l_pos;
 
-function drawObjects(step){
-	//OBJECTS
-	if(step!=2) skybox.draw();
+function drawObjects(){
+	
+	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
+	var res = [];
+	mat4.multiplyVec4(viewMatrix, lightPosPoint0, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint1, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint2, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint3, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint4, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
+	mat4.multiplyVec4(viewMatrix, lightPosPoint5, res);   //lightPos WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
+	mat4.multiplyVec4(viewMatrix, lightPosGlobal, res);   //lightDirection WCS -> Camera space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
+	mat4.multiplyVec4(viewMatrix, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
+	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
+	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
+	
+	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	gl.disable(gl.STENCIL_TEST);
+	gl.enable(gl.DEPTH_TEST);
+	
+	skybox.draw();
 	planet.draw();
 	for(alieni in aliens){
 		aliens[alieni].draw();
@@ -97,7 +132,7 @@ function drawObjects(step){
 	
 	
 	//STENCIL PORTAL
-	if(step == 3){
+
 		gl.enable(gl.STENCIL_TEST);
 		gl.stencilFunc(gl.ALWAYS, 1, 0x1);
 		gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
@@ -110,7 +145,6 @@ function drawObjects(step){
 		gl.depthMask(true);
 		portal.drawEye();
 		gl.disable(gl.STENCIL_TEST);
-	}
 	
 	//COISAS TRANSPARENTES
 	gl.enable(gl.BLEND);
@@ -127,7 +161,6 @@ function drawObjects(step){
 	}
 	gl.depthMask(true);
 	
-	
 }
 
 function renderScene(){
@@ -137,9 +170,10 @@ function renderScene(){
 	mat4.identity(modelMatrix);
 	mat4.identity(viewMatrix);
 	mat4.identity(projectionMatrix);
-	cameras[currentCamera].doProjection();
-	cameras[currentCamera].doView();
 	
+	
+	
+		
 	gl.useProgram(shaderProgram);
 	
 	gl.uniform1i(shaderProgram.uniform_foggy, fog);
@@ -167,105 +201,27 @@ function renderScene(){
 	lightDirSpot[2] = spaceship.speedAngleEffectVec.Z;
 	lightDirSpot[3] = 0.0;
 	
-	var res = [];
 	
 	
 	
-	gl.clearStencil(0);
-	gl.clear(gl.STENCIL_BUFFER_BIT);
-	gl.enable(gl.STENCIL_TEST);
-	gl.stencilFunc(gl.NEVER, 0x1, 0x1);
-	gl.stencilOp(gl.REPLACE, gl.KEEP, gl.KEEP);
-	gl.stencilMask(0xff);
-	mirror.fillStencil();
+	gl.enable(gl.SCISSOR_TEST); 
+	console.log("left");
+		gl.viewport(0, 0, gl.viewportWidth / 2, gl.viewportHeight);
+		gl.scissor(0, 0, gl.viewportWidth / 2, gl.viewportHeight);
+		cameras[currentCamera].doProjectionLeft();
+		cameras[currentCamera].doViewLeft();
 	
-	gl.stencilFunc(gl.EQUAL, 1, 0x1);
-	gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-	pushModelMatrix();
-		mat4.translate(modelMatrix, [0, -10, 0]);
-		mat4.scale(modelMatrix,[1,-1,1]);
-		//falta aqui usar as luzes ao contrario
-		
-		mat4.multiplyVec4(viewMatrix, lightPosPoint0mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
-		mat4.multiplyVec4(viewMatrix, lightPosPoint1mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
-		mat4.multiplyVec4(viewMatrix, lightPosPoint2mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
-		mat4.multiplyVec4(viewMatrix, lightPosPoint3mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
-		mat4.multiplyVec4(viewMatrix, lightPosPoint4mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
-		mat4.multiplyVec4(viewMatrix, lightPosPoint5mir, res);   //lightPos WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
-		mat4.multiplyVec4(viewMatrix, lightPosGlobalmir, res);   //lightDirection WCS -> Camera space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
-		mat4.multiplyVec4(viewMatrix, lightPosSpotmir, res);   //lightSpotPos definido em World Coord so it is converted to eye space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
-		mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
-		gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
-		
-		gl.cullFace(gl.FRONT);
-		drawObjects(1);
-		gl.cullFace(gl.BACK);
-	popModelMatrix();
+	drawObjects();
 	
-	gl.disable(gl.STENCIL_TEST);
-	gl.enable(gl.BLEND);
-	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-	//gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	gl.depthMask(false);
-	mirror.draw();
-	gl.depthMask(true);
+	console.log("right");
+		gl.viewport(gl.viewportWidth / 2, 0, gl.viewportWidth / 2, gl.viewportHeight);
+		gl.scissor(gl.viewportWidth / 2, 0, gl.viewportWidth / 2, gl.viewportHeight);
+		cameras[currentCamera].doProjectionRight();
+		cameras[currentCamera].doViewRight();
 	
-	var groundPlane = [0,1,0,5];
-	var shadowMat = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-	gl.uniform1i(shaderProgram.uniform_shadowOn,1);
-	//SHADOW MATRIX
-	shadow_matrix(shadowMat, groundPlane, lightPosPoint5);
-	//console.log(shadowMat);
-	gl.disable(gl.DEPTH_TEST);
-	//gl.blendFuncSeparate(gl.DST_COLOR, gl.ZERO,gl.DST_COLOR, gl.ZERO);
-	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-	gl.enable(gl.STENCIL_TEST);
-	gl.stencilFunc(gl.EQUAL, 0x1, 0x1);
-	gl.stencilOp(gl.KEEP, gl.KEEP, gl.ZERO);
-	pushModelMatrix();
-	pushViewMatrix();
-		//gl.blendFunc(gl.SRC_COLOR, gl.ZERO);
-		//MULTIPLY view by shadowmatrix
-		mat4.multiply(viewMatrix,shadowMat,viewMatrix);
-		drawObjects(2);
-	popModelMatrix();
-	popViewMatrix();
-	gl.uniform1i(shaderProgram.uniform_shadowOn,0);
+	drawObjects();
 	
-	mat4.multiplyVec4(viewMatrix, lightPosPoint0, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint0, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint1, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint1, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint2, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint2, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint3, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint3, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint4, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint4, res);
-	mat4.multiplyVec4(viewMatrix, lightPosPoint5, res);   //lightPos WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdPoint5, res);
-	mat4.multiplyVec4(viewMatrix, lightPosGlobal, res);   //lightDirection WCS -> Camera space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdGlobal, res);
-	mat4.multiplyVec4(viewMatrix, lightPosSpot, res);   //lightSpotPos definido em World Coord so it is converted to eye space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdSpot, res);
-	mat4.multiplyVec4(viewMatrix, lightDirSpot, res);   //lightSpotDir definido em World Coord so it is converted to eye space
-	gl.uniform4fv(shaderProgram.lPos_uniformIdSpotDirection, res);
-	
-	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-	gl.disable(gl.STENCIL_TEST);
-	gl.enable(gl.DEPTH_TEST);
-	
-	drawObjects(3);
-	//guy.draw();
-	
+	/*
 	//COISAS UTEIS PARA O LENS FLARE
 	gl.enable(gl.BLEND);
 	gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -348,6 +304,7 @@ function renderScene(){
 		mat4.translate(modelMatrix,[5,0,0]);
 	}
 	popModelMatrix();
+	*/
 }
 
 function update(){
@@ -498,8 +455,8 @@ function setupGLDetails(){
 
 function setupThings(){
 	ratio = gl.viewportWidth/gl.viewportHeight;
-	cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 11.0, 5.0);
-	cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
+	//cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 11.0, 5.0);
+	//cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
 	cameras[2] = new FollowPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0);
 	
 	
@@ -561,7 +518,6 @@ function setupThings(){
 	portal = new Portal(8.0, 2.0, FARTHESTALIEN);
 }
 
-
 function cycle(){
 	timeElapsed = new Date().getTime();
 	timeDelta = timeElapsed - timePrevious;
@@ -570,6 +526,7 @@ function cycle(){
 	if(texturesLeft >0) return;
     update();
 	renderScene();
+	
 }
 
 function webGLStart() {
