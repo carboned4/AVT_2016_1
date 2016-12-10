@@ -203,17 +203,22 @@ function renderScene(){
 	
 	
 	
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
 	
+	cameras[currentCamera].prepareVR();
 	gl.enable(gl.SCISSOR_TEST); 
-	console.log("left");
 		gl.viewport(0, 0, gl.viewportWidth / 2, gl.viewportHeight);
 		gl.scissor(0, 0, gl.viewportWidth / 2, gl.viewportHeight);
 		cameras[currentCamera].doProjectionLeft();
 		cameras[currentCamera].doViewLeft();
 	
 	drawObjects();
+	mat4.identity(modelMatrix);
+	mat4.identity(viewMatrix);
+	mat4.identity(projectionMatrix);
 	
-	console.log("right");
 		gl.viewport(gl.viewportWidth / 2, 0, gl.viewportWidth / 2, gl.viewportHeight);
 		gl.scissor(gl.viewportWidth / 2, 0, gl.viewportWidth / 2, gl.viewportHeight);
 		cameras[currentCamera].doProjectionRight();
