@@ -1,0 +1,372 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Space Invaders Grupo 3</title>
+		
+		<script type="text/javascript" src="vec3.js"></script>
+		<script type="text/javascript" src="webgl-utils.js"></script>
+		<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+		<script type="text/javascript" src="randomutilities.js"></script>
+		<script type="text/javascript" src="cameras.js"></script>
+		<script type="text/javascript" src="textures.js"></script>
+		<script type="text/javascript" src="guy.js"></script>
+		<script type="text/javascript" src="worldupdate.js"></script>
+		<script type="text/javascript" src="controls.js"></script>
+		<script type="text/javascript" src="Font.js"></script>
+		<script type="text/javascript" src="Audio.js"></script>
+		
+		<script type="text/javascript" src="spaceship.js"></script>
+		<script type="text/javascript" src="alien.js"></script>
+		<script type="text/javascript" src="AlienShot.js"></script>
+		<script type="text/javascript" src="Asteroid.js"></script>
+		<script type="text/javascript" src="SpaceshipShot.js"></script>
+		<script type="text/javascript" src="Explosion.js"></script>
+		<script type="text/javascript" src="Planet.js"></script>
+		<script type="text/javascript" src="Skybox.js"></script>
+		<script type="text/javascript" src="LensFlare.js"></script>
+		<script type="text/javascript" src="Mirror.js"></script>
+		<script type="text/javascript" src="Portal.js"></script>
+		
+		<script type="text/javascript" src="main.js"></script>
+		
+		
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script id="shader-vs" type="x-shader/x-vertex">
+precision mediump float;
+precision highp int;
+    
+int I_POINT = 0;
+int I_DIR = 1;
+int I_SPOT = 2;
+
+uniform mat4 m_pvm;
+uniform mat4 m_viewModel;
+uniform mat3 m_normal;
+uniform int lightPointOn;
+uniform int lightDirOn;
+uniform int lightSpotOn;
+
+uniform int texMode;
+
+uniform vec4 l_pospoint0, l_pospoint1, l_pospoint2, l_pospoint3, l_pospoint4, l_pospoint5;
+uniform vec4 l_posdir;
+uniform vec4 l_posspot;
+uniform int l_pointOn;
+uniform bool l_dirOn;
+uniform bool l_spotOn;
+
+
+uniform vec4 matdiffuse;
+uniform vec4 matambient;
+uniform vec4 matspecular;
+uniform float matshininess;
+uniform int mattexCount;
+
+attribute vec3 position;
+attribute vec3 normal;    //por causa do gerador de geometria
+attribute vec2 texCoord;
+attribute vec4 tangent;
+attribute vec2 vVertex;
+attribute vec2 vtexCoord;
+
+varying vec3 donormal;
+varying vec3 doeye;
+varying vec3 dotangent;
+varying vec3 dobitangent;
+varying vec3 dolightDir[8];
+varying vec2 dotex_coord;
+varying vec3 dohalfVec;
+
+void main () {
+	if(texMode == 5){
+		dotex_coord = vtexCoord;
+		gl_Position = m_pvm * vec4(vVertex, 0.0, 1.0);
+		//gl_Position = vec4(-0.57, -0.62, -1,1);
+	}
+	else {
+		vec4 pos = m_viewModel * vec4(position,1.0);
+		const int lightForBump = 2;
+		donormal = normalize(m_normal * normal.xyz);
+		dotangent = normalize(m_normal * tangent.xyz);
+		dobitangent = tangent.w * cross (donormal,dotangent);
+		doeye = vec3(-pos);
+		vec3 v;
+
+		if(lightPointOn == 1){
+			dolightDir[0] = vec3(l_pospoint0 - pos);
+			dolightDir[1] = vec3(l_pospoint1 - pos);
+			dolightDir[2] = vec3(l_pospoint2 - pos);
+			dolightDir[3] = vec3(l_pospoint3 - pos);
+			dolightDir[4] = vec3(l_pospoint4 - pos);
+			dolightDir[5] = vec3(l_pospoint5 - pos);
+			if(mattexCount == 15){
+				v.x = dot (dolightDir[ lightForBump ], dotangent);
+				v.y = dot (dolightDir[ lightForBump ], dobitangent);
+				v.z = dot (dolightDir[ lightForBump ], donormal);
+				dolightDir[ lightForBump ] = normalize(v);
+				vec3 halfVector = normalize(vec3(l_pospoint0 - pos) - doeye);
+				v.x = dot (halfVector, dotangent);
+				v.y = dot (halfVector, dobitangent);
+				v.z = dot (halfVector, donormal);
+				dohalfVec = normalize(v);
+			}
+		}
+		else{
+			dolightDir[0] = vec3(0);
+			dolightDir[1] = vec3(0);
+			dolightDir[2] = vec3(0);
+			dolightDir[3] = vec3(0);
+			dolightDir[4] = vec3(0);
+			dolightDir[5] = vec3(0);
+			if(mattexCount == 15){
+				v.x = dot (dolightDir[ lightForBump ], dotangent);
+				v.y = dot (dolightDir[ lightForBump ], dobitangent);
+				v.z = dot (dolightDir[ lightForBump ], donormal);
+				dolightDir[ lightForBump ] = normalize(v);
+				vec3 halfVector = normalize(vec3(0) - doeye);
+				v.x = dot (halfVector, dotangent);
+				v.y = dot (halfVector, dobitangent);
+				v.z = dot (halfVector, donormal);
+				dohalfVec = normalize(v);
+			}
+		}
+		if(lightDirOn == 1){
+			dolightDir[6] = vec3(l_posdir - pos);
+		}
+		else{
+			dolightDir[6] = vec3(0);
+		}
+		if(lightSpotOn == 1){
+			dolightDir[7] = vec3(l_posspot - pos);
+		}
+		else{
+			dolightDir[7] = vec3(0);
+		}
+		dotex_coord = texCoord.st;
+		gl_Position = m_pvm * vec4(position,1.0);
+	}
+}
+		</script>
+		<script id="shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+precision highp int;
+
+uniform int texMode;
+uniform int fogMode;
+uniform int shadowOn;
+uniform sampler2D texmap0;
+uniform sampler2D texmap1;
+uniform sampler2D texmap2;
+uniform sampler2D texmap3; //ship bump
+uniform sampler2D texmap4;
+uniform sampler2D texmap5;
+uniform sampler2D texmap6;
+uniform sampler2D texmap7;
+uniform sampler2D texmap8;
+uniform sampler2D texmap9;
+uniform sampler2D texmap10;
+uniform sampler2D texmap11;
+uniform sampler2D texmap12;
+uniform sampler2D texmap13;
+uniform sampler2D texmap14;
+uniform sampler2D texmap15; //ship
+
+uniform int lightPointOn;
+uniform int lightDirOn;
+uniform int lightSpotOn;
+
+
+const vec3 fogColor = vec3(0.25, 0.1, 0.1);
+const float FogDensity = 0.05;
+
+uniform vec4 matdiffuse;
+uniform vec4 matambient;
+uniform vec4 matspecular;
+uniform float matshininess;
+uniform int mattexCount;
+
+uniform vec4 l_spotdir;
+
+varying vec3 donormal;
+varying vec3 doeye;
+varying vec3 dotangent;
+varying vec3 dobitangent;
+varying vec3 dolightDir[8];
+varying vec2 dotex_coord;
+varying vec3 dohalfVec;
+
+void main() {
+	if(shadowOn == 1){
+		if(mod(floor(gl_FragCoord.x/2.0),2.0) == 0.0 ^^ mod(floor(gl_FragCoord.y/2.0),2.0) == 0.0){
+			discard;
+		}
+		else{
+			gl_FragColor = vec4(0, 0, 0, 0.5);
+			
+		}
+		//DEPTH TO COLOR - foi util
+		//gl_FragColor = vec4(length(doeye.z)/100.0, length(doeye.z)/100.0, length(doeye.z)/100.0, 1.0);
+		return;
+	}
+	vec3 finalColor = vec3(0.0, 0.0, 0.0);
+	//distance
+	float dist = 0.0;
+	float fogFactor = 0.0;
+	dist = length(doeye);
+	fogFactor = 1.0 /exp( (dist * FogDensity)* (dist * FogDensity));
+	fogFactor = clamp( fogFactor, 0.0, 1.0 );
+
+	float intensity = 0.0;
+	float spotCutOff=0.9;
+	vec3 h;
+	float intSpec;
+	vec4 spec = vec4(0.0);
+	float a = 0.7;
+	float b = 0.0;
+	float c = 0.07;
+	float attenuation;
+	float distance;
+	vec4 texel, texel1, texel2;
+	
+	vec3 v;
+	vec3 n;
+	vec3 l;
+	vec3 e = normalize(doeye);
+	vec3 sd = normalize(vec3(-l_spotdir));
+	
+//OPTION A - NORMAL FRAGMENTS
+
+//STEP 1 - spec & diff
+	
+	for(int i = 0; i<8; i++){
+		l = normalize(dolightDir[i]);
+		n = normalize(donormal);
+		if(i<=5){ //POINT	
+			h = normalize(l + e);
+			distance = length(dolightDir[i]);
+			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
+			if(i == 2 && mattexCount == 15){
+				n = normalize(2.0 * texture2D(texmap3, dotex_coord).rgb-1.0);
+				h = dohalfVec;
+			}
+			intensity += max(dot(n,l), 0.0) * attenuation;
+			if (intensity > 0.0) {
+				intSpec = max(dot(h,n), 0.0);
+				spec = spec + matspecular * pow(intSpec, matshininess) * attenuation;
+			}
+		}
+		else if(i==6){ //DIRECTIONAL
+			intensity += max(dot(n,l), 0.0);
+			if (intensity > 0.0) {
+				h = normalize(l + e);
+				intSpec = max(dot(h,n), 0.0);
+				spec = spec + matspecular * pow(intSpec, matshininess);
+			}
+		}
+		else if(i==7){ //SPOT
+			float cosSDL = dot(sd,l);
+			float spotExponent = 100.0;
+			if (cosSDL > spotCutOff) {
+				distance = length(dolightDir[i]);
+				attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
+				intensity += max(dot(n,l), 0.0) * attenuation;
+				if (intensity > 0.0) {
+					h = normalize(l + e);
+					intSpec = max(dot(h,n), 0.0);
+					spec = spec + matspecular * pow(intSpec, matshininess) * attenuation;
+				}
+			}
+		}
+		
+	}
+	
+//STEP 2 - textures
+	if(mattexCount == 0)
+		texel = texture2D(texmap0, dotex_coord);
+	else if(mattexCount == 1)
+		texel = texture2D(texmap1, dotex_coord);
+	else if(mattexCount == 2)
+		texel = texture2D(texmap2, dotex_coord);
+	else if(mattexCount == 3)
+		texel = texture2D(texmap3, dotex_coord);
+	else if(mattexCount == 4)
+		texel = texture2D(texmap4, dotex_coord);
+	else if(mattexCount == 5)
+		texel = texture2D(texmap5, dotex_coord);
+	else if(mattexCount == 6)
+		texel = texture2D(texmap6, dotex_coord);
+	else if(mattexCount == 7)
+		texel = texture2D(texmap7, dotex_coord);
+	else if(mattexCount == 8)
+		texel = texture2D(texmap8, dotex_coord);
+	else if(mattexCount == 9)
+		texel = texture2D(texmap9, dotex_coord);
+	else if(mattexCount == 10)
+		texel = texture2D(texmap10, dotex_coord);
+	else if(mattexCount == 11)
+		texel = texture2D(texmap11, dotex_coord);
+	else if(mattexCount == 12)
+		texel = texture2D(texmap12, dotex_coord);
+	else if(mattexCount == 13)
+		texel = texture2D(texmap13, dotex_coord);
+	else if(mattexCount == 14)
+		texel = texture2D(texmap14, dotex_coord);
+	else if(mattexCount == 15)
+		texel = texture2D(texmap15, dotex_coord);
+
+	
+	if(texMode == 0) // modulate diffuse color with texel color
+	{
+		if(texel.a == 0.0) discard;
+		gl_FragColor.rgb = max(intensity * matdiffuse.rgb * texel.rgb + spec.rgb,matambient.rgb * texel.rgb);
+		gl_FragColor.a = matambient.a * texel.a;
+	}
+	else if (texMode == 1) // diffuse color is replaced by texel color, with specular area or ambient (0.1*texel)
+	{
+		if(texel.a == 0.0) discard;
+		gl_FragColor.rgb = max(intensity*texel.rgb + spec.rgb, 0.1*texel.rgb);
+		gl_FragColor.a = matambient.a * texel.a;
+	}
+	else if (texMode == 2) // multitexturing
+	{
+		texel1 = texture2D(texmap0, dotex_coord);  // texel from stars.tga
+		texel2 = texture2D(texmap1, dotex_coord);  // texel from checker.tga
+		vec4 possibleMix = texel1 * texel2;
+		gl_FragColor = max(intensity*texel1 + spec, possibleMix);
+	}
+	else if (texMode == 3) //use only texture
+	{	
+		if(texel.a == 0.0) discard;
+		gl_FragColor.rgb = texel.rgb;
+		gl_FragColor.a = texel.a;
+	}
+	else if (texMode == 5) //writing
+	{
+		vec4 cor = vec4(1,1,1,1);
+		vec4 texcolol = texture2D(texmap2, dotex_coord);
+		if(texcolol[0]+texcolol[1]+texcolol[2] < 2.5) discard;
+		gl_FragColor = texcolol*cor;
+	}
+	else if (texMode == 6) // full texel color, with specular area or ambient (0.1*texel)
+	{
+		if (texel.a == 0.0) discard;
+		gl_FragColor.rgb = max(texel.rgb + spec.rgb, 0.1*texel.rgb);
+		gl_FragColor.a = matambient.a * texel.a;
+	}
+	else { //do not use texture // 4
+		gl_FragColor = max((intensity * matdiffuse + spec),matambient);
+	}
+
+	if(fogMode == 1 && mattexCount!=0 && mattexCount!=2 && mattexCount!=11  && mattexCount!=13 && mattexCount!=14 ){
+		finalColor=gl_FragColor.rgb;
+		gl_FragColor.rgb = mix(fogColor, finalColor, fogFactor);
+	}
+}
+
+		</script>
+	</head>
+	<body oncontextmenu="return false;" onload="webGLStart();">
+	<p id="mousepos" style="color:white;position:absolute;left:20px;right:20px;z-index:999">
+	</p>
+	</body>
+</html>
