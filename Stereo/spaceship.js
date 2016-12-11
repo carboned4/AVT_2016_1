@@ -105,7 +105,7 @@ Spaceship.prototype.draw = function(notHud){
 }
 
 Spaceship.prototype.sendGeometry = function(){
-	gl.enableVertexAttribArray(shaderProgram.tangentAttribute);
+	//gl.enableVertexAttribArray(shaderProgram.tangentAttribute);
 	
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexPositionBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexposAttribute, spaceshipVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -115,16 +115,16 @@ Spaceship.prototype.sendGeometry = function(){
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexNormalBuffer);
 	gl.vertexAttribPointer(shaderProgram.normalAttribute, spaceshipVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
+/*
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexTangentBuffer);
 	gl.vertexAttribPointer(shaderProgram.tangentAttribute, spaceshipVertexTangentBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
+*/
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, spaceshipVertexIndexBuffer);
 	
 	setMatrixUniforms();
 	gl.drawElements(gl.TRIANGLES, spaceshipVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 	
-	gl.disableVertexAttribArray(shaderProgram.tangentAttribute);
+	//gl.disableVertexAttribArray(shaderProgram.tangentAttribute);
 }
 
 
@@ -148,13 +148,13 @@ function handleLoadedSpaceship(spaceshipData) {
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(spaceshipData.vertexPositions), gl.STATIC_DRAW);
 	spaceshipVertexPositionBuffer.itemSize = 3;
 	spaceshipVertexPositionBuffer.numItems = spaceshipData.vertexPositions.length / 3;
-
+/*
 	spaceshipVertexTangentBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, spaceshipVertexTangentBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(spaceshipData.tangents), gl.STATIC_DRAW);
 	spaceshipVertexTangentBuffer.itemSize = 4;
 	spaceshipVertexTangentBuffer.numItems = spaceshipData.tangents.length / 4;
-
+*/
 	spaceshipVertexIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, spaceshipVertexIndexBuffer);
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(spaceshipData.indices), gl.STREAM_DRAW);

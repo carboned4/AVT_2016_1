@@ -73,7 +73,7 @@ varying vec3 donormal;
 varying vec3 doeye;
 varying vec3 dotangent;
 varying vec3 dobitangent;
-varying vec3 dolightDir[8];
+varying vec3 dolightDir;
 varying vec2 dotex_coord;
 varying vec3 dohalfVec;
 
@@ -93,54 +93,10 @@ void main () {
 		vec3 v;
 
 		if(lightPointOn == 1){
-			dolightDir[0] = vec3(l_pospoint0 - pos);
-			dolightDir[1] = vec3(l_pospoint1 - pos);
-			dolightDir[2] = vec3(l_pospoint2 - pos);
-			dolightDir[3] = vec3(l_pospoint3 - pos);
-			dolightDir[4] = vec3(l_pospoint4 - pos);
-			dolightDir[5] = vec3(l_pospoint5 - pos);
-			if(mattexCount == 15){
-				v.x = dot (dolightDir[ lightForBump ], dotangent);
-				v.y = dot (dolightDir[ lightForBump ], dobitangent);
-				v.z = dot (dolightDir[ lightForBump ], donormal);
-				dolightDir[ lightForBump ] = normalize(v);
-				vec3 halfVector = normalize(vec3(l_pospoint0 - pos) - doeye);
-				v.x = dot (halfVector, dotangent);
-				v.y = dot (halfVector, dobitangent);
-				v.z = dot (halfVector, donormal);
-				dohalfVec = normalize(v);
-			}
+			dolightDir = vec3(l_pospoint0 - pos);
 		}
 		else{
-			dolightDir[0] = vec3(0);
-			dolightDir[1] = vec3(0);
-			dolightDir[2] = vec3(0);
-			dolightDir[3] = vec3(0);
-			dolightDir[4] = vec3(0);
-			dolightDir[5] = vec3(0);
-			if(mattexCount == 15){
-				v.x = dot (dolightDir[ lightForBump ], dotangent);
-				v.y = dot (dolightDir[ lightForBump ], dobitangent);
-				v.z = dot (dolightDir[ lightForBump ], donormal);
-				dolightDir[ lightForBump ] = normalize(v);
-				vec3 halfVector = normalize(vec3(0) - doeye);
-				v.x = dot (halfVector, dotangent);
-				v.y = dot (halfVector, dobitangent);
-				v.z = dot (halfVector, donormal);
-				dohalfVec = normalize(v);
-			}
-		}
-		if(lightDirOn == 1){
-			dolightDir[6] = vec3(l_posdir - pos);
-		}
-		else{
-			dolightDir[6] = vec3(0);
-		}
-		if(lightSpotOn == 1){
-			dolightDir[7] = vec3(l_posspot - pos);
-		}
-		else{
-			dolightDir[7] = vec3(0);
+			dolightDir = vec3(0);
 		}
 		dotex_coord = texCoord.st;
 		gl_Position = m_pvm * vec4(position,1.0);
@@ -191,7 +147,7 @@ varying vec3 donormal;
 varying vec3 doeye;
 varying vec3 dotangent;
 varying vec3 dobitangent;
-varying vec3 dolightDir[8];
+varying vec3 dolightDir;
 varying vec2 dotex_coord;
 varying vec3 dohalfVec;
 
@@ -232,52 +188,26 @@ void main() {
 	vec3 n;
 	vec3 l;
 	vec3 e = normalize(doeye);
-	vec3 sd = normalize(vec3(-l_spotdir));
 	
 //OPTION A - NORMAL FRAGMENTS
 
 //STEP 1 - spec & diff
 	
-	for(int i = 0; i<8; i++){
-		l = normalize(dolightDir[i]);
+	for(int i = 0; i<1; i++){
+		l = normalize(dolightDir);
 		n = normalize(donormal);
-		if(i<=5){ //POINT	
-			if (i!=2) continue;
-			h = normalize(l + e);
-			distance = length(dolightDir[i]);
-			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
-			if(i == 2 && mattexCount == 15){
-				n = normalize(2.0 * texture2D(texmap3, dotex_coord).rgb-1.0);
-				h = dohalfVec;
-			}
-			intensity += max(dot(n,l), 0.0) * attenuation;
-			if (intensity > 0.0) {
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + matspecular * pow(intSpec, matshininess) * attenuation;
-			}
+		
+		h = normalize(l + e);
+		//distance = length(dolightDir);
+		//attenuation = 5.0/(a+(b*distance)+(c*distance*distance));
+		attenuation = 1.0;
+		intensity += max(dot(n,l), 0.0) * attenuation;
+		if (intensity > 0.0) {
+			intSpec = max(dot(h,n), 0.0);
+			spec = spec + matspecular * pow(intSpec, matshininess) * attenuation;
 		}
-		else if(i==6){ //DIRECTIONAL
-			intensity += max(dot(n,l), 0.0);
-			if (intensity > 0.0) {
-				h = normalize(l + e);
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + matspecular * pow(intSpec, matshininess);
-			}
-		}
-		else if(i==7){ //SPOT
-			float cosSDL = dot(sd,l);
-			float spotExponent = 100.0;
-			if (cosSDL > spotCutOff) {
-				distance = length(dolightDir[i]);
-				attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
-				intensity += max(dot(n,l), 0.0) * attenuation;
-				if (intensity > 0.0) {
-					h = normalize(l + e);
-					intSpec = max(dot(h,n), 0.0);
-					spec = spec + matspecular * pow(intSpec, matshininess) * attenuation;
-				}
-			}
-		}
+	
+		
 		
 	}
 	

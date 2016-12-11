@@ -15,7 +15,7 @@ Asteroid.prototype.draw = function(){
 	gl.uniform4f(shaderProgram.materialSpecularColorUniform, 0.2, 0.2, 0.2, 1.0);
 	gl.uniform1f(shaderProgram.materialShininessUniform, 10.0);
 	
-	gl.uniform1i(shaderProgram.texMode_uniformId,1);
+	gl.uniform1i(shaderProgram.texMode_uniformId,3);
 	gl.uniform1i(shaderProgram.materialTexCount, 12);
 	gl.activeTexture(gl.TEXTURE12);
 	gl.bindTexture(gl.TEXTURE_2D, asteroidTex);
