@@ -126,6 +126,6 @@ function genAlienShots(){
 		alienShots.push(new AlienShot(aliens[output].position.X, aliens[output].position.Y, aliens[output].position.Z - 0.5));
 		lastShot = timeElapsed;
 		playStriderShot();
-		//printf("%d %d\n", objId, objIdAlienShot);
+		console.log("alien "+output+ " " +timeElapsed);
 	}
 }

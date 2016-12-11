@@ -537,7 +537,10 @@ function cycle(){
 	timeDelta = timeElapsed - timePrevious;
 	timePrevious = timeElapsed;
 	requestAnimFrame(cycle);
-	if(texturesLeft >0) return;
+	if(texturesLeft >0){
+		lastShot = timeElapsed;
+		return;
+	}
     update();
 	renderScene();
 	
