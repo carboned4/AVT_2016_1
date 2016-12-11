@@ -29,6 +29,9 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.cameraPos = v3(0,0,0);
 	this.center = v3(_x,_y,_z);
 	this.directionVector = [0,0,1];
+	this.atVector; //DEFINE
+	//
+	//
 	this.upVector = [0,1,0];
 	this.rightVector = [-1,0,0];
 	this.ratio = _ratio;
@@ -36,10 +39,13 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.nearPlane = _near;
 	this.farPlane = _far;
 	this.focusPlane = 5;
-	this.D;
-	this.hdiv2;
-	this.vEye = [-0.5,0,0];
 	this.eyeSeparation = 0.06;
+	this.alpha = 90;
+	this.beta = 0;
+	this.gamma = 0;
+	this.D = 0.5 * this.eyeSeparation * this.nearPlane / this.focusPlane;  //Frustum assymetry – next slides 
+	this.hdiv2   = this.nearPlane * Math.tan(rad(this.fov / 2)); // aperture in radians 
+	this.vEye = [-0.5,0,0];
 	
 	this.setRatio = function(_r){
 		this.ratio = _r;
@@ -49,13 +55,39 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 		this.center.set(_x, _y+1.0, _z-2.0);
 	}
 	
+	this.updateDirection = function(_alpha, _beta){
+		this.directionAlpha = _alpha;
+		this.directionBeta = _beta;
+	}
+	
 	this.setCamXYZ = function(_x, _y, _z) {
 		this.cameraPos.set(_x, _y, _z);
 	}
 	
 	this.prepareVR = function(){
-		this.D = 0.5 * this.eyeSeparation * this.nearPlane / this.focusPlane;  //Frustum assymetry – next slides 
-		this.hdiv2   = this.nearPlane * Math.tan(rad(this.fov / 2)); // aperture in radians 
+		var oriented_pos;
+		var oriented_up;
+		var oriented_at;
+
+		if(alpha != null) {
+			var rMat = mat3.clone(getRotationMatrix(alpha, beta < 0 ? 90 : (90-beta), gamma));
+			oriented_pos = vec3.clone(this.pos);
+			oriented_up = vec3.clone(this.up);
+			oriented_at = vec3.clone(this.at);
+			vec3.sub(oriented_pos, oriented_pos, game.frog.position);
+			vec3.sub(oriented_at, oriented_at, game.frog.position);
+			vec3.transformMat3(oriented_pos, rMat, oriented_pos);
+			vec3.transformMat3(oriented_up, rMat, oriented_up);
+			vec3.transformMat3(oriented_at, rMat, oriented_at);
+			vec3.add(oriented_pos, oriented_pos, game.frog.position);
+			vec3.add(oriented_at, oriented_at, game.frog.position);
+		} else {
+			oriented_pos = this.center;
+			oriented_up = this.upVector;
+			oriented_at = this.at;
+		}
+		
+		
 		vec3.cross(this.directionVector,this.upVector, this.rightVector);         // Each unit vectors 
 		this.vEye[0] = this.rightVector[0] * this.eyeSeparation / 2.0; // half eye separa+on vector 
 		this.vEye[1] = this.rightVector[1] * this.eyeSeparation / 2.0; // half eye separa+on vector 
@@ -96,6 +128,33 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 		[this.upVector[0],this.upVector[1],this.upVector[2]],
 		viewMatrix);
 	}
+	
+	this.handleOrientationEvent = function(e) {
+		var TOLERANCE = 10;
+		this.alpha = e.this.alpha;
+		this.beta = e.this.beta;
+		this.gamma = e.this.gamma;
+
+		if(isInit) {
+			if(this.prev_alpha - this.alpha <= -TOLERANCE || this.prev_alpha - this.alpha >= TOLERANCE)
+				this.prev_alpha = this.alpha;
+			if(this.prev_beta - this.beta <= -TOLERANCE || this.prev_beta - this.beta >= TOLERANCE)
+				this.prev_beta = this.beta;
+			if(this.prev_gamma - this.gamma <= -TOLERANCE || this.prev_gamma - this.gamma >= TOLERANCE)
+				this.prev_gamma = this.gamma;
+		} else {
+			isInit = true;
+			this.prev_alpha = this.alpha;
+			this.prev_beta = this.beta;
+			this.prev_gamma = this.gamma;
+		}
+
+		this.alpha = this.prev_alpha;
+		this.beta = this.prev_beta;
+		this.gamma = this.prev_gamma;
+
+	}
+	
 	/*this.doProjectionLeft = function(){
 		mat4.perspective(this.fov, this.ratio, this.nearPlane,this.farPlane, projectionMatrix);
 	}
@@ -111,6 +170,37 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 }
 	
 	
+function getRotationMatrix( _alpha, _beta, _gamma ) {
+
+  var _x = _beta  ? rad(_beta) : 0;
+  var _y = _gamma ? rad(_gamma) : 0;
+  var _z = _alpha ? rad(_alpha) : 0;
+
+  var cX = Math.cos( _x );
+  var cY = Math.cos( _y );
+  var cZ = Math.cos( _z );
+  var sX = Math.sin( _x );
+  var sY = Math.sin( _y );
+  var sZ = Math.sin( _z );
+
+  var m11 = cZ * cY - sZ * sX * sY;
+  var m12 = - cX * sZ;
+  var m13 = cY * sZ * sX + cZ * sY;
+
+  var m21 = cY * sZ + cZ * sX * sY;
+  var m22 = cZ * cX;
+  var m23 = sZ * sY - cZ * cY * sX;
+
+  var m31 = - cX * sY;
+  var m32 = sX;
+  var m33 = cX * cY;
+
+  return [
+    m11,    m12,    m13,
+    m21,    m22,    m23,
+    m31,    m32,    m33
+  ];
+};
 	
 	
 	
