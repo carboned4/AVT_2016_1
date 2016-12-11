@@ -463,7 +463,7 @@ function setupThings(){
 	//cameras[0] = new TopOrthoCamera(-6.0* ratio, 6.0* ratio, -6.0, 6.0, 0.1, 1000.0, 0.0, 11.0, 5.0);
 	//cameras[1] = new FixedPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0, 0.0, 0.0, 5.0);
 	cameras[2] = new FollowPerspCamera(70.0, ratio, 0.1, 1000.0, 0.0, 5.0, -5.0);
-	
+	window.addEventListener('deviceorientation', cameras[2].handleOrientationEvent, true);
 	
 	loadSpaceshipTexture();
 	loadSpaceshipBumpTexture();
