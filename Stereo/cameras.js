@@ -47,6 +47,8 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.D = 0.5 * this.eyeSeparation * this.nearPlane / this.focusPlane;  //Frustum assymetry – next slides 
 	this.hdiv2   = this.nearPlane * Math.tan(rad(this.fov / 2)); // aperture in radians 
 	this.vEye = [-0.5,0,0];
+	this.rotatedUp = [0,0,0];
+	this.rotatedDirection = [0,0,0];
 	
 	
 	this.setRatio = function(_r){
@@ -72,11 +74,11 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 		var oriented_up;
 		var oriented_at;
 		
-		var rotatedUp = [0,0,0];
-		var rotatedDirection = [0,0,0];
+		this.rotatedUp = [0,0,0];
+		this.rotatedDirection = [0,0,0];
 
 		if(this.alpha != null) {
-			var rMat = getRotationMatrix(this.alpha, this.beta < 0 ? 90 : (90-this.beta), this.gamma);
+			var rMat = getRotationMatrix(this.alpha, this.beta, this.gamma);
 			//console.log(rMat);
 			/*oriented_pos = vec3.create([this.center.X,this.center.Y,this.center.Z]);
 			oriented_up = vec3.create(this.upVector);
@@ -88,24 +90,24 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 			vec3.transformMat3(oriented_up, rMat, oriented_up);
 			vec3.transformMat3(oriented_at, rMat, oriented_at);
 			*/
-			vec3.transformMat3(rotatedUp, this.upVector, rMat);
-			vec3.transformMat3(rotatedDirection, this.directionVector, rMat);
+			vec3.transformMat3(this.rotatedUp, this.upVector, rMat);
+			vec3.transformMat3(this.rotatedDirection, this.directionVector, rMat);
 			
 			
 			//vec3.add(oriented_pos, shippos, oriented_pos);
 			//vec3.add(oriented_at, shippos, oriented_pos);
 		} else {
-			oriented_pos = this.center;
-			oriented_up = this.upVector;
-			oriented_at = this.atVector;
-			rotatedUp = vec3.create(this.upVector);
-			rotatedDirection = vec3.create(this.directionVector);
+			this.rotatedUp = vec3.create(this.upVector);
+			this.rotatedDirection = vec3.create(this.directionVector);
 		}
-		console.log(rotatedUp);
-		console.log(rotatedDirection);
-		console.log("_\n");
+		//console.log(this.rotatedUp);
+		//console.log(this.rotatedDirection);
+		//console.log("_\n");
+		document.getElementById("mousepos").innerHTML = this.alpha + " " + this.beta + " " + this.gamma + "<br>"+this.rotatedUp + "<br>"+ this.rotatedDirection;
 		
-		vec3.cross(this.directionVector,this.upVector, this.rightVector);         // Each unit vectors 
+		//vec3.cross(this.directionVector,this.upVector, this.rightVector);         // Each unit vectors 
+		vec3.cross(this.rotatedDirection,this.rotatedUp, this.rightVector);         // Each unit vectors 
+		this.rightVector = vec3.normalize(this.rightVector);
 		this.vEye[0] = this.rightVector[0] * this.eyeSeparation / 2.0; // half eye separa+on vector 
 		this.vEye[1] = this.rightVector[1] * this.eyeSeparation / 2.0; // half eye separa+on vector 
 		this.vEye[2] = this.rightVector[2] * this.eyeSeparation / 2.0; // half eye separa+on vector 
@@ -122,10 +124,10 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.doViewLeft = function(){
 		mat4.lookAt(
 		[this.center.X-this.vEye[0],this.center.Y-this.vEye[1],this.center.Z-this.vEye[2]],
-		[this.center.X-this.vEye[0]+this.directionVector[0],
-		this.center.Y-this.vEye[1]+this.directionVector[1],
-		this.center.Z-this.vEye[2]+this.directionVector[2]],
-		[this.upVector[0],this.upVector[1],this.upVector[2]],
+		[this.center.X-this.vEye[0]+this.rotatedDirection[0],
+		this.center.Y-this.vEye[1]+this.rotatedDirection[1],
+		this.center.Z-this.vEye[2]+this.rotatedDirection[2]],
+		[this.rotatedUp[0],this.rotatedUp[1],this.rotatedUp[2]],
 		viewMatrix);
 	}
 	this.doProjectionRight = function(){
@@ -139,10 +141,10 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.doViewRight = function(){
 		mat4.lookAt(
 		[this.center.X+this.vEye[0],this.center.Y+this.vEye[1],this.center.Z+this.vEye[2]],
-		[this.center.X+this.vEye[0]+this.directionVector[0],
-		this.center.Y+this.vEye[1]+this.directionVector[1],
-		this.center.Z+this.vEye[2]+this.directionVector[2]],
-		[this.upVector[0],this.upVector[1],this.upVector[2]],
+		[this.center.X+this.vEye[0]+this.rotatedDirection[0],
+		this.center.Y+this.vEye[1]+this.rotatedDirection[1],
+		this.center.Z+this.vEye[2]+this.rotatedDirection[2]],
+		[this.rotatedUp[0],this.rotatedUp[1],this.rotatedUp[2]],
 		viewMatrix);
 	}
 	
