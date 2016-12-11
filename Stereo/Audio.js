@@ -7,7 +7,7 @@ var wastedSound;
 var backgroundvolume = 0.15;
 
 function loadSounds(){
-	audioStriderDie = new Audio('sounds/striderdie.mp3');
+	/*audioStriderDie = new Audio('sounds/striderdie.mp3');
 	audioStriderPains[0] = new Audio('sounds/striderpain2.mp3');
 	audioStriderPains[1] = new Audio('sounds/striderpain5.mp3');
 	audioStriderPains[2] = new Audio('sounds/striderpain7.mp3');
@@ -23,7 +23,7 @@ function loadSounds(){
 	missileSound = new Audio('sounds/missile.mp3');
 	striderShotSound = new Audio('sounds/stridershot.mp3');
 	wastedSound = new Audio('sounds/gta5wasted.mp3');
-	
+	*/
 }
 
 function playStriderDie(){

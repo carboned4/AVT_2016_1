@@ -28,7 +28,7 @@ function startShake(){
 function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.cameraPos = v3(0,0,0);
 	this.center = v3(_x,_y,_z);
-	this.directionVector = [0,0,1];
+	this.directionVector = [0,-0.250,1];
 	this.atVector = [this.center.X + this.directionVector[0], this.center.Y + this.directionVector[1], this.center.Z + this.directionVector[2]]; //DEFINE
 	//https://w3c.github.io/deviceorientation/spec-source-orientation.html#usecases
 	//
@@ -56,7 +56,7 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	}
 	
 	this.updatePosition = function(_x, _y, _z) {
-		this.center.set(_x, _y+1.0, _z-2.0);
+		this.center.set(_x, _y+2.0, _z-3.0);
 		this.atVector = [this.center.X + this.directionVector[0], this.center.Y + this.directionVector[1], this.center.Z + this.directionVector[2]];
 	}
 	
@@ -78,7 +78,10 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 		this.rotatedDirection = [0,0,0];
 
 		if(this.alpha != null) {
-			var rMat = getRotationMatrix(this.alpha, this.beta, this.gamma);
+			//var rMat = getRotationMatrix(this.alpha, this.beta, this.gamma);
+			//var rMat = getRotationMatrix(this.alpha, -this.gamma, -this.beta);
+			var rMat = getRotationMatrix(180+this.alpha, 180-this.gamma, this.beta+180);
+			
 			vec3.transformMat3(this.rotatedUp, this.upVector, rMat);
 			vec3.transformMat3(this.rotatedDirection, this.directionVector, rMat);
 			
@@ -86,7 +89,7 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 			this.rotatedUp = vec3.create(this.upVector);
 			this.rotatedDirection = vec3.create(this.directionVector);
 		}
-		document.getElementById("mousepos").innerHTML = this.alpha + " " + this.beta + " " + this.gamma + "<br>"+this.rotatedUp + "<br>"+ this.rotatedDirection;
+		//document.getElementById("mousepos").innerHTML = this.alpha + " " + this.beta + " " + this.gamma + "<br>"+this.rotatedUp + "<br>"+ this.rotatedDirection;
 		
 		vec3.cross(this.rotatedDirection,this.rotatedUp, this.rightVector);         // Each unit vectors 
 		this.rightVector = vec3.normalize(this.rightVector);

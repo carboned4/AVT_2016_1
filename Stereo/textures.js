@@ -1,6 +1,6 @@
 
 
-var texturesLeft = 16;
+var texturesLeft = 10;
 var gunshipTex;
 var gunshipnormalTex;
 var alienTex;

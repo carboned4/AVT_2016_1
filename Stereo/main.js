@@ -330,6 +330,10 @@ function update(){
 			backgroundmusic.volume = backgroundvolume/3;
 			playWasted();
 			restartGame();
+			game_running = true;
+			wonGame = false;
+			lostGame = false;
+			pauseWindowShow = false;
 		}
 		if (aliens.length <= 0) {
 			wonGame = true;
@@ -471,20 +475,20 @@ function setupThings(){
 	window.addEventListener('deviceorientation', orientationProxy, true);
 	
 	loadSpaceshipTexture();
-	loadSpaceshipBumpTexture();
+	//loadSpaceshipBumpTexture();
 	loadAlienTexture();
-	loadFontTexture();
+	//loadFontTexture();
 	loadAsteroidTexture();
 	loadCheckerColorsTexture();
 	loadCloudTexture();
-	loadMetalTexture();
+	//loadMetalTexture();
 	loadEarthTexture();
 	//loadHeadTexture();
 	//loadHead2Texture();
 	loadExplosionTexture();
-	loadFlare2Texture();
-	loadFlare4Texture();
-	loadFlare5Texture();
+	//loadFlare2Texture();
+	//loadFlare4Texture();
+	//loadFlare5Texture();
 	loadEyeTexture();
 	loadPortalTexture();
 	loadStarsTexture();
@@ -504,7 +508,7 @@ function setupThings(){
 	
 	loadSounds();
 	
-	lensFlare = new LensFlare();
+	//lensFlare = new LensFlare();
 	skybox = new Skybox(0,0,0);
 	//guy = new Head(0,0,0);
 	for(var i = 0; i< ALIENROWS; i++){
