@@ -10,10 +10,10 @@ var r = 4.5;
 
 function processKeys(key){
 	if(key.keyCode == 37 && keyState[37] != true){
-		console.log("left " + "true");
+		//console.log("left " + "true");
 	}
 	if(key.keyCode == 39 && keyState[39] != true){
-		console.log("right " + "true");
+		//console.log("right " + "true");
 	}
 	keyState[key.keyCode] = true;
 	switch (key.keyCode) {
@@ -34,10 +34,10 @@ function processUpKeys(key)
 {
 	keyState[key.keyCode] = false;
 	if(key.keyCode == 37){
-		console.log("left " + "false");
+		//console.log("left " + "false");
 	}
 	if(key.keyCode == 39){
-		console.log("right " + "false");
+		//console.log("right " + "false");
 	}
 	passKeys();
 }
@@ -50,7 +50,7 @@ function passKeys() {
 		if(game_running){
 			spaceshipShots.push(new SpaceshipShot(spaceship.position.X, spaceship.position.Y, spaceship.position.Z + 1.5));
 			playMissile();
-			console.log("ship "+timeElapsed);
+			//console.log("ship "+timeElapsed);
 		}
 	}
 	if (keyState[83]) {							//Toggle pausewindow on or off

@@ -32,7 +32,7 @@ function restartGame(){
 			aliens.push(new Alien(ALIENCOLUMNS - j*ALIENCOLUMNGAP, 0.0, 10.0 - i*ALIENROWGAP, ALIENCOLUMNS - j*ALIENCOLUMNGAP, ALIENWIDTH, ALIENROWSHIFT)); // x y z left width rowgap
 		}
 	}
-	backgroundmusic.volume = backgroundvolume;
+	//backgroundmusic.volume = backgroundvolume;
 }
 
 function cleanupProjectiles(){
@@ -126,6 +126,6 @@ function genAlienShots(){
 		alienShots.push(new AlienShot(aliens[output].position.X, aliens[output].position.Y, aliens[output].position.Z - 0.5));
 		lastShot = timeElapsed;
 		playStriderShot();
-		console.log("alien "+output+ " " +timeElapsed);
+		//console.log("alien "+output+ " " +timeElapsed);
 	}
 }

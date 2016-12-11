@@ -327,7 +327,7 @@ function update(){
 		if (lives <= 0) {
 			lostGame = true;
 			game_running = false;
-			backgroundmusic.volume = backgroundvolume/3;
+			//backgroundmusic.volume = backgroundvolume/3;
 			playWasted();
 			restartGame();
 			game_running = true;
@@ -339,6 +339,7 @@ function update(){
 			wonGame = true;
 			game_running = false;
 		}
+		animation(timeDelta);
 	}
 }
 
@@ -380,7 +381,7 @@ function initShaders() {
 	gl.attachShader(shaderProgram, fragmentShader);
 	gl.linkProgram(shaderProgram);
 	if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
-		console.log(gl.getProgramInfoLog(shaderProgram));
+		//console.log(gl.getProgramInfoLog(shaderProgram));
 		alert("Could not initialise shaders");
 	}
 	gl.useProgram(shaderProgram);
@@ -532,13 +533,104 @@ function setupThings(){
 	portal = new Portal(8.0, 2.0, FARTHESTALIEN);
 }
 
+var animstep = -1;
+var animtimeaux = 5;
+function animation(delta){
+	if(animstep == -1){
+		animtimeaux -= delta/1000;
+		if(animtimeaux <= 0){
+			animstep = 0;
+		}
+	}
+	else if(animstep == 0){
+		spaceship.leftPressed = true;
+		if(spaceship.position.X == 5.8){
+			spaceship.leftPressed = false;
+			animstep = 1;
+			animtimeaux = 0.25;
+		}
+	}
+	else if(animstep == 1){
+		spaceship.rightPressed = true;
+		animtimeaux -= delta/1000;
+		if(animtimeaux <= 0){
+			spaceshipShots.push(new SpaceshipShot(spaceship.position.X, spaceship.position.Y, spaceship.position.Z + 1.5));
+			animtimeaux = 0.25;
+		}
+		if(spaceship.position.X <= 0){
+			spaceship.rightPressed = false;
+			animstep = 2;
+			animtimeaux= 3;
+		}
+	}
+	else if(animstep == 2){
+		animtimeaux -= delta/1000;
+		if(animtimeaux <= 0){
+			animstep = 3;
+		}
+	}
+	else if(animstep == 3){
+		spaceship.rightPressed = true;
+		animtimeaux -= delta/1000;
+		if(animtimeaux <= 0){
+			animtimeaux = 0.5;
+		}
+		if(spaceship.position.X <= -5.8){
+			spaceship.rightPressed = false;
+			animstep = 4;
+			animtimeaux= 0;
+			for(var output = 0; output < aliens.length; output++){
+				alienShots.push(new AlienShot(aliens[output].position.X, aliens[output].position.Y, aliens[output].position.Z - 0.5));
+			}
+		}
+	}
+	else if(animstep == 4){
+		spaceship.leftPressed = true;
+		if(spaceship.position.X >= 0){
+			spaceship.leftPressed = false;
+			animstep = 5;
+			animtimeaux = 0.25;
+		}
+	}
+	else if(animstep == 5){
+		spaceship.rightPressed = true;
+		if(spaceship.position.X <= -5.8){
+			spaceship.rightPressed = false;
+			animstep = 6;
+			animtimeaux = 0.25;
+		}
+	}
+	else if(animstep == 6){
+		spaceship.leftPressed = true;
+		if(spaceship.position.X >= 0){
+			spaceship.leftPressed = false;
+			animstep = 7;
+			animtimeaux = 3;
+			document.getElementById("mousepos").innerHTML = "A RECOME&Ccedil;AR...";
+		
+		}
+	}
+	else if(animstep == 7){
+		animtimeaux -= delta/1000;
+		if(animtimeaux <= 0){
+			document.getElementById("mousepos").innerHTML = "";
+			animstep = -1;
+			animtimeaux = 5;
+			restartGame();
+		}
+	}
+}
+
+var timeBeginning = 0;
 function cycle(){
-	timeElapsed = new Date().getTime();
+	var timeNow = new Date().getTime();
+	timeElapsed = timeNow - timeBeginning;
 	timeDelta = timeElapsed - timePrevious;
 	timePrevious = timeElapsed;
 	requestAnimFrame(cycle);
 	if(texturesLeft >0){
 		lastShot = timeElapsed;
+		timeBeginning = timeNow;
 		return;
 	}
     update();
