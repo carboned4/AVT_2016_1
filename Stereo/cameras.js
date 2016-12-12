@@ -28,7 +28,7 @@ function startShake(){
 function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	this.cameraPos = v3(0,0,0);
 	this.center = v3(_x,_y,_z);
-	this.directionVector = [0,-0.250,1];
+	this.directionVector = [0,0,1];
 	this.atVector = [this.center.X + this.directionVector[0], this.center.Y + this.directionVector[1], this.center.Z + this.directionVector[2]]; //DEFINE
 	//https://w3c.github.io/deviceorientation/spec-source-orientation.html#usecases
 	//
@@ -81,6 +81,13 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 			//var rMat = getRotationMatrix(this.alpha, this.beta, this.gamma);
 			//var rMat = getRotationMatrix(this.alpha, -this.gamma, -this.beta);
 			var rMat = getRotationMatrix(180+this.alpha, 180-this.gamma, this.beta+180);
+			var sMat = getScreenTransformationMatrix(90);
+			var rsMat = matrixMultiply(rMat, sMat);
+			
+			var wMat = getWorldTransformationMatrix();
+			
+			var rswMat = matrixMultiply(rsMat, wMat);
+			
 			
 			vec3.transformMat3(this.rotatedUp, this.upVector, rMat);
 			vec3.transformMat3(this.rotatedDirection, this.directionVector, rMat);
@@ -164,6 +171,24 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 }
 	
 	
+function getWorldTransformationMatrix() {
+	var x = rad(-90);
+
+	var cA = Math.cos( x );
+	var sA = Math.sin( x );
+
+	// Construct our world transformation matrix
+	var r_w = [
+		1,     0,    0,
+		0,     cA,   -sA,
+		0,     sA,   cA
+	];
+
+	return r_w;
+}
+
+
+	
 function getRotationMatrix( _alpha, _beta, _gamma ) {
 
   var _x = _beta  ? rad(_beta) : 0;
@@ -197,6 +222,23 @@ function getRotationMatrix( _alpha, _beta, _gamma ) {
 };
 	
 	
+	
+function getScreenTransformationMatrix( screenOrientation ) {
+	var orientationAngle = screenOrientation ? rad(screenOrientation) : 0;
+
+	var cA = Math.cos( orientationAngle );
+	var sA = Math.sin( orientationAngle );
+
+	// Construct our screen transformation matrix
+	var r_s = [
+		cA,    -sA,    0,
+		sA,    cA,     0,
+		0,     0,      1
+	];
+
+	return r_s;
+}
+	
 //utilidade do vec3.js
 vec3.transformMat3 = function(out, a, m) {
     var x = a[0], y = a[1], z = a[2];
@@ -208,7 +250,23 @@ vec3.transformMat3 = function(out, a, m) {
 	
 	
 	
-	
+function matrixMultiply( a, b ) {
+	var final = [];
+
+	final[0] = a[0] * b[0] + a[1] * b[3] + a[2] * b[6];
+	final[1] = a[0] * b[1] + a[1] * b[4] + a[2] * b[7];
+	final[2] = a[0] * b[2] + a[1] * b[5] + a[2] * b[8];
+
+	final[3] = a[3] * b[0] + a[4] * b[3] + a[5] * b[6];
+	final[4] = a[3] * b[1] + a[4] * b[4] + a[5] * b[7];
+	final[5] = a[3] * b[2] + a[4] * b[5] + a[5] * b[8];
+
+	final[6] = a[6] * b[0] + a[7] * b[3] + a[8] * b[6];
+	final[7] = a[6] * b[1] + a[7] * b[4] + a[8] * b[7];
+	final[8] = a[6] * b[2] + a[7] * b[5] + a[8] * b[8];
+
+	return final;
+}
 	
 	
 	

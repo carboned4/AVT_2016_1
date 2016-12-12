@@ -54,7 +54,7 @@ Planet.prototype.drawAtmosphere = function(){
 	mat4.translate(modelMatrix,[this.position.X,this.position.Y-1,this.position.Z]);
 	mat4.rotate(modelMatrix,rad(-23),[1,0,0]);
 	mat4.rotate(modelMatrix,rad(this.angleAtmosphere),[0,1,0]);
-	mat4.scale(modelMatrix, [504,504,504]);
+	mat4.scale(modelMatrix, [510,510,510]);
 	
 	gl.uniform4f(shaderProgram.materialAmbientColorUniform, 0, 0, 0, 0.5);
 	gl.uniform4f(shaderProgram.materialDiffuseColorUniform, 0.25, 0.25, 0.25, 0.5);
