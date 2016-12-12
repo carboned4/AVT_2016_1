@@ -135,7 +135,7 @@ function FollowPerspCamera(_fov, _ratio, _near, _far, _x, _y, _z){
 	
 	var HOEisInit = false;
 	this.handleOrientationEvent = function(e) {
-		var TOLERANCE = 0;
+		var TOLERANCE = 0.5;
 		this.alpha = e.alpha;
 		this.beta = e.beta;
 		this.gamma = e.gamma;
