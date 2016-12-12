@@ -6,7 +6,7 @@ var lastMouseY = null;
 
 var alpha = 180.0;
 var beta = 20.0;
-var r = 4.5;
+var r = 6;
 
 function processKeys(key){
 	keyState[key.keyCode] = true;
