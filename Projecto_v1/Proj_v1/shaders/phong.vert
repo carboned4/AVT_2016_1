@@ -10,6 +10,7 @@ uniform mat3 m_normal;
 uniform vec3 lightState;
 
 uniform int texMode;
+uniform float textureShift;
 
 uniform vec4 l_pospoint0, l_pospoint1, l_pospoint2, l_pospoint3, l_pospoint4, l_pospoint5;
 uniform vec4 l_posdir;

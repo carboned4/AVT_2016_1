@@ -21,7 +21,9 @@ uniform sampler2D texmap12;
 uniform sampler2D texmap13;
 uniform sampler2D texmap14;
 uniform sampler2D texmap15; //ship
+uniform sampler2D texmap16; //ship
 
+uniform float textureShift;
 
 out vec4 colorOut;
 const vec3 fogColor = vec3(0.25, 0.1, 0.1);
@@ -85,47 +87,64 @@ void main() {
 //OPTION A - NORMAL FRAGMENTS
 
 //STEP 1 - spec & diff
-	
-	for(int i = 0; i<8; i++){
-		l = normalize(DataIn.lightDir[i]);
-		n = normalize(DataIn.normal);
-		if(i<=5){ //POINT	
-			h = normalize(l + e);
-			distance = length(DataIn.lightDir[i]);
-			attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
-			if(i == 2 && mat.texCount == 15){
-				n = normalize(2.0 * texture(texmap3, DataIn.tex_coord).rgb-1.0);
-				h = DataIn.halfVec;
-			}
-			intensity += max(dot(n,l), 0.0) * attenuation;
-			if (intensity > 0.0) {
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
-			}
+	if(mat.texCount == 16){
+		l = normalize(DataIn.lightDir[2]);
+		h = normalize(l + e);
+		distance = length(DataIn.lightDir[2]);
+		attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
+		vec2 shiftedtex = vec2(DataIn.tex_coord.s*10.0+textureShift,DataIn.tex_coord.t*10.0+textureShift);
+		n = normalize(2.0 * texture(texmap16, shiftedtex).rgb-1.0);
+		h = DataIn.halfVec;
+				
+		intensity += max(dot(n,l), 0.0) * attenuation;
+		if (intensity > 0.0) {
+			intSpec = max(dot(h,n), 0.0);
+			spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 		}
-		else if(i==6){ //DIRECTIONAL
-			intensity += max(dot(n,l), 0.0);
-			if (intensity > 0.0) {
+	}
+	if(mat.texCount != 16){
+		for(int i = 0; i<8; i++){
+			l = normalize(DataIn.lightDir[i]);
+			n = normalize(DataIn.normal);
+			if(i<=5){ //POINT	
 				h = normalize(l + e);
-				intSpec = max(dot(h,n), 0.0);
-				spec = spec + mat.specular * pow(intSpec, mat.shininess);
-			}
-		}
-		else if(i==7){ //SPOT
-			float cosSDL = dot(sd,l);
-			float spotExponent = 100.0;
-			if (cosSDL > spotCutOff) {
 				distance = length(DataIn.lightDir[i]);
-				attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
+				attenuation = 0.5/(a+(b*distance)+(c*distance*distance));
+				if(i == 2 && mat.texCount == 15){
+					n = normalize(2.0 * texture(texmap3, DataIn.tex_coord).rgb-1.0);
+					h = DataIn.halfVec;
+				}
+				
 				intensity += max(dot(n,l), 0.0) * attenuation;
 				if (intensity > 0.0) {
-					h = normalize(l + e);
 					intSpec = max(dot(h,n), 0.0);
 					spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
 				}
 			}
-		}
+			else if(i==6){ //DIRECTIONAL
+				intensity += max(dot(n,l), 0.0);
+				if (intensity > 0.0) {
+					h = normalize(l + e);
+					intSpec = max(dot(h,n), 0.0);
+					spec = spec + mat.specular * pow(intSpec, mat.shininess);
+				}
+			}
+			else if(i==7){ //SPOT
+				float cosSDL = dot(sd,l);
+				float spotExponent = 100.0;
+				if (cosSDL > spotCutOff) {
+					distance = length(DataIn.lightDir[i]);
+					attenuation = 2.0/(a+(b*distance)+(c*distance*distance)) * pow(cosSDL,spotExponent);
+					intensity += max(dot(n,l), 0.0) * attenuation;
+					if (intensity > 0.0) {
+						h = normalize(l + e);
+						intSpec = max(dot(h,n), 0.0);
+						spec = spec + mat.specular * pow(intSpec, mat.shininess) * attenuation;
+					}
+				}
+			}
 		
+		}
 	}
 	
 //STEP 2 - textures
@@ -161,6 +180,8 @@ void main() {
 		texel = texture(texmap14, DataIn.tex_coord);
 	else if(mat.texCount == 15)
 		texel = texture(texmap15, DataIn.tex_coord);
+	else if(mat.texCount == 16)
+		texel = texture(texmap16, DataIn.tex_coord);
 
 	
 	if(texMode == 0) // modulate diffuse color with texel color

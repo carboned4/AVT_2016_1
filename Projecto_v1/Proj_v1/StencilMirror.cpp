@@ -62,8 +62,11 @@ void StencilMirror::fillStencil(VSShaderLib _shader) {
 
 
 void StencilMirror::draw(VSShaderLib _shader) {
+	this->elapsedShift += 0.001f;
+	printf("%f\n", this->elapsedShift);
+	glUniform1f(textureShift_uniformId, this->elapsedShift);
 	pushMatrix(MODEL);
-	translate(MODEL, position.getX(), position.getY(), position.getZ()+10.0f);
+	translate(MODEL, position.getX(), position.getY(), position.getZ()+11.0f);
 	GLint loc;
 
 	glUniform1i(texMode_uniformId, 4);

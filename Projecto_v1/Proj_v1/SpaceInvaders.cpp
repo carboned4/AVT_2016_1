@@ -149,8 +149,11 @@ GLint tex_loc5, tex_loc6, tex_loc7, tex_loc8, tex_loc9;
 //nothing yet
 GLint tex_loc10, tex_loc11, tex_loc12, tex_loc13, tex_loc14;
 GLint tex_loc15;
+GLint tex_loc16;
+
 GLint texMode_uniformId;
 GLuint TextureArray[25];
+GLint textureShift_uniformId;
 
 extern float mMatrix[COUNT_MATRICES][16];
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -387,9 +390,11 @@ GLuint setupShaders() {
 	tex_loc13 = glGetUniformLocation(shader.getProgramIndex(), "texmap13");
 	tex_loc14 = glGetUniformLocation(shader.getProgramIndex(), "texmap14");
 	tex_loc15 = glGetUniformLocation(shader.getProgramIndex(), "texmap15");
+	tex_loc16 = glGetUniformLocation(shader.getProgramIndex(), "texmap16");
 
 	uniform_foggy = glGetUniformLocation(shader.getProgramIndex(), "fogMode");
 	uniform_shadowOn = glGetUniformLocation(shader.getProgramIndex(), "shadowOn");
+	textureShift_uniformId = glGetUniformLocation(shader.getProgramIndex(), "textureShift");
 
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
@@ -526,6 +531,8 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, TextureArray[14]);
 	glActiveTexture(GL_TEXTURE15);
 	glBindTexture(GL_TEXTURE_2D, TextureArray[15]);
+	glActiveTexture(GL_TEXTURE16);
+	glBindTexture(GL_TEXTURE_2D, TextureArray[16]);
 	//Indicar aos tres samplers do GLSL quais os Texture Units a serem usados
 	glUniform1i(tex_loc0, 0);
 	glUniform1i(tex_loc1, 1);
@@ -543,6 +550,7 @@ void renderScene()
 	glUniform1i(tex_loc13, 13);
 	glUniform1i(tex_loc14, 14);
 	glUniform1i(tex_loc15, 15);
+	glUniform1i(tex_loc16, 16);
 
 	glUniform1i(uniform_foggy, fog);
 
@@ -768,7 +776,7 @@ void renderScene()
 
 	//este já é feito no display
 	//glutSwapBuffers();
-	checkOpenGLError("ERROR: Could not draw scene.");
+	//checkOpenGLError("ERROR: Could not draw scene.");
 }
 
 void switchFramerate() {
@@ -1238,7 +1246,7 @@ void setupGLUT(int argc, char* argv[])
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(300, 100);
 	glutInitWindowSize(WinX, WinY);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	WindowHandle = glutCreateWindow(CAPTION);
@@ -1266,7 +1274,7 @@ void setupThings() {
 	initTextureMappedFont();
 
 
-	glGenTextures(16, TextureArray);
+	glGenTextures(17, TextureArray);
 	TGA_Texture(TextureArray, "stars.tga", 0);
 	TGA_Texture(TextureArray, "checker.tga", 1);
 	TGA_Texture(TextureArray, "Anno_16x16_2.tga", 2);
@@ -1283,6 +1291,7 @@ void setupThings() {
 	TGA_Texture(TextureArray, "flare4.tga", 13);
 	TGA_Texture(TextureArray, "flare5.tga", 14);
 	TGA_Texture(TextureArray, "GunshipSheet.tga", 15);
+	TGA_Texture(TextureArray, "water_bump0.tga", 16);
 
 	//TopOrthoCamera( _left,  _right,  _down,  _up,  _near,  _far,  _x,  _y,  _z);
 	orthoCam = new TopOrthoCamera(-6.0f* ratio, 6.0f* ratio, -6.0f, 6.0f, 0.1f, 1000.0f, 0.0f, 10.0f, 5.0f);

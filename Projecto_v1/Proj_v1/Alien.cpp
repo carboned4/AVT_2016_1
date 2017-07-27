@@ -58,7 +58,7 @@ void Alien::update(int delta) {
 	if (!changeRow) {
 		position = position + speed*(delta / 1000.0f);
 		float xpos = position.getX();
-		printf("%f %f %f\n", left, xpos, left-width);
+		//printf("%f %f %f\n", left, xpos, left-width);
 		if (xpos > left) {
 			position.set(left, position.getY(), position.getZ());
 			changeRow = true;
